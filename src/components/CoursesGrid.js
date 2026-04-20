@@ -5,9 +5,11 @@ import { useState, useEffect } from "react";
 /**
  * "Related Courses" grid section — fetches from /api/courses (Supabase-backed).
  *
- * @param {{ limit?: number, showViewAll?: boolean }} props
+ * @param {{ limit?: number, showViewAll?: boolean, tags?: string[] }} props
+ * When `tags` is provided, courses are ranked by domain_tag overlap so the
+ * article's topic drives which courses appear.
  */
-export default function CoursesGrid({ limit = 3, showViewAll = true }) {
+export default function CoursesGrid({ limit = 3, showViewAll = true, tags = [] }) {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
@@ -17,7 +19,19 @@ export default function CoursesGrid({ limit = 3, showViewAll = true }) {
       .catch(() => {});
   }, []);
 
-  const displayed = courses.slice(0, limit);
+  const tagSet = new Set((tags || []).map((t) => String(t).toLowerCase()));
+  const ranked = tagSet.size === 0
+    ? courses
+    : [...courses]
+        .map((c) => {
+          const ct = Array.isArray(c.domain_tags) ? c.domain_tags : [];
+          const score = ct.reduce((n, t) => n + (tagSet.has(String(t).toLowerCase()) ? 1 : 0), 0);
+          return { c, score };
+        })
+        .sort((a, b) => b.score - a.score || (a.c.sort_order ?? 0) - (b.c.sort_order ?? 0))
+        .map(({ c }) => c);
+
+  const displayed = ranked.slice(0, limit);
 
   if (displayed.length === 0) return null;
 

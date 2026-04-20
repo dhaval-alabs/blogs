@@ -770,6 +770,8 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                       key={widget.id}
                       questions={suggestedQuestions}
                       context={`Title: ${post.title}\nExcerpt: ${post.excerpt || ""}\nTopics: ${(post.domain_tags || []).join(", ")}`}
+                      tags={post.domain_tags || []}
+                      slug={post.slug || ""}
                       placeholder="Ask anything about this article…"
                     />
                   );
@@ -842,7 +844,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
       </div>
 
       {/* ── Related Courses ── */}
-      <CoursesGrid showViewAll={false} />
+      <CoursesGrid showViewAll={false} tags={post.domain_tags || []} />
 
       <Footer />
       <MobileBottomNav activePage="insights" />
