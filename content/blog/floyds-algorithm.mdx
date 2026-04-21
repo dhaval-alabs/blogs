@@ -4,7 +4,7 @@ slug: floyds-algorithm
 date: "2024-08-06T13:53:40+00:00"
 modified: "2026-02-04T06:34:33+00:00"
 description: "Floyd's Algorithm: Comprehensive guide detailing its steps, applications in machine learning, and practical implementations."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/08/cover-image-updated-image.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/cover-image-updated-image.webp"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -32,11 +32,11 @@ Representations in Floyd’s Algorithm:
 -   **Distance Matrix**: Denoted as dist\[\]\[\], this [matrix](https://www.analytixlabs.co.in/blog/confusion-matrix) calculates the shortest distances between all the pairs of nodes. Initially, it is filled with the direct edge weights between nodes or infinity (∞) if no edge exists.
 -   **Intermediate Node**: Represented as k, which updates the path length iteratively. The values of k range from 1 to n (the number of nodes).
 
-![pseudo code of floyd algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/1.jpg)
+![pseudo code of floyd algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/1.jpg)
 
 Here is an example graph to illustrate Floyd’s Algorithm example:
 
-![floyd algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/2.jpg)
+![floyd algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/2.jpg)
 
 The Floyd’s Algorithm example can be outlined in the following steps:
 
@@ -44,7 +44,7 @@ The Floyd’s Algorithm example can be outlined in the following steps:
 
 ` ```text   for each node i in V:   for each node j in V:   if i == j:   dist[I][j] = 0   else if (i, j) is an edge in E:   dist[i][j] = weight(i, j)   else:   dist[i][j] = ∞   ``` `
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/3.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/3.jpg)
 
 Course Alert 👨🏻‍💻
 
@@ -77,7 +77,7 @@ The formula for Distance\[\]\[\] for every {i,j} node pair is as follows:
 
  = Distance\[i\]\[j\] = minimum (Distance\[i\]\[j\], Distance\[i\]\[A\] + Distance\[A\]\[j\]) 
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/4.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/4.jpg)
 
 Use node A as an intermediate node to calculate the Distance\[\]\[\] using the formula:
 
@@ -85,7 +85,7 @@ Use node A as an intermediate node to calculate the Distance\[\]\[\] using the f
 
  = Distance\[i\]\[j\] = minimum (Distance\[i\]\[j\], Distance\[i\]\[A\] + Distance\[A\]\[j\]) 
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/5.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/5.jpg)
 
 Use node B as an intermediate node to calculate the Distance\[\]\[\] using the formula:
 
@@ -93,7 +93,7 @@ Use node B as an intermediate node to calculate the Distance\[\]\[\] using the f
 
  = Distance\[i\]\[j\] = minimum (Distance\[i\]\[j\], Distance\[i\]\[B\] + Distance\[B\]\[j\]) 
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/6.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/6.jpg)
 
 Use node C as an intermediate node to calculate the Distance\[\]\[\] using the formula:
 
@@ -101,7 +101,7 @@ Use node C as an intermediate node to calculate the Distance\[\]\[\] using the f
 
  = Distance\[i\]\[j\] = minimum (Distance\[i\]\[j\], Distance\[i\]\[C\] + Distance\[C\]\[j\]) 
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/7.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/7.jpg)
 
 Use node D as an intermediate node to calculate the Distance\[\]\[\] using the formula:
 
@@ -109,7 +109,7 @@ Use node D as an intermediate node to calculate the Distance\[\]\[\] using the f
 
  = Distance\[i\]\[j\] = minimum (Distance\[i\]\[j\], Distance\[i\]\[D\] + Distance\[D\]\[j\]) 
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/8.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/8.jpg)
 
 Use node E as an intermediate node to calculate the Distance\[\]\[\] using the formula:
 
@@ -124,7 +124,7 @@ Use node E as an intermediate node to calculate the Distance\[\]\[\] using the f
 
 This systematic use of pseudo-variables captures the essence of Floyd’s Algorithm and demonstrates its structured approach to solving the all-pairs shortest path problem effectively.
 
-![floyd's algorithm example](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/9.jpg)
+![floyd's algorithm example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/9.jpg)
 
 ### **2) Time and Space Complexity Analysis**
 
@@ -302,7 +302,7 @@ By following this structured path and utilizing these resources, you can deeply 
 
 Floyd’s Algorithm has practical applications in various ML tasks. Here are specific examples in different domains:
 
-![implementation use cases in machine learning ](https://www.analytixlabs.co.in/wp-content/uploads/2024/08/10.jpg)
+![implementation use cases in machine learning ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/08/10.jpg)
 
 ### **1\. Network Analysis**
 

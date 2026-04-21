@@ -4,7 +4,7 @@ slug: why-learn-sql-for-data-science
 date: "2020-06-26T18:34:57+00:00"
 modified: ""
 description: "Everyone who has stepped into data analytics, data science would have pondered over this question at least once. Which among these big guns should I begin with or choose from SQL or Python or R."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2020/06/blog-9-2x-01-3.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/06/blog-9-2x-01-3.jpg"
 author: AnalytixLabs
 categories:
   - Data Analytics
@@ -20,7 +20,7 @@ Undoubtedly, SQL is one of the most versatile languages that the tech world has 
 
 ## **Why is SQL Still Ubiquitous?**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/06/blog-9-2x-02-600x366.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/06/blog-9-2x-02-600x366.jpg)
 
 SQL is a great tool when you are handling relational databases to extract useful information from the data. For most business decisions that we make at a quantitative level, SQL does a good job with joins and aggregate functions. As we go into a higher level of data manipulations such as statistical analysis (although we have a statistical function in SQL), plot analysis, Regression test, time series analysis using SQL becomes painstaking to achieve them unless you are an SQL ninja! This is where the diversified libraries and packages in Python/R shine. Pandas in Python or _data.table_ in R are counterparts for handling relational or tabular data. Yet, SQL continues to be very pervasive among the data science people because of its declarative nature; you tell SQL what you want to be done rather than how you want it to be done. Also, the evolution of data warehouses like NoSQL, Hadoop, Amazon’s Redshift, and Google’s BigQuery significantly transform the way of handling complex data manipulations with a faster execution rate.
 
@@ -39,15 +39,15 @@ Let’s take a use case. As you all know, window functions are very commonly use
 
 **The Data has an ID, and sales corresponding to that ID as shown below:**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/06/image.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/06/image.png)
 
 ### **The SQL way:**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/06/image-1.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/06/image-1.png)
 
 ### **The R way ( using TidyVerse package):**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/06/image-2.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/06/image-2.png)
 
 The outputs obtained from both the tools are the same. But what I want you to notice is here is that R is a bit more compact than SQL which is repetitive but flexible. If you notice, I still could have used R’s equivalent of _Over() and order by(ID),_ but I was able to consolidate them using _arrange() and mutate()_ functions. Also, the beautiful part about R here is that, especially for SQL enthusiasts, you can still query a data frame as if it were a SQL table and pass the query as a string using the _SQLDF_package. On the other hand, if I were to see more complex operations using window functions, SQL still might have an upper hand over R.
 

@@ -4,7 +4,7 @@ slug: data-analytics-with-python
 date: "2024-09-18T13:24:05+00:00"
 modified: "2026-02-04T09:20:03+00:00"
 description: "Data Analytics with Python: Learn essential techniques & best practices to enhance your data-driven decision-making with our guide."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/09/Cover-Image-1-2.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/Cover-Image-1-2.jpg"
 author: Archish Rai Kapil
 categories:
   - Data Analytics
@@ -50,7 +50,7 @@ Learn the right skills to fully leverage AI’s power and unleash AI’s potenti
 
 To analyze data, you need to follow a process. All the steps in the process are highly crucial as they allow for the practical analysis of data. The key steps for performing data analysis are as follows-
 
-![how to analyze data](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/2-4.jpg)
+![how to analyze data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/2-4.jpg)
 
 1.  **Setting up Objective:** The first step is to define what you intend to achieve with the analysis and what aspects of the business you want to cover.
 2.  **Collecting Data:** The next step is to collect and collate the relevant data for analysis.
@@ -66,7 +66,7 @@ After reviewing the fundamentals of data analytics, it is time to examine an act
 
 To perform data analysis using Python, you must follow the data analysis process discussed above using Python libraries. In this section, it is precisely what you will do.
 
-![how to analyze data using python](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/1-4.jpg)
+![how to analyze data using python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/1-4.jpg)
 
 ### **1) Objective Definition**
 
@@ -109,7 +109,7 @@ The first obvious step was to examine the data, so you performed exploratory dat
 `# viewing the first few rows of the data`  
 `df.head()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-1-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-1-1.jpg)
 
 After reviewing the data, you created a table describing each column and how it could be used during data analysis.
 
@@ -118,7 +118,7 @@ Next, you calculated the data dimensions and found that you dealt with around 3.
 `# finding the number of rows and columns there in the data`  
 `print("The number of rows are {} and the number of columns are {}".format(df.shape[0],df.shape[1]))`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-2-2.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-2-2.jpg)
 
 As you had a basic understanding of the data, it was time to start with data cleaning. Data cleaning needs to focus on the following key aspects-
 
@@ -155,7 +155,7 @@ Next, you check the data types in the columns. Several columns, such as \`Date\`
 
 `# finding the data types and number of non-null values in the data   df.info()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-5-copy.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-5-copy.jpg)
 
 To understand why that is the case, you view and explore the unique values of all the columns. While for \`Customer Estimated Income\`, the presence of the $ symbol caused wrong data types, several other issues were present, such as invalid values masking missing values and inconsistent data (e.g., \`Education\`). 
 
@@ -165,7 +165,7 @@ To understand why that is the case, you view and explore the unique values of al
 
 `# finding the unique values for each column in the data to find such unwanted values   for i in df_without_na:   print('\n', i, df_without_na[i].unique())`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-6-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-6-1.jpg)
 
 To resolve the invalid values, note them down and replace them with missing ones so they can be dealt with through imputation.
 
@@ -187,7 +187,7 @@ You also changed the data types of the remaining columns to their correct types,
 `# rechecking column data types`  
 `df.dtypes`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-7-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-7-1.jpg)
 
 #### **c. Anomaly/Outlier Treatment**
 
@@ -213,7 +213,7 @@ You will then create boxplots for the numeric columns. Upon inspection, you foun
 
 `# creating boxplots   plot_boxplots(df, numerical_cols)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-8-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-8-1.jpg)
 
 To handle such anomalies, you create a function that caps outliers using the Inter-Quartile (IQR) method.
 
@@ -238,7 +238,7 @@ Next, you will use the above-created function on columns with anomalies and recr
 
 `# re-creating boxplots for the columns where outlier capping is performed   plot_boxplots(df, columns_to_cap)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-9-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-9-1.jpg)
 
 #### **d. Missing Value Imputation**
 
@@ -247,7 +247,7 @@ One of the most crucial aspects of data cleaning is dealing with missing values.
 `# printing column names with missing value`  
 `print(df.isna().sum()[df.isna().sum()>0].index)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-10-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-10-1.jpg)
 
 You create a function that performs group-level missing value imputations using mean and mode for imputing numerical and categorical columns, respectively.
 
@@ -275,7 +275,7 @@ You then used the function to impute missing values and used appropriate group c
 
 `# rechecking if there are any missing values left   df.isna().sum()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/62.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/62.jpg)
 
 #### **e. Fixing Inconsistent Data**
 
@@ -283,7 +283,7 @@ During typecasting, you found some structural issues in the data with the \`Cust
 
 `# checking the different categories in the Education Level column   df['Customer Education Level'].value_counts().sort_index()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-11-2.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-11-2.jpg)
 
 To resolve this, you removed the inconsistent categories by standardizing them, eventually providing you with only four education levels.
 
@@ -293,7 +293,7 @@ To resolve this, you removed the inconsistent categories by standardizing them, 
 
 `# rechecking if the categories have been fixed   df['Customer Education Level'].unique()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-12-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-12-1.jpg)
 
 As the data is now clean, it’s time to analyze it. To perform data analysis using Python, you must have your data as a Pandas DataFrame, as it is much easier to deal with. As you already had the data in this form, you had multiple ways to analyze data.
 
@@ -307,13 +307,13 @@ The simplest and easiest way to analyze data is to mine it. This involves extrac
 
 `# finding the key statistical values of the numerical columns   df.describe().T`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-13-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-13-1.jpg)
 
 The same function can also be applied to finding key insights about the categorical columns.
 
 `# finding the key statistical values of the categorical columns   df.drop('Date', axis=1).describe(exclude=np.number).T`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-14-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-14-1.jpg)
 
 It was necessary to derive a few important variables to mine the data further. These included calculating the year-month combination of the transaction, profit, profit margin, etc.
 
@@ -351,7 +351,7 @@ Once such key variables become available, key performance metrics (KPI) can be e
 
 `print("\nOperational KPIs:")   print(f"Total Cost: ${ttl_cost:,.2f}")   print(f"Average Basket Size: {avg_basket_size:.2f} items")   print(f"Average Profit Margin: {avg_profit_margin:.2f}%")   print(f"Country with Highest Total Cost: {top_costly_country}")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-KPIs-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-KPIs-1.jpg)
 
 You’ll now do some complex analysis and calculate crucial financial information for different products. You will do this by grouping the dataframe by product categories and sub-categories and aggregating it by calculating the sum of the key financial columns like revenue, cost, profit, and margin.
 
@@ -361,7 +361,7 @@ You’ll now do some complex analysis and calculate crucial financial informatio
 
 `# viewing data   prod_analysis_df`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-15-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-15-1.jpg)
 
 Similarly, you can also calculate this information and more for different countries.
 
@@ -375,7 +375,7 @@ Similarly, you can also calculate this information and more for different countr
 
 `# viewing the data   country_analysis_df`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-country-financial-perf-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-country-financial-perf-1.jpg)
 
 As you can see, data can be easily analyzed using Pandas, revealing many insights. However, when you try to perform more complex analyses, you may have a set of complex numbers to interpret, making visualization crucial.
 
@@ -636,7 +636,7 @@ You started by analyzing the overall sales situation. You counted the number of 
 
 `# showing plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-16-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-16-1.jpg)
 
 #### **iii. Time-Based Analysis**
 
@@ -659,7 +659,7 @@ The x-axis represents the Year-Month, and the y-axis shows the amount in dollars
 
 `# creating plot   fig.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-17-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-17-1.jpg)
 
 -   ##### **_Analysis: Financial Performance between Years_**
     
@@ -684,7 +684,7 @@ The x-axis represents the year, and the y-axis shows the respective values or pe
 
 `# adjusting layout and showing plot   plt.tight_layout()   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-18-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-18-1.jpg)
 
 -   ##### **_Analysis: Financial Performance between Years for Different Countries_**
     
@@ -697,11 +697,11 @@ To examine financial performance across different countries, you plotted \`Reven
 
 `# plotting Profit by Year for different countries   plot_metric_by_year_country(df, 'Profit', 'Profit by Year and Country')`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-19-2.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-19-2.jpg)
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-20-2.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-20-2.jpg)
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-21-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-21-1.jpg)
 
 #### **iv. Customer Demography Analysis**
 
@@ -718,7 +718,7 @@ You created a histogram with 30 bins to understand the distribution of customer 
 
 `# showing the plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-22-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-22-1.jpg)
 
 -   ##### **_Analysis: Products Purchased by Different Age Groups_**
     
@@ -741,7 +741,7 @@ Using a stacked bar plot, you visualized the total quantity purchased for each p
 
 `# showing the plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-23-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-23-1.jpg)
 
 -   ##### **_Analysis: Age Distribution of Different Product Sub-categories_**
     
@@ -770,7 +770,7 @@ This visualization helped you compare age distributions across subcategories and
 
 `# showing the plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-24-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-24-1.jpg)
 
 #### **v. Product Analysis**
 
@@ -783,7 +783,7 @@ You started by creating a frequency pie (donut) chart to visualize the distribut
 
 `# creating a frequency donut plot   plot_frequency_pie_chart(df, 'Product Category')`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-25-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-25-1.jpg)
 
 -   ##### **_Analysis: Financial Contribution of Different Products_**
     
@@ -792,7 +792,7 @@ You created pie charts for each financial performance column to visualize the fi
 
 `# plotting pie charts for different product categories are financial performance columns   plot_pie_charts_1(df, 'Product Category', financial_cols_metrics)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-27-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-27-1.jpg)
 
 -   ##### **_Analysis: Financial Contribution of Different Product Subcategories_**
     
@@ -803,7 +803,7 @@ To understand product sub-category performance, you created a dodged bar plot ba
 
 `# showing plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-26-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-26-1.jpg)
 
 -   ##### **_Analysis: Financial Performance by Product Sub-categories_**
     
@@ -819,9 +819,9 @@ These plots helped you understand the distribution and performance of products w
 
 `# creating bar plots for product subcategories and financial performance columns   plot_bar_chart(df, group_by_col = 'Sub Category', aggregate_col = 'Quantity', agg_func = 'sum', text_auto='.2s')   plot_bar_chart(df, group_by_col = 'Sub Category', aggregate_col = 'Revenue', agg_func = 'sum', text_auto='.2s')   plot_bar_chart(df, group_by_col = 'Sub Category', aggregate_col = 'Profit', agg_func = 'sum', text_auto='.2s')   plot_bar_chart(df, group_by_col = 'Sub Category', aggregate_col = 'Profit Margins', agg_func = 'mean')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-31-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-31-1.jpg)
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-28-1.jpg) ![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-29-1.jpg) ![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-30-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-28-1.jpg) ![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-29-1.jpg) ![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-30-1.jpg)
 
 -   ##### **_Analysis: Revenue_**
     
@@ -847,7 +847,7 @@ These plots helped you compare revenue distribution and performance across diffe
 
 `# displaying the plots   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-32-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-32-1.jpg)
 
 -   ##### **_Analysis: Financial Contribution of Different Products & their Subcategories_**
     
@@ -882,7 +882,7 @@ This layout helped you compare how different metrics are distributed across sub-
 
 `# showing the plot   fig.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/2-3.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/2-3.jpg)
 
 -   ##### **_Analysis: Product Category – Bike_**
     
@@ -910,7 +910,7 @@ These plots comprehensively show how bike revenue, cost, profit, and profit marg
 
 `# showing the plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-33-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-33-1.jpg)
 
 -   ##### **_Analysis: Subcategories of Product – Bike_**
     
@@ -919,9 +919,9 @@ You continued exploring the Bike segment and evaluated the performance of differ
 
 `# plotting bar charts for different subcategories of Bike for different countries   plot_sub_category_performance(df, 'Mountain Bikes')   plot_sub_category_performance(df, 'Touring Bikes')   plot_sub_category_performance(df, 'Road Bikes')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-34-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-34-1.jpg)
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/Untitled-1.jpg)![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-36-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/Untitled-1.jpg)![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-36-1.jpg)
 
 -   ##### **_Analysis: Unit Cost & Unit Price of Different Bikes by Country_**
     
@@ -930,7 +930,7 @@ Lastly, you concluded by analyzing the bike segment and exploring the relationsh
 
 `# plotting scatterplots   plot_unit_cost_vs_price(df, ['Mountain Bikes', 'Road Bikes', 'Touring Bikes'])`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-37-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-37-1.jpg)
 
 #### **vi. Country Analysis**
 
@@ -943,7 +943,7 @@ You started by visualizing the distribution of observations (transactions) acros
 
 `# plotting frequency donut plot for 'Country' column   plot_frequency_pie_chart(df, 'Country')`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-38-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-38-1.jpg)
 
 -   ##### **_Analysis: Profit of Different Countries_**
     
@@ -956,7 +956,7 @@ To analyze the contribution of profit by country, you calculated the total profi
 
 `# showing plot   fig.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/image9-copy.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/image9-copy.jpg)
 
 -   ##### **_Analysis: Financial Contribution of Countries_**
     
@@ -965,7 +965,7 @@ You created pie charts for each financial performance column by country to explo
 
 `# plotting pie charts for countries and financial performance related columns   plot_pie_charts_1(df, 'Country', financial_cols_metrics)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-40-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-40-1.jpg)
 
 -   #####  **_Analysis: Most Profitable Product Category by Country_**
     
@@ -986,7 +986,7 @@ You selected the top product category for each country based on profit and creat
 
 `# displaying the plot   plt.show()`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-41-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-41-1.jpg)
 
 -   ##### **_Analysis: Contribution of Different Product Categories to Different Countries_**
     
@@ -995,7 +995,7 @@ To analyze the distribution of sub-categories within each country, you created p
 
 `# plotting pie charts for countries and sub-categories   plot_pie_charts_2(df)`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-42-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-42-1.jpg)
 
 -   #####  **_Analysis: Product Subcategory Composition by Countries_**
     
@@ -1006,7 +1006,7 @@ You created pie charts for each product category (Bikes, Clothing, and Accessori
 
 `# plotting pie charts for the specified countries and product category   plot_pie_charts_3(countries, product_category =  "Bikes")   plot_pie_charts_3(countries, product_category =  "Clothing")   plot_pie_charts_3(countries, product_category =  "Accessories")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-43-2.jpg) ![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-44-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-43-2.jpg) ![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-44-1.jpg)
 
 -   #####  **_Analysis: Top Product Sub-categories for Different Countries_**
     
@@ -1022,13 +1022,13 @@ These charts helped you identify which products perform best in terms of quantit
 
 `# creating bar chart for analyzing countries by quantity, cost, profit and profit margin   plot_top_products_by_metric(df, ["Country", "Sub Category"], "Quantity", agg_func='sum', title="Top Product by Country and Quantity")   plot_top_products_by_metric(df, ["Country", "Sub Category"], "Cost", agg_func='mean', title="Top Product by Country and Cost")   plot_top_products_by_metric(df, ["Country", "Sub Category"], "Profit", agg_func='mean', title="Top Product by Country and Profit")   plot_top_products_by_metric(df, ["Country", "Sub Category"], "Profit Margins", agg_func='mean', title="Top Product by Country and Profit Margin")`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-45-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-45-1.jpg)
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-48-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-48-1.jpg)
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-47-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-47-1.jpg)
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-46-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-46-1.jpg)
 
 ### **6) Statistical Analysis**
 
@@ -1051,7 +1051,7 @@ The resulting t-statistic and p-value help you assess whether the observed diffe
 
 `# interpreting results   alpha = 0.05  # significance level   if p_value < alpha:   print("Reject the null hypothesis: There is a significant difference in revenue between males and females.")   else:   print("Fail to reject the null hypothesis: There is no significant difference in revenue between males and females.")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-49-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-49-1.jpg)
 
 -   #### **Analysis: Correlation between Revenue and Profit**
     
@@ -1064,7 +1064,7 @@ You calculated the Pearson correlation coefficient to assess the relationship be
 
 `# interpreting results   alpha = 0.05   if p_value < alpha:   print("Reject the null hypothesis: There is a significant correlation between revenue and profit.")   else:   print("Fail to reject the null hypothesis: There is no significant correlation between revenue and profit.")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-50-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-50-1.jpg)
 
 -   #### **Analysis: Comparing the Average Revenue across Different Product Categories**
     
@@ -1077,7 +1077,7 @@ To investigate if there is a significant difference in average revenue among dif
 
 `# interpreting results   alpha = 0.05   if p_value < alpha:   print("Reject the null hypothesis: There is a significant difference in average revenue across product categories.")   else:   print("Fail to reject the null hypothesis: There is no significant difference in average revenue across product categories.")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-51-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-51-1.jpg)
 
 -   #### **Analysis: Checking the Association between Product Category and Customer Marital Status**
     
@@ -1092,7 +1092,7 @@ You created a contingency table and performed a Chi-Square test to examine the a
 
 `# interpreting results   alpha = 0.05   if p_value < alpha:   print("Reject the null hypothesis: There is a significant association between Product Category and Customer Marital Status.")   else:   print("Fail to reject the null hypothesis: There is no significant association between Product Category and Customer Marital Status.")`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-52-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-52-1.jpg)
 
 -   #### **Analysis: Finding Predictors for Income Column**
     
@@ -1109,7 +1109,7 @@ After fitting the regression model, you reviewed the summary, which includes coe
 
 `# printing summary   print(model.summary())`
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/output-53-1.jpg)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/output-53-1.jpg)
 
 As the data analysis has been done using Python, the next thing to learn is how to report the findings.
 

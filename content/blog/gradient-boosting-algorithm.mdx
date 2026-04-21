@@ -4,7 +4,7 @@ slug: gradient-boosting-algorithm
 date: "2022-10-19T12:25:04+00:00"
 modified: ""
 description: "Learn how gradient boosting algorithm can help in classification and regression tasks, along with its types, python codes, and examples"
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-13-100-2.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-13-100-2.jpg"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -30,7 +30,7 @@ Gradient Boosting is a type of machine learning boosting technique. It builds a 
 
 In each case, the target outcomes in the data decide the effect a case’s forecast has on the overall prediction inaccuracy. There are two possible cases for this:
 
-![gradient boosting use case](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Bullet-5.png)
+![gradient boosting use case](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Bullet-5.png)
 
 Gradient Boosting is named so that the set target outcomes depend on the gradient of the inaccuracy vs the forecast. Every new model created using this method moves closer to the path that lowers prediction error in the range of potential outcomes for every ML training case.
 
@@ -57,7 +57,7 @@ The first step includes building a base model to predict the dataset. For easy c
 
 Mathematical interpretation of the 1st step: 
 
-![mathematical interpretation gradient boosting algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-100-2.jpg)
+![mathematical interpretation gradient boosting algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-100-2.jpg)
 
 Where, L= Loss Function
 
@@ -67,7 +67,7 @@ Argmin= predicted value or gamma to be found of which the loss function is minim
 
 Furthermore, as our  target column is continuous , the Loss function is to be calculated by: 
 
-![loss function calculation](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-100-2.jpg)
+![loss function calculation](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-100-2.jpg)
 
 #### Step 2
 
@@ -79,7 +79,7 @@ The predicted value in this is the value forecasted in the prior model. Because 
 
 This step includes  finding the output values of each leaf of the decision tree . We have to find the output for all the leaves since a single leaf might get more than one residue. No matter if there is just one number or more, we can easily calculate the result by taking the average of all the values in a leaf.
 
-![value of decision tree](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-2-100-2.jpg)
+![value of decision tree](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-2-100-2.jpg)
 
 Mathematical expression:
 
@@ -93,7 +93,7 @@ The final step involves the update of the forecasts of the previous model.
 
 Mathematical Expression for updating the model: 
 
-![update forecast gradient boosting algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-3-100-2.jpg)
+![update forecast gradient boosting algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-3-100-2.jpg)
 
 Where,
 
@@ -111,13 +111,13 @@ Now, the gradient boosting explained above mathematical calculation can be prese
 
 Method will be used to train the model and `predict` method to make predictions.
 
-![decision tree regression python code](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-4-100-1.jpg)
+![decision tree regression python code](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-4-100-1.jpg)
 
 The trained trees from `self.trees` are retrieved with `predict`method.
 
 Upon running a `CustomGradientBoostingRegressor` you will notice it also performs like the `GradientBoostingRegressor` from scikit-learn.
 
-![Gradient Boosting Regressor](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-14-100.jpg)
+![Gradient Boosting Regressor](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-14-100.jpg)
 
 To understand this in more detail, watch this example of Gradient Boosting Algorithm with Python –
 
@@ -131,17 +131,17 @@ Here is the process to find optimal parameters using GridSearchCV: 
 
 #### Step 1- Import GridSearchCV library
 
-![import gridsearchcv library](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-5-100-1.jpg)
+![import gridsearchcv library](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-5-100-1.jpg)
 
 #### Step 2- Data setup
 
-![data setup](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-6-100-1.jpg)
+![data setup](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-6-100-1.jpg)
 
 #### Step 3 – Create the model and parameter
 
 Create an object to use the using GradientBoostingClassifier for the Machine Learning model. 
 
-![gradient boosting classifier for machine learning](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-7-100.jpg)
+![gradient boosting classifier for machine learning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-7-100.jpg)
 
 Next, make a dictionary with the parameters of the model to pass through GridSearchCV. The important parameters are-
 
@@ -151,17 +151,17 @@ Next, make a dictionary with the parameters of the model to pass through GridSea
 -   **cv:** It passes an integer value which signifies the number of splits for cross-validation. The default value is set as five.
 -   **n\_jobs:** Signifies the number of jobs running in parallel.
 
-![gridsearchcv parameters](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-8-100.jpg)
+![gridsearchcv parameters](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-8-100.jpg)
 
 #### Step 4- Run through GridSearchCV and print results
 
 Fit the data set in the object grid\_GBC
 
-![gridsearchcv results](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-9-100.jpg)
+![gridsearchcv results](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-9-100.jpg)
 
 Use [print statements to get the result](https://www.youtube.com/watch?v=DLMXOD3yBaQ&t=51s) i.e.  values of hyperparameters .
 
-![print results gridsearchcv](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-10-100.jpg)
+![print results gridsearchcv](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-10-100.jpg)
 
 ## Applications of Gradient boosting algorithm
 
@@ -197,7 +197,7 @@ This regularization process can reduce the over-fitting or under-fitting of the 
 
 Also, unlike GBM,  XGBM can perform parallel preprocessing of each node to save time and get rapid decisions/predictions . Extreme gradient boosting machines also understand the imputation (i.e. whether a node should be placed on the right or left of the decision tree) automatically.
 
-![Extreme gradient boosting machine](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-11-100.jpg)
+![Extreme gradient boosting machine](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-11-100.jpg)
 
 -   ### Light GBM
     
@@ -212,7 +212,7 @@ These specific data points or features, as they are mutually exclusive (i.e. the
 
 To sum it up,  light GBM works faster with less memory in a gradient boosting model with cutting-edge approaches as explained in the last section . 
 
-![light gradient boosting machine](https://www.analytixlabs.co.in/wp-content/uploads/2022/10/Artboard-1-copy-12-100.jpg)
+![light gradient boosting machine](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2022/10/Artboard-1-copy-12-100.jpg)
 
 -   ### Catboost
     

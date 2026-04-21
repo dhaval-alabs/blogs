@@ -4,7 +4,7 @@ slug: logistic-regression-in-python
 date: "2026-02-25T18:35:26+00:00"
 modified: ""
 description: Logistic regression in Python includes practical guide to understanding logistic regression and putting it into practical implementations
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/11/learning-logistic-regression.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/learning-logistic-regression.webp"
 author: Pritha Bose
 categories:
   - Machine Learning
@@ -55,7 +55,7 @@ The typical stages for building a model using logistic regression in Python are 
 3.  Model evaluation
 4.  Data preparation
 
-![model building stages](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Model-Building-Stages.jpg)
+![model building stages](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Model-Building-Stages.jpg)
 
 Let’s explore all these stages using Python.
 
@@ -77,7 +77,7 @@ You will start by importing a few basic modules and the dataset. 
 
 The dataset seems to have an id variable, a bunch of independent variables with health and other information about an individual, and a dependent variable, ‘stroke’, indicating whether the individual had a heart stroke, indicated by label 1.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Viewing-dataset.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Viewing-dataset.jpg)
 
 #### **Viewing shape of dataset**
 
@@ -91,7 +91,7 @@ Next up, you check the data type of the columns.  While most columns are numeri
 
 `**# checking the column data types**   health_data.dtypes`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Viewing-data-type-of-columns.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Viewing-data-type-of-columns.jpg)
 
 However, it doesn’t mean all columns with ‘int’ or ‘float’ i.e., numeric data types are numerical variables. For example, while columns ‘hypertension’, ‘heart\_disease’, and ‘stroke’ have numeric data types, they are categorical in nature as they are binary columns indicating yes or no.  
 `**# checking the unique values of a few numeric columns   # to check if their variable type is numerical or categorical**   for i in ['hypertension','heart_disease','stroke']:   print('Unique values in {} are : {}'.\   format(i,health_data[i].unique().tolist()))`
@@ -104,7 +104,7 @@ You use the describe function to calculate a bunch of important descriptive stat
 
 `**# calculating coefficient of variation**   desc_stats['coeff_of_var'] = desc_stats['std'] / desc_stats['mean'] desc_stats`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Calculating-Summary-Statistics.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Calculating-Summary-Statistics.jpg)
 
 #### **Checking data balance**
 
@@ -150,7 +150,7 @@ Another major assumption of logistic regression is that the data should not have
 
 `**# checking for outliers**   df.plot(kind = 'box', figsize=(17, 5))`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Identifying-and-capping-outliers.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Identifying-and-capping-outliers.jpg)
 
 Both columns have upper outliers. As ‘**avg\_gulucose\_level**’ has extremely high outliers, we will use its 90th percentile to cap the outliers, whereas for ‘**bmi**’ where the outliers were relatively mild, we can cap them at the 99th percentile.
 
@@ -162,7 +162,7 @@ After capping the outliers, the box plot seems to indicate that while outliers a
 
 `**# ensuring that any major outliers are not there**   df.plot(kind = 'box', figsize=(17, 5))`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Identifying-and-capping-outliers-other-preparation-steps.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Identifying-and-capping-outliers-other-preparation-steps.jpg)
 
 #### **Feature Encoding**
 
@@ -180,7 +180,7 @@ As you can see, the dataframe having the columns with the ‘**object**’ data 
 
 `**# displaying data only having the 'object' data type columns**   df_obj`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Feature-Encoding.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Feature-Encoding.jpg)
 
 You now perform **label encoding** on all the columns.
 
@@ -200,7 +200,7 @@ As you can see, all the columns in the data now have a numeric data type.
 
 `**# ensuring that all data types are numeric**   df.dtypes`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Feature-Encoding-numeric-data-type.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Feature-Encoding-numeric-data-type.jpg)
 
 #### **Feature Importance**
 
@@ -226,7 +226,7 @@ To calculate the feature importance, you use an **Extra [Gradient Boosting Class
 
 `**# plotting the importance**   feature_importances.plot(kind = 'barh')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Feature-Importance.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Feature-Importance.jpg)
 
 You have selected the top six important features as the feature importance score seems to plateau after the first six important variables.
 
@@ -240,7 +240,7 @@ To check for multicollinearity, you can create a correlation matrix, and while i
 
 `**# checking for correlation among variables**   import seaborn as sns   corr = df.drop('stroke',axis=1).corr()   f, ax = plt.subplots(figsize=(12, 10))   mask = np.triu(np.ones_like(corr, dtype=bool))   cmap = sns.diverging_palette(230, 20, as_cmap=True)   sns.heatmap(corr, annot=True, mask = mask, cmap=cmap)`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Removing-multicollinearity.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Removing-multicollinearity.jpg)
 
 To identify variables causing multicollinearity, one can calculate each column’s Variance Inflation Factor (VIF). The formula for VIF is 1/1-R2.
 
@@ -256,7 +256,7 @@ It indicates how well all the features can predict the feature in question. The 
 
 `**# sorting the vif scores in descending order**   vif_scores = vif_scores.sort_values(ascending=False)   vif_scores`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Removing-multicollinearity-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Removing-multicollinearity-1.jpg)
 
 In our case, the column with the highest VIF value is ‘age’; however, you must avoid dropping it as it’s the most important feature, as seen before.
 
@@ -270,7 +270,7 @@ Once ‘bmi’ is dropped, you recalculate the VIF for all the remaining columns
 
 `**# recalculating VIF score**   vif_scores = pd.Series([vif(features.values, i) for i in range(len(features.columns))])   vif_scores.index = features.columns   vif_scores.sort_values(ascending=False)   vif_scores`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Logistic-Regression-in-Python-2.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Logistic-Regression-in-Python-2.jpg)
 
 Therefore, now you go ahead and drop the ‘bmi’ variable from the prepared datatset.
 
@@ -280,7 +280,7 @@ Thus, the final dataset that will be used for fitting the model will have five i
 
 `**# saving all the columns to be used for modeling**   final_columns = df.columns   final_columns`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/independent-columns.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/independent-columns.jpg)
 
 ### **Stage 3: Model Fitting**
 
@@ -304,7 +304,7 @@ You fit the model by passing the train data and a formula. Here, the formula is 
 
 `**# fitting the model to the train data**   model_sm = smf.logit('stroke~age+ever_married+heart_disease+hypertension',   data = train_data).fit()   print(model_sm.summary2())`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/p-value-is-greater-than-0.05.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/p-value-is-greater-than-0.05.jpg)
 
 ##### **Interpreting Results**
 
@@ -316,7 +316,7 @@ For a categorical variable like ‘heart\_disease’, it means that if an indivi
 
 `**# converting the coefficients into odds ratio**   coeff_interpret = pd.DataFrame(np.exp(model_sm.params), columns= ['odds_ratio'])   coeff_interpret[['CI_OR_2.5%', 'CI_OR_97.5%']] = np.exp(model_sm.conf_int())   coeff_interpret['z_value']= model_sm.tvalues   coeff_interpret['p_value']= model_sm.pvalues   coeff_interpret['log_odds(beta_coeff)']=model_sm.params   coeff_interpret = coeff_interpret.loc[:,['log_odds(beta_coeff)','odds_ratio',   'CI_OR_2.5%', 'CI_OR_97.5%','z_value','p_value']] coeff_interpret`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Interpreting-Results.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Interpreting-Results.jpg)
 
 #### **Sklearn**
 
@@ -342,7 +342,7 @@ You have used the model to predict the test dataset. When using a logistic regre
 
 `**# predicting for the test data**   model.predict_proba(X_test)`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Predicting-probabilities-and-classes.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Predicting-probabilities-and-classes.jpg)
 
 You can use the predict function, which converts the predicted probabilities into classes such that it returns 1 when the probability is above 0.5 and 0 when it’s below 0.5.
 
@@ -358,13 +358,13 @@ You now have a dataset with the training data’s dependent variable (y\_true) a
 
 `**# viewing train scores**   train_scores`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/y_true-and-predicted-probabilities-y_prob.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/y_true-and-predicted-probabilities-y_prob.jpg)
 
 Similarly, another dataset is where you have y\_true and y\_prob for the test data.
 
 `**# viewing test scores**   test_scores`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/y_true-and-y_prob-for-the-test-data.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/y_true-and-y_prob-for-the-test-data.jpg)
 
 ### **Model Evaluation**
 
@@ -393,7 +393,7 @@ As you can see below, in your case, the AUC score for the train data is a decent
 
 `**# setting the title, legend, labels etc.**   plt.title('Receiver Operating Characteristic (ROC) Curve')   plt.legend(loc = 'lower right')   plt.plot([0, 1], [0, 1,],'k--')   plt.xlim([0, 1])   plt.ylim([0, 1])   plt.ylabel('True Positive Rate')   plt.xlabel('False Positive Rate')   plt.show()`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/ROC-Curve.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/ROC-Curve.jpg)
 
 -   ##### **Calibration Curve**
     
@@ -414,12 +414,12 @@ Ideally, a well-calibrated model should follow a linear straight (diagonal) line
 
 `**# setting title, legends, labels etc.**   plt.title('Calibration Curve')   plt.ylabel ('Ratio of Positives')   plt.xlabel('Average Predicted Probability in each bin')   plt.plot([0, 1], [0, 1], "k--", label="Ideal Calibration")   plt.ylim([-0.05, 1.05])   plt.legend(loc="lower right")   plt.tight_layout()   plt.show()` 
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Calibration-Curve.jpg)  
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Calibration-Curve.jpg)  
 In our case, the model seems to be calibrated to a certain degree but overpredicting for the higher probabilities.
 
 For example, when the predicted probability is around 0.4, you expect around 40% of individuals with such a predicted probability to suffer from stroke, whereas, in reality, roughly 30% did.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/oughly-around-30-did.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/oughly-around-30-did.jpg)
 
 The calibration curve also indicates the predicted probabilities are not well distributed, with the maximum predicted probability for training data tapering off at around 50%, while for the test, it’s just at around 40%.
 
@@ -450,7 +450,7 @@ Fortunately, in your case, you do see a staircase-like pattern for both train an
 
 `**# setting title, lavbels etc.**   plt.title('Decile Analysis')   plt.xlabel('Decile')   plt.ylabel('Proportion of Actual Positives')   plt.xticks(rotation='horizontal')   import matplotlib.ticker as mtick   plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1.0))   plt.show()`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Decile-Analysis.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Decile-Analysis.jpg)
 
 -   ##### **KS Statistic**
     
@@ -465,7 +465,7 @@ The KS statistic is computed by finding the separation at its maximum. In your c
 
 `**# plotting KS Statistic curve for test**   plt.subplot(1, 2, 2)   kds.metrics.plot_ks_statistic(test_scores.y_true, test_scores.y_prob,   title='KS Statistic Plot for test')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/KS-Statistic.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/KS-Statistic.jpg)
 
 -   ##### **Lift Chart**
     
@@ -482,7 +482,7 @@ In other words, you can expect four times the total number of events found by ra
 
 `**# plotting Lift chart for test**   plt.subplot(1, 2, 2)   kds.metrics.plot_lift(test_scores.y_true, test_scores.y_prob,   title='Lift Chart Plot for test')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Lift-Chart.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Lift-Chart.jpg)
 
 -   ##### **Gain Chart**
     
@@ -495,13 +495,13 @@ The gain chart is another way of visualizing lift.
 
 `**# plotting Gain chart for test**   plt.subplot(1, 2, 2)   kds.metrics.plot_cumulative_gain(test_scores.y_true, test_scores.y_prob,   title='Gain Chart Plot for test')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Gain-Chart.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Gain-Chart.jpg)
 
 #### **Class-based Performance Metrics**
 
 So far, all the evaluation methods discussed involved the actual labels (y\_true) and the predicted probabilities (y\_prob). It’s time now to calculate the various class-based performance metrics. These metrics required the actual labels (y\_true) and the predicted labels (y\_pred) to calculate some form of performance. All these metrics rely on four outcomes-
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Class-based-Performance-Metrics.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Class-based-Performance-Metrics.jpg)
 
 These four outcomes are the values you will later see in a confusion matrix.
 
@@ -509,7 +509,7 @@ Ideally, you want the TP and TN to be the highest, but there is always a trade-o
 
 #### **Predicting and Evaluating classes using default threshold**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-default-threshold.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-default-threshold.jpg)
 
 To understand all this, let’s first use the default threshold of 50% used by sklearn to predict the classes and calculate various performance metrics. You must know that, unlike a few algorithms like SVM, the logistic regression algorithm doesn’t naturally come up with classes. Instead, it predicts probabilities, which need to be converted into classes.
 
@@ -535,7 +535,7 @@ You now use the above function to calculate the performance metrics on the train
 
 `**# Using the function to calculate performance metrics for train data**   performance_metrics(y_true= train_scores.y_true,   y_pred = train_scores.y_pred,   set_col_name = 'score')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/logistic-regression-algorithm.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/logistic-regression-algorithm.jpg)
 
 To check for overfitting, you can use the user-defined ‘performance\_metrics’ function to calculate the class-based metrics on train and test and combine them in a single dataframe. As the difference between the values of the train and test are not substantially different, it can be said that the model is not overfitting.
 
@@ -547,7 +547,7 @@ To check for overfitting, you can use the user-defined ‘performance\_metrics�
 
 `**# viewing the data**   train_test_metrics`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/use-my-user-defined-performance_metrics-function.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/use-my-user-defined-performance_metrics-function.jpg)
 
 #### **Optimizing Threshold**
 
@@ -579,13 +579,13 @@ Here, the threshold probability is around 5%, which is to be expected as the tot
 
 `**# visualizing optimum threshold using roc method**   optimum_threshold_finder(y_true_train = train_scores.y_true,   y_prob_train = train_scores.y_prob,   display_graph = True, method = 'roc')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Best-Threshold-Maximizing-TPR-and-TNR.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Best-Threshold-Maximizing-TPR-and-TNR.jpg)
 
 If you want, you can find the optimum threshold by using balanced accuracy where that value of predicted probability is considered where the balanced accuracy is at its maximum (I, however, will be using the threshold provided by the roc method).
 
 `**# visualizing optimum threshold using balanced accuracy method**   optimum_threshold_finder(y_true_train = train_scores.y_true,   y_prob_train = train_scores.y_prob,   display_graph = True, method = 'accuracy')`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Best-Threshold-Maximizing-Balanced-Accuracy.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Best-Threshold-Maximizing-Balanced-Accuracy.jpg)
 
 #### **Predicting and Evaluating classes using Optimized Threshold**
 
@@ -609,7 +609,7 @@ At the same time, there is a good balance between the two metrics for the test. 
 
 `**# viewing the data**   train_test_metrics2`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-Optimized-Threshold-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-Optimized-Threshold-1.jpg)
 
 To appreciate the impact of using the optimized threshold, you calculate all the class-based performance metrics on the test data once where the predicted classes were created using the default threshold and another one where the predicted classes were created using the optimized threshold. As you can see, while accuracy did drop (which is not a good metric for imbalanced data), the balanced accuracy increased, and sensitivity and specificity became much more balanced. 
 
@@ -621,7 +621,7 @@ To appreciate the impact of using the optimized threshold, you calculate all the
 
 `**# viewing the data**   default_optimized_metrics`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-Optimized-Threshold-2.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Predicting-and-Evaluating-classes-using-Optimized-Threshold-2.jpg)
 
 #### **Confusion Matrix**
 
@@ -635,7 +635,7 @@ Lastly, to look at the final numbers, you will create a confusion matrix using t
 
 `**# setting title, x and y labels**   ax.set_xlabel("Predicted Label", fontsize=14, labelpad=20)   ax.xaxis.set_ticklabels(['Negative (healthy)', 'Positive (stroke)'])   ax.set_ylabel("Actual Label", fontsize=14, labelpad=20)   ax.yaxis.set_ticklabels(['Negative (healthy)', 'Positive (stroke)'])   ax.set_title("Confusion Matrix of Test dataset", fontsize=14, pad=20)   plt.show()`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Confusion-Matrix-of-Test-dataset.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Confusion-Matrix-of-Test-dataset.jpg)
 
 ### **Scoring**
 
@@ -645,7 +645,7 @@ Here, you use the 5% of the data you left out, which doesn’t have a dependent 
 
 `**# importing new data**   health_data_new =  pd.read_csv('dataset/stroke/healthcare-dataset-stroke-data_serving.csv')   health_data_new`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Scoring.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Scoring.jpg)
 
 #### **EDA and Data Preparation**
 
@@ -666,13 +666,13 @@ You can also check for outliers; here, no action needs to be taken as there are 
 
 `**# checking for outliers**   df_new.plot(kind = 'box', figsize=(17, 5))`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/check-for-outliers.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/check-for-outliers.jpg)
 
 Now, you will check for any columns that are not numeric.
 
 `**# checking the column data types**   df_new.dtypes`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/check-for-any-columns-that-are-not-numeric.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/check-for-any-columns-that-are-not-numeric.jpg)
 
 You perform label encoding because a few columns with the object data type exist.
 
@@ -682,7 +682,7 @@ Now, the data seems to be ready for the model.
 
 `**# viewing the processed data**   df_new`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/data-seems-to-be-ready-for-the-model.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/data-seems-to-be-ready-for-the-model.jpg)
 
 #### **Using Model for Predictions**
 
@@ -700,17 +700,17 @@ This data with the predictions can now be shared with other departments that wil
 
 `**# viewing the data with the predictions**   health_data_new.head(10)`
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Logistic-Regression-in-Python-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Logistic-Regression-in-Python-1.jpg)
 
 Before we conclude, let us discuss a common question that gets raised a lot: the difference between linear and logistic regression and whether there is a difference between the two algorithms in Python.
 
 ## **Linear Regression vs. Logistic Regression in Python**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/Linear-regression-vs.-logistic-regression.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/Linear-regression-vs.-logistic-regression.jpg)
 
 Linear and Logistic Regression are two different algorithms. While linear regression predicts continuous values, logistic regression predicts probabilities. There are several differences between the two algorithms.
 
-![linear vs logistic regression](https://www.analytixlabs.co.in/wp-content/uploads/2023/11/linear-vs-logistic-regression.png)
+![linear vs logistic regression](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/11/linear-vs-logistic-regression.png)
 
 In Python, too, all these differences come up when using these two algorithms. There are separate models in statsmodels and sklearn that allow you to create linear and logistic regression models.
 

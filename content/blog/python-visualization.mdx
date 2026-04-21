@@ -4,7 +4,7 @@ slug: python-visualization
 date: "2024-04-26T05:08:03+00:00"
 modified: "2024-09-06T12:05:20+00:00"
 description: "Python visualization techniques with Pandas, Seaborn, and Matplotlib for insightful data representation and analysis."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/04/lpv.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/lpv.webp"
 author: AnalytixLabs
 categories:
   - Data Visualisation
@@ -114,7 +114,7 @@ Let’s discuss the libraries you can use to create such graphs in Python.
 
 Numerous libraries in [Python](https://www.python.org/) can be used to visualize data. Some of the most prominent ones are as follows-
 
-![visualization libraries in python](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/1-1.jpg)
+![visualization libraries in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/1-1.jpg)
 
 -   ### **Pandas**
     
@@ -185,7 +185,7 @@ We are using transaction data, with a week of transactions from Monday, 2nd Octo
 
 Read the table below to understand the data you are working with.
 
-![python visualization data](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/2-1.jpg)
+![python visualization data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/2-1.jpg)
 
 -   ### **Basic EDA** 
     
@@ -246,7 +246,7 @@ As mentioned, we use Matlotlib’s Pylot to show the graph and make it aesthetic
 `# showing the plot`  
 `plt.show()`
 
-![histogram using pandas ](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/3.jpg)
+![histogram using pandas ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/3.jpg)
 
 -   **_Matplotlib_**
 
@@ -261,7 +261,7 @@ We have used the code mentioned above; we are just changing the line where we cr
 `# creating histogram`  
 `plt.hist(x = df['Transaction_Value'], color = "red", edgecolor = "black", bins = 12)`
 
-![histogram using matplotlib](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/4-1.jpg)
+![histogram using matplotlib](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/4-1.jpg)
 
 -   **_Seaborn_**
 
@@ -274,7 +274,7 @@ Here, too, we switch the one line creating the histogram and create one using Se
 `# creating histogram`  
 `sns.histplot(x='Transaction_Value', data=df, color = 'red')`
 
-![histogram using seaborn](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/5-1.jpg)
+![histogram using seaborn](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/5-1.jpg)
 
 Remember that we will follow this approach of switching the lines, constructing the graph, and showing you the edited code when comparing similar graphs created from different libraries. This way, you can easily compare how different libraries create the same graph without needing to read a complete block of code repeatedly. 
 
@@ -295,7 +295,7 @@ To achieve this, we created the histogram using Seaborn, but this time, we’ve 
 `# showing graph`  
 `plt.show()`
 
-![bivariate histogram](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/6-1.jpg)
+![bivariate histogram](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/6-1.jpg)
 
 -   ### **Boxplot**
     
@@ -321,7 +321,7 @@ We create a boxplot using pandas by using the attribute ‘plot’ available for
 `# showing plot`  
 `plt.show()`
 
-![box plot using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/7-1.jpg)
+![box plot using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/7-1.jpg)
 
 **Matplotlib**
 
@@ -330,7 +330,7 @@ To create a boxplot in Matplotlib, we use the attribute ‘boxplot’ available 
 `# creating boxplot`  
 `plt.boxplot(x = df['Transaction_Value'])`
 
-![boxplot using matplotlib](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/8.jpg)
+![boxplot using matplotlib](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/8.jpg)
 
 **Seaborn**
 
@@ -338,7 +338,7 @@ We use the attribute ‘boxplot’ of Seaborn to create a boxplot.
 
 `# creating boxplot`  
 `sns.boxplot(y = 'Transaction_Value', data = df)`  
-![boxplot using seaborn ](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/9ai.jpg)
+![boxplot using seaborn ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/9ai.jpg)
 
 -   ### **Line Chart**
     
@@ -381,7 +381,7 @@ Before outputting the graph, we made some aesthetic changes, such as adding a ti
 `# showing plot`  
 `plt.show()`
 
-![line chart using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/10-1.jpg)
+![line chart using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/10-1.jpg)
 
 -   **_Matplotlib_**
 
@@ -390,7 +390,7 @@ To do the same in Matplotlib, we used the above-aggregated data indexed by dates
 `# creating line chart`  
 `plt.plot(df_agg_index['Transaction_Value'])`
 
-![line chart using matplotlib](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/11-1.jpg)
+![line chart using matplotlib](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/11-1.jpg)
 
 -   **_Seaborn_**
 
@@ -413,7 +413,7 @@ Now, while ‘Transaction\_Date’ sorts the data, we use ‘Transaction\_Day’
 `# showing plot`  
 `plt.show()`
 
-![line chart using seaborn](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/12-1.jpg)
+![line chart using seaborn](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/12-1.jpg)
 
 #### **ii. Multiline Chart**
 
@@ -437,7 +437,7 @@ We then create two line charts using pyplot and provide each one with different 
 We also use the following function to display the legend in the graph.  
 `plt.legend()`
 
-![multiline chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/13-1.jpg)
+![multiline chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/13-1.jpg)
 
 -   ### **KDE Plot**
     
@@ -449,7 +449,7 @@ Seaborn can quickly help you create KDE plots. Below, we will create the KDE plo
 `# creating KDE plot`  
 `sns.kdeplot(df['Transaction_Value'])`
 
-![kde plot](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/14-1.jpg)
+![kde plot](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/14-1.jpg)
 
 After the basics, let’s focus on more complicated graphs in the next section.
 
@@ -476,7 +476,7 @@ To create a scatterplot, use the ‘plot’ attribute of the pandas DataFrame an
 
 `# creating scatterplot`  
 `df.plot.scatter(x = 'Transaction_Value', y = 'Actual_Cost')`  
-![scatterplot using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/15-1.jpg)
+![scatterplot using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/15-1.jpg)
 
 **_Matplotlib_**
 
@@ -485,7 +485,7 @@ In Matplotlib, you use the scatter() function of Pyplot and provide two vectors 
 `# creating scatterplot`  
 `plt.scatter(x = df['Transaction_Value'], y = df['Actual_Cost'])`
 
-![scatterplot using matplotlib](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/16-1.jpg)
+![scatterplot using matplotlib](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/16-1.jpg)
 
 **_Seaborn_**
 
@@ -493,7 +493,7 @@ You provide the dataframe and then mention the name of the variables for the ‘
 
 `# creating scatterplot`  
 `sns.scatterplot(data=df, x = "Transaction_Value" , y = "Actual_Cost", s = 100, c = 'red', marker = "P")`  
-![scatterplot using seaborn ](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/17-1.jpg)
+![scatterplot using seaborn ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/17-1.jpg)
 
 #### **ii. Multivariate Scatterplot**
 
@@ -504,7 +504,7 @@ Suppose you want to create a scatterplot to understand the relationship between 
 `# creating scatterplot`  
 `sns.scatterplot(data = df, x = "Income", y = "Saving", hue = "Sex", palette = ['blue','red'])`
 
-![multivariate scatterplot](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/18-1.jpg)
+![multivariate scatterplot](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/18-1.jpg)
 
 -   ### **Pie Chart**
     
@@ -530,7 +530,7 @@ We now visualize this data using a pie chart using Pandas’ plot’ attribute. 
 `# showing plot`  
 `plt.show()`
 
-![intermediate python visualization - pie chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/34-1.jpg)
+![intermediate python visualization - pie chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/34-1.jpg)
 
 -   ### **Area Chart**
     
@@ -557,7 +557,7 @@ To do so, we first aggregate the data using pivot\_table() so that it is in the 
 `# creating area chart`  
 `df_agg.plot(kind='area', stacked=False, figsize=(15, 5)`
 
-![overlapping area chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/19-1.jpg)
+![overlapping area chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/19-1.jpg)
 
 #### **ii. Stacked Area Chart**
 
@@ -569,7 +569,7 @@ To create a stacked area chart, you must set the argument ‘stacked’ to ‘Tr
 
 `# creating stacked area chart`  
 `df_agg.plot(kind='area', stacked=True, figsize=(15, 5))`  
-![stacked area chart using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/20-1.jpg)
+![stacked area chart using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/20-1.jpg)
 
 -   ### **Bar Chart**
     
@@ -590,7 +590,7 @@ We visualize the total loyalty points redeemed at different stores. We first agg
 `# creating bar chart`  
 `df_agg.plot(kind = "bar", figsize = (10,3))`
 
-![simple bar chart using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/21-1.jpg)
+![simple bar chart using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/21-1.jpg)
 
 **_Matplotlib_**
 
@@ -602,7 +602,7 @@ We use Pyplot’s bar() function to visualize the total transaction value of sto
 `# creating bar chart`  
 `plt.bar(x = df_agg['Location'], height = df_agg['Transaction_Value'])`
 
-![simple bar chart using matplotlib](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/22-1.jpg)
+![simple bar chart using matplotlib](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/22-1.jpg)
 
 **_Seaborn_**
 
@@ -614,7 +614,7 @@ We created a bivariate bar chart indicating the total loyalty points accrued at 
 `# creating bar chart`  
 `sns.barplot(data = df_agg, x = "Store_Category", y = "Points_Accrued_on_Transaction")`
 
-![simple bar chart using seaborn](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/23-1.jpg)
+![simple bar chart using seaborn](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/23-1.jpg)
 
 #### **ii. Grouped Bar Chart**
 
@@ -643,7 +643,7 @@ Once we have this dataframe, we can use its plot() attribute and set the ‘kind
 `# setting the location of the legend so that it doesn't overlap the graph`  
 `plt.legend(bbox_to_anchor=(1.01, 1.0), loc='upper left')`
 
-![grouped bar chart using pandas](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/24-1.jpg)
+![grouped bar chart using pandas](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/24-1.jpg)
 
 **Seaborn**
 
@@ -672,7 +672,7 @@ Once we have the aggregated data in long format, we can use Seaborn’s barplot(
 
 > \> Output:
 
-![dodged bar chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/36-1.jpg)
+![dodged bar chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/36-1.jpg)
 
 We will not go further and won’t include Matplotlib in this discussion mainly because creating a dodged bar chart using it is unnecessarily complicated. Thus, it would be best to use Pandas or Seaborn to create a dodged bar chart.
 
@@ -701,7 +701,7 @@ Upon having the data, we will use the attribute plot.bar()’ of it. We will cre
 `# setting the location of the legend so that it doesn't overlap the graph`  
 `plt.legend(bbox_to_anchor=(1.01, 1.0), loc='upper left')`
 
-![stacked bar chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/25-1.jpg)
+![stacked bar chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/25-1.jpg)
 
 If you wish to create a stacked barplot using Seaborn, then unfortunately, Seaborn’s barplot() function doesn’t have a parameter to draw stacked bars. You can create a stacked bar chart by creating individual plots and placing the bar charts on top of each other; however, this can be extremely time-consuming.
 
@@ -715,7 +715,7 @@ On the other hand, if you use the logic that has been used so far to create a do
 
 `# creating stacked bar plot`  
 `sns.barplot(x = 'Sex', y = 'Transaction_Value', hue = 'Location', data = df_agg, ax = ax, dodge = False, alpha = 0.4)`  
-![stacked bar graph](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/26-1.jpg)
+![stacked bar graph](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/26-1.jpg)
 
 As using Matplotlib is a bit complicated, the only library you can easily use to create a Dodge barplot is Pandas.
 
@@ -746,7 +746,7 @@ We used Seaborn to create the heatmap, providing the data with the correlation m
 `# creating a heatmap`  
 `sns.heatmap(corr_df, annot=True)`
 
-![heat map](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/27-1.jpg)
+![heat map](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/27-1.jpg)
 
 -   ### **Bubble Chart**
     
@@ -758,7 +758,7 @@ We first create a bubble chart using Matplotlib. Suppose you want to understand 
 `# creating bubble chart`  
 `plt.scatter('Age', 'Transaction_Value', s = 'Points_Redeemed', alpha = 0.5, data = df)`
 
-![bubble chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/28-1.jpg)
+![bubble chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/28-1.jpg)
 
 -   ### **Marginal Plot**
     
@@ -768,7 +768,7 @@ Marginal Plots allow you to examine the relationship between two variables while
 `# creating marginal plot`  
 `sns.jointplot(x = df["Transaction_Value"], y = df["Actual_Cost"], kind='scatter')`
 
-![marginal plot](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/29-1.jpg)
+![marginal plot](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/29-1.jpg)
 
 -   ### **Waffle Chart**
     
@@ -803,7 +803,7 @@ We now use Pyplot’s figure() function, where we set the argument ‘FigureClas
 `colors = mycolors,`  
 `legend = {'loc': 'upper left', 'bbox_to_anchor': (1, 1)})`
 
-![waffle chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/35-1.jpg)
+![waffle chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/35-1.jpg)
 
 #### **ii. Custom Icon Waffle Chart**
 
@@ -865,7 +865,7 @@ We now use the library ‘matplotlib\_venn’ to create the Venn diagram. Here, 
 
 > \> Output:
 
-![vein diagram](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/30-1-1.jpg)
+![vein diagram](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/30-1-1.jpg)
 
 -   ### **Tree Map**
     
@@ -917,7 +917,7 @@ Here, we first set the hierarchy of levels using the argument ‘path’. To set
 `# adding title`  
 `fig.update_layout(title=dict(text = "**Multi-Level Tree Map indicating frequency of Store Categories and Store Name**",`  
  `x = 0.5, y = 1, font=dict(size=18), yref='paper'))`  
-![multilevel tree map](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/31-1.jpg)
+![multilevel tree map](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/31-1.jpg)
 
 -   ### **Waterfall Chart**
     
@@ -946,7 +946,7 @@ We will use the waterfall\_chart  library to provide the days and net profit in
 `# calculating net profit by subtracting operating cost from profit`  
 `df_agg['Net_Profit'] = df_agg['Profit'] - df_agg['Operating_Cost']`
 
-![waterfall chart](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/32-1.jpg)
+![waterfall chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/32-1.jpg)
 
 -   ### **Pair Plots**
     
@@ -961,7 +961,7 @@ You can easily create a pair plot using Seaborn. Below, we extract three numeric
 `# creating pair plot`  
 `sns.pairplot(data)`
 
-![pair plots](https://www.analytixlabs.co.in/wp-content/uploads/2024/04/33-1.jpg)
+![pair plots](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/04/33-1.jpg)
 
 ## **Conclusion**
 

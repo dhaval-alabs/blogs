@@ -4,7 +4,7 @@ slug: exploratory-data-analysis-in-python
 date: "2023-06-10T05:47:39+00:00"
 modified: "2024-09-09T05:33:50+00:00"
 description: "Learn everything related to doing exploratory data analysis in python - steps, techniques, and detailed guide to doing different analysis"
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/06/exploratory-data-analysis-in-python.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/exploratory-data-analysis-in-python.webp"
 author: AnalytixLabs
 categories:
   - Data Analytics
@@ -61,7 +61,7 @@ While these are some of the critical questions that EDA tries to answer, it is n
 
 EDA doesn’t describe the data just for a better understanding of it. Instead of just describing, summarizing, and visualizing the data, it achieves multiple goals crucial in the later steps of Data Preprocessing, Feature Engineering, Model Development, Model Validation, Model Evaluation, and Model Deployment.
 
-![exploratory data analysis steps](https://www.analytixlabs.co.in/wp-content/uploads/2023/05/exploratory-data-analysis-steps.png)
+![exploratory data analysis steps](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/05/exploratory-data-analysis-steps.png)
 
 The main reasons why EDA is performed, apart from the few discussed above, are the following-
 
@@ -87,7 +87,7 @@ The variable can be understood using statistics (non-graphical) and graphs (grap
 
 Therefore, the following types of EDA for understanding data are as follows-
 
-![types of visualization](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/types-of-visualization.png)
+![types of visualization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/types-of-visualization.png)
 
 ### Univariate non-graphical
 
@@ -195,19 +195,19 @@ Once the required modules and the dataset are imported, you can view the dataset
 
 <table><tbody><tr><td><span style="color: #26bc00">#viewing demographic data<br><span style="color: #000000">demographic_details.head(<span style="color: #ff6600">5</span>)</span></span></td></tr></tbody></table>
 
-![dataset EDA](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/1.jpg)
+![dataset EDA](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/1.jpg)
 
 The first data has details regarding the customer, such as their gender, education, income, etc.
 
 <table><tbody><tr><td><span style="color: #26bc00">#viewing demographic data<br><span style="color: #000000">policy_details.head(<span style="color: #ff6600">5</span>)</span></span></td></tr></tbody></table>
 
-![dataset data analysis](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/2.jpg)
+![dataset data analysis](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/2.jpg)
 
 The second dataset has information regarding the nature of the policy they have purchased.
 
 <table><tbody><tr><td><span style="color: #26bc00">#viewing claim details<br><span style="color: #000000">claim_details.head(</span></span><span style="color: #ff6600">5</span><span style="color: #26bc00"><span style="color: #000000">)</span></span></td></tr></tbody></table>
 
-![claim dataset](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/3.jpg)
+![claim dataset](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/3.jpg)
 
 The third data is information regarding the insurance claim, raised complaints, etc.
 
@@ -215,7 +215,7 @@ The third data is information regarding the insurance claim, raised complaints, 
 
 <table><tbody><tr><td><span style="color: #26bc00">#combining data #1 with #2</span><span style="color: #26bc00"><span style="color: #000000">mrg_df <span style="color: #0000ff">=</span> pd.merge(left=<br>demographic_details, right <span style="color: #0000ff">=</span></span><br><span style="color: #000000">policy_details, on<span style="color: #0000ff">=</span>‘Customer ID’,</span><br></span>how= ‘inner’)<p></p><p><span style="color: #26bc00">#combining data #1 and #2 with data #3</span><br>df = pd.merge (left = mrg_df,<br>right=claim_details, on=’Customer ID’,<br>how=’inner’)</p><p><span style="color: #26bc00">#viewing the first 5 rows</span><br>df.head()</p></td></tr></tbody></table>
 
-![data for eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/data-e1687170384759.png)
+![data for eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/data-e1687170384759.png)
 
 ‘Customer ID’ is the common variable in all three datasets and is the primary key to combining all three datasets into one. From this point forward, the EDA in Python will be performed on this dataset.
 
@@ -225,7 +225,7 @@ The third data is information regarding the insurance claim, raised complaints, 
 
 <table><tbody><tr><td><span style="color: #26bc00">#viewing the column names</span><br>df.columns</td></tr></tbody></table>
 
-![basic information column name](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/4.jpg)
+![basic information column name](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/4.jpg)
 
 You first start by looking at all the column names to understand the kind of information in the data. Let’s say you notice the names in the data are not as per Python conventions and have space and other special characters.
 
@@ -233,7 +233,7 @@ The scope of EDA is to explore the data and identify such issues so that they ca
 
 <table><tbody><tr><td><span style="color: #26bc00">#making the column names as per Python conventions</span><br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(” “,” “)<br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(“(” “,” “)<br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(“)”,” “)</td></tr></tbody></table>
 
-![column data](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/5.jpg)
+![column data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/5.jpg)
 
 Removing the unnecessary characters from the column names makes it easier to operate on such columns when performing EDA in Python.
 
@@ -257,7 +257,7 @@ The next important thing in Python data exploration is to know the dimensions of
 
 <table><tbody><tr><td><span style="color: #26bc00">#viewing the data types of columns</span><br>df.dtypes</td></tr></tbody></table>
 
-![data type columns](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/7.jpg)
+![data type columns](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/7.jpg)
 
 When performing exploratory data analysis in Python, you use various functions, often dependent on the column’s data type. Therefore identifying the data type of columns is important.
 
@@ -283,7 +283,7 @@ Interestingly, the column ‘Income\_USD’ data type is being shown as ‘O’,
 
 <table><tbody><tr><td><span style="color: #26bc00">#identifying why certain columns don’t have the correct data type e.g. ‘Income_USD’</span><br>df.Income_USD.value_counts()</td></tr></tbody></table>
 
-![column data set](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/8.jpg)
+![column data set](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/8.jpg)
 
 By exploring the variable or by looking at the data dictionary, you find that ‘NILL’ is being mentioned in place of 0 and ‘$’ and ‘, ‘ is in the data causing it to have a string-based data type.
 
@@ -295,7 +295,7 @@ You can replace the characters with appropriate values and perform feature engin
 
 Similarly, you can look at ‘Customer\_Lifetime\_Value\_USD’ also. There too, seems to be a mismatch of data type.
 
-![mismatch data type](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/9.jpg)
+![mismatch data type](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/9.jpg)
 
 Here it seems that in place of missings, some specials characters ‘$$$’ have been mentioned.
 
@@ -335,7 +335,7 @@ Statistics and statistical functions play an important role in Python data explo
 
 <table><tbody><tr><td><span style="color: #26bc00">#Calculating upper cap using IQR</span><br>Q1, Q3 = df.Income_USD.quantile ([<span style="color: #ff0000">0.25,0.75</span>])<br>IQR = Q3-Q1<br>UC = Q3 + (IQR*<span style="color: #ff0000">1.5</span>)<p></p><p><span style="color: #26bc00">#identifying upper outliers</span><br>df.Income_USD[df.Income_USD&gt;UC]</p></td></tr></tbody></table>
 
-![output](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/output.png)
+![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/output.png)
 
 For example, you identify the upper outliers for the ‘Income\_USD’ column using the IQR method and find two such outliers.
 
@@ -355,7 +355,7 @@ In datasets that are at a customer level, you need to ensure that each row provi
 
 <table><tbody><tr><td><span style="color: #26bc00"># calculating mean</span><br><span style="color: #7c1dc9"><b style="font-family: inherit;font-size: inherit">print</b></span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-family: inherit;font-size: inherit">“mean: “</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-family: inherit;font-size: inherit"> df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">Total_Claim_Amount</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">mean</span><b style="font-family: inherit;font-size: inherit">()</b> <b style="font-family: inherit;font-size: inherit">)</b><p></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating median</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“median: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">median</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating mode</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“mode: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">mode</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating variance</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“variance: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">var</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating standard deviation</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“standard deviation: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">std</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating minimum</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“minimum: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><b>min</b><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating maximum</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“maximum: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><b>max</b><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating IQR</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“IQR: “</span><b>,</b><span style="font-weight: 400"> stats</span><b>.</b><span style="font-weight: 400">iqr</span><b>(</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>,</b><span style="font-weight: 400"> interpolation </span><b>=</b> <span style="font-weight: 400">‘midpoint’</span><b>)</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># coefficient of variance</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“coefficient of variance: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">std</span><b>()/</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">mean</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating skewness</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“skewness: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">skew</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating kurtosis</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“kurtosis: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">kurtosis</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating the cardinality (number of unique values)</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b>“unique values: “<b>,</b> df<b>.</b>Total_Claim_Amount<b>.</b>nunique<b>()</b> <b>)</b></p></td></tr></tbody></table>
 
-![descriptive summary statistics output](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/11.jpg)
+![descriptive summary statistics output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/11.jpg)
 
 Descriptive statistics play a crucial role in data exploration in Python. As seen above, various Python functions can describe a variable through its mean, median, mode, min, max, standard deviation, etc.
 
@@ -375,7 +375,7 @@ An Independent t-test allows you to understand whether the mean of two categorie
 
 <table><tbody><tr><td><span style="color: #26bc00">#finding categories</span><br>df.Education.value_counts()</td></tr></tbody></table>
 
-![anova test data](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/anova-test-data.png)
+![anova test data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/anova-test-data.png)
 
 One Way Analysis of Variance, a kind of F-test, allows you to understand if the mean of two or more categories of a variable is similar. Here, for example, there is strong proof that the Income of individuals from different educational backgrounds is statistically similar.
 
@@ -396,7 +396,7 @@ If you create the histogram of ‘Total\_Claim\_Amount’, you can understand it
 
 In that case, you may want to transform it to ensure its distribution is normal (Gaussian), which presently is not the case.
 
-![histogram analysis](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/A.jpg)
+![histogram analysis](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/A.jpg)
 
 -   #### Boxplot
     
@@ -405,7 +405,7 @@ In that case, you may want to transform it to ensure its distribution is normal 
 
 The outliers can also be visualized using a boxplot. As seen before using the IQR outlier detection method, there are two outliers in ‘Income\_USD.’
 
-![boxplot eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/B.jpg)
+![boxplot eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/B.jpg)
 
 -   #### Frequency Bar Chart
     
@@ -414,7 +414,7 @@ The outliers can also be visualized using a boxplot. As seen before using the IQ
 
 Frequency bar charts allow you to understand the count of each value in a categorical variable. As per the chart, most customers seem to be from California.
 
-![frequency bar chart eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/c.jpg)
+![frequency bar chart eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/c.jpg)
 
 -   #### Frequency Pie Chart
     
@@ -423,7 +423,7 @@ Frequency bar charts allow you to understand the count of each value in a catego
 
 Just like frequency bar charts, frequency pie charts can also be created. As per the chart, most customers seem to be from a suburban location.
 
-![frequency pie chart](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/D.jpg)
+![frequency pie chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/D.jpg)
 
 -   #### Line Chart
     
@@ -443,7 +443,7 @@ The next step in exploratory data analysis in Python is to use two variables to 
 
 A cross-frequency table lets you know the frequency of each unique combination of categories from two categorical variables. For example, most customers are married and are located in suburban areas.
 
-![cross-frequency table](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/10.jpg)
+![cross-frequency table](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/10.jpg)
 
 -   #### Aggregation and Summarization
     
@@ -452,7 +452,7 @@ A cross-frequency table lets you know the frequency of each unique combination o
 
 Cross tables can be created using one numerical and one categorical variable. For example, you calculate the sum of ‘Total\_Claim\_Amount’ for each location type. It seems customers make most claims from suburban areas.
 
-![aggregationa nd summarization](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/12.jpg)
+![aggregationa nd summarization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/12.jpg)
 
 -   #### Correlation Coefficient
     
@@ -468,13 +468,13 @@ You can use the correlation coefficient to understand the relationship between t
 
 <table><tbody><tr><td><span style="color: #26bc00"># converting the numerical data into categories</span><span style="font-weight: 400">labels_vals </span><span style="color: #071ac6"><b>=</b></span> <b>[</b><span style="font-weight: 400">‘Small Claim’</span><b>,</b><span style="font-weight: 400">‘Medium Claim’</span><b>,</b><span style="font-weight: 400">‘Large Income’</span><b>,</b> <span style="font-weight: 400">‘Very Large Claim’</span><b>]</b><p></p><p><span style="font-weight: 400">df</span><b>[</b><span style="font-weight: 400">‘Claim_Level’</span><b>]</b> <span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400"> pd</span><b>.</b><span style="font-weight: 400">qcut</span><b>(</b><span style="font-weight: 400">df</span><b>[</b><span style="font-weight: 400">‘Total_Claim_Amount’</span><b>],</b><span style="font-weight: 400"> q</span><span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400;color: #ff0000">4</span><b>,</b><span style="font-weight: 400"> duplicates</span><span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400">‘drop’</span><b>,</b><span style="font-weight: 400"> labels</span><b>=</b><span style="font-weight: 400">labels_vals</span><b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># viewing the ‘Claim_Level’ variable</span><br></span><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Claim_Level</span><b>.</b><span style="font-weight: 400">head</span><b>()</b></p></td></tr></tbody></table>
 
-![chi square test](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/13.jpg)
+![chi square test](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/13.jpg)
 
 You use the chi-square test to understand the relationship between two categorical columns. Here you convert the claim amount into bins such that they indicate the claim amount level.
 
 <table><tbody><tr><td><span style="color: #26bc00"># creating the contingency table<br></span>contingency_table <b style="font-family: inherit;font-size: inherit">=</b><span style="font-weight: 400"> pd</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">crosstab</span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-weight: 400">df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">Claim_Level</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-weight: 400"> df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">Location_Code</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-weight: 400"> margins </span><b style="font-family: inherit;font-size: inherit">=</b> <b style="font-family: inherit;font-size: inherit">True</b><b style="font-family: inherit;font-size: inherit">)</b><p></p><p><span style="font-weight: 400"><span style="color: #26bc00"># running chi-square test</span><br></span><span style="font-weight: 400">stats</span><b>.</b><span style="font-weight: 400">chi2_contingency</span><b>(</b><span style="font-weight: 400">observed </span><b>=</b><span style="font-weight: 400"> contingency_table</span><b>)</b></p></td></tr></tbody></table>
 
-![chi square contingency test result](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/14.jpg)
+![chi square contingency test result](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/14.jpg)
 
 If you run a chi-square to test the relationship between the claim level and location code, then it seems location code strongly influences the claim level.
 
@@ -498,7 +498,7 @@ Next, you try to understand the relationship between two columns by creating var
 
 You can create a bar chart to understand the numerical and categorical relationship. Below – on the x-axis, you have location type; on the y-axis, the total claim amount.
 
-![bar chart eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/F.jpg)
+![bar chart eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/F.jpg)
 
 -   #### Pie Chart
     
@@ -507,7 +507,7 @@ You can create a bar chart to understand the numerical and categorical relations
 
 Similar to a bar chart, a pie chart can also be created. Here the income % of all those customers who own different kinds of cars is identified.
 
-![bivariate graphical eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/G.jpg)
+![bivariate graphical eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/G.jpg)
 
 -   #### Line Chart
     
@@ -516,7 +516,7 @@ Similar to a bar chart, a pie chart can also be created. Here the income % of al
 
 You can create a line chart to understand the relationship between two numerical columns. Above, the monthly premium is plotted against the number of complaints which shows that the premium decreases as the complaints increase.
 
-![line chart](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/E.jpg)
+![line chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/E.jpg)
 
 -   #### Scatterplot
     
@@ -525,7 +525,7 @@ You can create a line chart to understand the relationship between two numerical
 
 The scatterplot is the most prominently used chart to understand the relationship between two numerical columns. Above, the scatterplot is created using income and claim amount.
 
-![scatterplot eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/I.jpg)
+![scatterplot eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/I.jpg)
 
 -   #### Boxplot
     
@@ -534,7 +534,7 @@ The scatterplot is the most prominently used chart to understand the relationshi
 
 Bivariate boxplots can also be created where a boxplot is created using a numerical variable for each category of a categorical variable. In the example above, boxplots for each category of ‘Location\_code’ is created using the income variable.
 
-![boxplot exploratory data analysis](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/J.jpg)
+![boxplot exploratory data analysis](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/J.jpg)
 
 ### Multi-variate Non-Graphical EDA
 
@@ -547,14 +547,14 @@ Lastly, one can perform EDA by simultaneously using and analyzing more than two 
 
 You can create a correlation matrix where for every variable, you get the correlation values against all other variables in the dataset. Such matrices are crucial when addressing the issue of multicollinearity and checking various assumptions for statistical algorithms.
 
-![correlation matrix eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/15.jpg)
+![correlation matrix eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/15.jpg)
 
 -   #### Multivariate Cross Table
     
 
 <table><tbody><tr><td><span style="color: #26bc00"># creating a multivariate cross table</span><br>df.groupby(by=[‘Location_Code’,’Marital_Status’]).agg({‘Marital_Status’:’count’,’Total_Claim_Amount’:’mean’,’Income_USD’:’mean’,’Number_of_Open_Complaints’:’count’})</td></tr></tbody></table>
 
-![multivariate cross table eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/16.jpg)
+![multivariate cross table eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/16.jpg)
 
 A multivariate cross table can be created using frequency or summary statistics. Above, for example, a cross table is created using two categorical and four numerical columns.
 
@@ -563,7 +563,7 @@ A multivariate cross table can be created using frequency or summary statistics.
 
 <table><tbody><tr><td><span style="color: #26bc00"># improting the module</span><br><span style="color: #071ac6">import</span> statsmodels.formula.api <span style="color: #071ac6">as</span> sm<p></p><p><span style="color: #26bc00"># initialization regression model</span><br>model = sm.ols(‘Total_Claim_Amount~Income_USD+Gender+Number_of_Open_Complaints’, data=df)</p><p><span style="color: #26bc00"># fitting the model on the dataset</span><br>model = model.fit()</p><p><span style="color: #26bc00"># printing model summary</span><br><span style="color: #7c1dc9">print</span>(model.summary())</p></td></tr></tbody></table>
 
-![regression results exploratory data analysis in python](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/Screenshot-2023-06-12-at-3.09.34-PM.png)
+![regression results exploratory data analysis in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/Screenshot-2023-06-12-at-3.09.34-PM.png)
 
 You can run a simple linear regression to understand how certain variables are related to one variable. Above, for example, it seems that the income, gender, and number of complaints don’t seem to have a strong linear relationship with the claim amount.
 
@@ -576,7 +576,7 @@ Let’s end the discussion on exploratory data analysis in Python by performing 
 
 <table><tbody><tr><td><span style="color: #26bc00"># creating scatterplot</span> sns.lmplot(data=df,x=”Income_USD”,y=”Total_Claim_Amount”,fit_reg=<span style="color: #7c1dc9">False</span>,hue=”State”,palette=[“green”,”blue”,”red”,”purple”,”black”])<p></p><p>plt.show()</p></td></tr></tbody></table>
 
-![multivariate eda scatterplot](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/K.jpg)
+![multivariate eda scatterplot](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/K.jpg)
 
 You can easily create a scatterplot using two numerical and a categorical variable. Above, for example, the scatterplot between income and claim amount is created where each data point (dot) also indicates the location it belongs to.
 
@@ -587,14 +587,14 @@ You can easily create a scatterplot using two numerical and a categorical variab
 
 You can use stacked or dodged bar charts to visualize two categorical and one numerical variable. For example, the vehicle class and size are plotted against the claim amount, which shows that the claim amount is most for luxury cars, with all their sizes having roughly the same contribution.
 
-![multivariate eda stacked chart](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/L.jpg)
+![multivariate eda stacked chart](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/L.jpg)
 
 -   #### Multiline Chart
     
 
 <table><tbody><tr><td><span style="color: #26bc00"># creating data</span><br>agg_data =<br>df.groupby(by=[‘Number_of_Open_Complaints’])[[‘Claim_Amount_1_USD’,’Claim_Amount_2_USD’,’Claim_Amount_3_USD’]].<span style="color: #7c1dc9">sum</span>().reset_index()<p></p><p><span style="color: #26bc00"># defining data values</span><br>x = agg_data.Number_of_Open_Complaints<br>y1 = agg_data.Claim_Amount_1_USD<br>y2 = agg_data.Claim_Amount_2_USD<br>y3 = agg_data.Claim_Amount_3_USD</p><p><span style="color: #26bc00"># creating line chart</span><br>plt.plot(x, y1, ‘g’, label=’Claim Amount #1′)</p><p><span style="color: #26bc00"># adding another line on the same chart</span><br>plt.plot(x, y2, ‘r’, label=’Claim Amount #2′)</p><p><span style="color: #26bc00"># adding another line on the same chart</span><br>plt.plot(x, y3, ‘b’, label=’Claim Amount #3′)</p><p><span style="color: #26bc00"># showing graph</span><br>plt.xlabel(“Number of Complaints”)<br>plt.ylabel(“Claim Amount”)<br>plt.title(“Number of Open Complaints – Claim Amount”)<br>plt.legend()<br>plt.show()</p></td></tr></tbody></table>
 
-![multiline chart eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/M.jpg)
+![multiline chart eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/M.jpg)
 
 Multiline charts allow you to plot multiple numerical columns against another numerical or ordinal categorical column. Above, for example, the different claim amounts are plotted against the number of complaints.
 
@@ -605,7 +605,7 @@ Multiline charts allow you to plot multiple numerical columns against another nu
 
 Heatmaps can be created to visualize tables such as a correlation matrix. Above, a heat map is created using the correlation matrix created during multivariate non-graphical EDA. Such a graphical matrix representation helps identify the highly correlated variables.
 
-![heatmaps graphical eda](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/N.jpg)
+![heatmaps graphical eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/N.jpg)
 
 As you have seen, much work goes into performing EDA in Python. There are, however, few libraries that help you to come up with quick EDA reports. While they may not be as flexible as writing all the required code manually (as done above), they still help give you a good starting point.
 
@@ -699,7 +699,7 @@ Lastly, data can also be summarized based on the shape. Each numerical data has 
 
 A data can have a symmetric or asymmetric distribution where in symmetrical data, the data can be divided from the middle that returns two mirror opposites. Asymmetrical data, however, is skewed.
 
-![descriptive statistics](https://www.analytixlabs.co.in/wp-content/uploads/2023/06/O.jpg)
+![descriptive statistics](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/O.jpg)
 
 Common symmetrical data distributions include Uniform, Normal (Gaussian), etc.
 

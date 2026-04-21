@@ -4,7 +4,7 @@ slug: apriori-algorithm-in-data-mining
 date: "2024-01-22T12:45:03+00:00"
 modified: "2024-09-06T13:53:43+00:00"
 description: "Apriori Algorithm forms the base of a effective market basket analysis, making profitable businesses. Dive deep with this article."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/01/apriori-algorithm.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/apriori-algorithm.webp"
 author: AnalytixLabs
 categories:
   - Deep Learning
@@ -64,7 +64,7 @@ Implementing the Apriori algorithm performs the task of association rule mining,
 
 There can be thousands of products that a supermarket might be selling at any given point in time. As they record the transactions, i.e., the products sold to customers, association mining is possible on such transaction data. A general association rule mining algorithm finds all possible associations, i.e., combinations of all the products in transaction data. Then, it loops these combinations through every transaction to find the association rules.
 
-![apriori algorithm for association rule mining](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/1-4.jpg)
+![apriori algorithm for association rule mining](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/1-4.jpg)
 
 To put what I said in context, let’s say a supermarket sells four products – A, B, C, and D. This would mean that there can be 11 ways one can buy a combination of these products. 
 
@@ -187,7 +187,7 @@ As you would have noticed by now, the Apriori algorithm is perfect for performin
 
 ## **Apriori algorithm Steps in Data Mining**
 
-![apriori algorithm steps in data mining ](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/2-6.jpg)
+![apriori algorithm steps in data mining ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/2-6.jpg)
 
 Typically, Apriori algorithm steps in data mining are the following-
 
@@ -235,11 +235,11 @@ To better understand all the Apriori algorithm steps in data mining mentioned ab
 
 ## **Understanding Apriori Algorithm with an example**
 
-![apriori algorithm with an example ](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/3-4.jpg)
+![apriori algorithm with an example ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/3-4.jpg)
 
 Let me now explain the apriori algorithm with an example. Suppose you are dealing with the following transaction data.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/4-3.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/4-3.jpg)
 
 ### **Step 1: Deciding Threshold**
 
@@ -249,7 +249,7 @@ In this example, the threshold value of Support is considered as 3. Therefore, a
 
 The frequency for each unique item in the data is calculated, i.e., the Support for 1-itemsets.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/5-3-e1705917484469.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/5-3-e1705917484469.jpg)
 
 As all the 1-itemsets support is more than the support threshold of 3, they can be classified as frequent 1-itemsets and used to generate the candidates for 2-itemsets.
 
@@ -268,7 +268,7 @@ The above frequent 1-itemsets are considered to generate the candidate 2-itemset
 
 The transaction data is scanned for the above combinations, and their support value is calculated, as seen below.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/6-4.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/6-4.jpg)
 
 According to the above data, juice and egg were purchased together in five transactions, whereas egg and bread were bought together in only two transactions. Now, if you go by the support threshold value of 3, then the frequent 2-itemsets would be the following-
 
@@ -285,7 +285,7 @@ These frequent 2-itemsets can now be used to generate candidates for 3-itemset, 
 
 The support value for the above itemsets would be as follows-
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/2-7.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/2-7.jpg)
 
 As you would have noticed, of the 3-itemsets, only one can be considered frequent as only {juice, egg, butter} itemset has the support value of 3 or above. Now, as only one itemset remains, a candidate for 4-itemsets cannot be generated, leading us to terminate the process of finding the frequent itemsets. Therefore, the association rules can now be generated.
 
@@ -301,7 +301,7 @@ The main purpose of explaining the Apriori algorithm with example in data mining
 
 For this example, I am using the confidence metric to define the utility of my association rules.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/8-3.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/8-3.jpg)
 
 If you consider a confidence threshold of 0.7, i.e., 70%, then of all the associations mentioned above rules, the one that you can use to recommend products to the customer or optimize product placement would be {egg, butter} 🡪 {juice} as here you find a high value of Confidence that if a customer buys egg and butter, they are highly likely to purchase juice also.
 
@@ -332,7 +332,7 @@ Explore our signature Data Science and Analytics courses that cover the most imp
 
 ## **Methods to Improve Apriori Efficiency**
 
-![methods to improve apriori efficiency](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/10-2.jpg)
+![methods to improve apriori efficiency](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/10-2.jpg)
 
 There are multiple ways through which the efficiency of the aprio algorithm can be elevated. Some of the most prominent ways of making this algorithm efficient are the following-
 
@@ -447,7 +447,7 @@ Despite all these advantages and disadvantages of the Apriori algorithm, it has 
 
 ## **Application of Apriori Algorithm**
 
-![application of apriori algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/9-3.jpg)
+![application of apriori algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/9-3.jpg)
 
 Multiple Apriori algorithm examples indicate its usefulness. Some of the most prominent application areas of the Apriori algorithm are the following-
 

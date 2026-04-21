@@ -4,7 +4,7 @@ slug: what-is-image-segmentation
 date: "2020-05-31T17:10:10+00:00"
 modified: "2025-06-04T06:23:29+00:00"
 description: "Image segmentation is a technique used in digital image processing. Find out its types & techniques from this article with Analytixlabs"
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-1-19-3.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-1-19-3.jpg"
 author: AnalytixLabs
 categories:
   - Artificial Intelligence
@@ -33,7 +33,7 @@ Using these labels, we can specify boundaries, draw lines, and separate the most
 
 This is how different methods of segmentation of images work in varying degrees of complexity and yield different levels of outputs.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-6-4-600x301.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-6-4-600x301.jpg)
 *Image Source: stackexchange.com*
 
 From a machine learning point of view, later, these identified labels can be further used for both supervised and unsupervised training and hence simplifying and solving a wide variety of business problems. This is a simpler overview of segmentation in Image Processing. Let’s try to understand the use cases, methodologies, and algorithms used in this article.
@@ -68,7 +68,7 @@ This fundamental approach relies on detecting similar pixels in an image – bas
 
 This is a stark opposite of similarity detection approach where the algorithm rather searches for discontinuity. Image Segmentation Algorithms like Edge Detection, Point Detection, Line Detection follows this approach – where edges get detected based on various metrics of discontinuity like intensity etc.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-7-2-600x301.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-7-2-600x301.jpg)
 *Image Source: scikit-image*
 
 ### 2\. The Types of Techniques
@@ -116,7 +116,7 @@ Based on the image segmentation approaches and the type of processing that is ne
 
 This is perhaps the most basic and yet powerful technique to identify the required objects in an image. Based on the intensity, the pixels in an image get divided by comparing the pixel’s intensity with a threshold value. The threshold method proves to be advantageous when the objects in the image in question are assumed to be having more intensity than the background (and unwanted components) of the image.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-5-6-600x350.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-5-6-600x350.jpg)
 
 At its simpler level, the threshold value T is considered to be a constant. But that approach may be futile considering the amount of noise (unwanted information) that the image contains. So, we can either keep it constant or change it dynamically based on the image properties and thus obtain better results. Based on that, thresholding is of the following types:
 
@@ -146,7 +146,7 @@ Edge detection is the process of locating edges in an image which is a very impo
 
 Edge-based segmentation algorithms work to detect edges in an image, based on various discontinuities in grey level, colour, texture, brightness, saturation, contrast etc. To further enhance the results, supplementary processing steps must follow to concatenate all the edges into edge chains that correspond better with borders in the image.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-4-7-600x350.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-4-7-600x350.jpg)
 *Image Source: researchgate.net*
 
 Edge detection algorithms fall primarily into two categories – Gradient based methods and Gray Histograms. Basic edge detection operators like sobel operator, canny, Robert’s variable etc are used in these algorithms. These operators aid in detecting the edge discontinuities and hence mark the edge boundaries. The end goal is to reach at least a partial segmentation using this process, where we group all the local edges into a new binary image where only edge chains that match the required existing objects or image parts are present.
@@ -183,7 +183,7 @@ The clustering based techniques segment the image into clusters or disjoint grou
 
 K means clustering is a chosen and popular method because of its simplicity and computational efficiency. The Improved K-means algorithm can minimize the number of iterations usually involved in a k-means algorithm. FCM algorithm allows data points, (pixels in our case) to belong to multiple classes with varying degrees of membership. The slower processing time of an FCM is overcome by improved FCM.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/Picture1-2-600x245.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/Picture1-2-600x245.png)
 *Image Source: researchgate.net*
 
 A massive value add of clustering based ML algorithms is that we can measure the quality of the segments that get generated by using several statistical parameters such as: Silhouette Coefficient, rand index (RI) etc.
@@ -204,7 +204,7 @@ At the convergence of this algorithm, we have areas within the image, segmented 
 
 Watershed is a ridge approach, also a region-based method, which follows the concept of topological interpretation. We consider the analogy of geographic landscape with ridges and valleys for various components of an image. The slope and elevation of the said topography are distinctly quantified by the gray values of the respective pixels – called the gradient magnitude. Based on this 3D representation which is usually followed for Earth landscapes, the watershed transform decomposes an image into regions that are called “catchment basins”. For each local minimum, a catchment basin comprises all pixels whose path of steepest descent of gray values terminates at this minimum.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-3-17-600x350.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-3-17-600x350.jpg)
 *Image Source: scikit-image*
 
 In a simple way of understanding, the algorithm considers the pixels as a “local topography” (elevation), often initializing itself from user-defined markers. Then, the algorithm defines something called “basins” which are the minima points and hence, basins are flooded from the markers until basins meet on watershed lines. The watersheds that are so formed here, they separate basins from each other. Hence the picture gets decomposed because we have pixels assigned to each such region or watershed.
@@ -215,7 +215,7 @@ The approach of using Image Segmentation using neural networks is often referred
 
 An image, based on the approach used, is considered either as a set of vectors (colour annotated polygons) or a raster (a table of pixels with numerical values for colors). The vector or raster is turned into simpler components that represent the constituent physical objects and features in an image. Computer vision systems can logically analyze these constructs, by extracting the most important sections, and then by organizing data through feature extraction algorithms and classification algorithms.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2020/05/image-2-19-600x350.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2020/05/image-2-19-600x350.jpg)
 *Image Source: mathworks.com*
 
 These algorithms are widely used in a variety of industries and applications. E-commerce industry uses it for providing relevant products to users for their search requirements and browsing history. The manufacturing industry uses it for anomaly detection, detecting damaged objects, ensuring worker safety etc. Image Recognition is famously used in education and training for visually impaired, speech impaired students. Although Neural Nets are time consuming when it comes to training the data, the end results have been very promising and the application of these has been highly successful.

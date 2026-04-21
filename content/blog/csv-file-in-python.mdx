@@ -4,7 +4,7 @@ slug: csv-file-in-python
 date: "2023-02-07T11:38:13+00:00"
 modified: ""
 description: "A detailed guide on how to read csv file in python with additional codes on writing to csv file, and how it is different from excel"
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/02/1-1.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/1-1.jpg"
 author: AnalytixLabs
 categories:
   - Python
@@ -106,7 +106,7 @@ Let’s now look at a few specific code snippets that can help you understand ho
 
 We will continue with the earlier dataset. For reference, here is the data set –
 
-![csv file in python](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/5.jpg)
+![csv file in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/5.jpg)
 
 ## CSV.reader()
 
@@ -114,7 +114,7 @@ This method uses the open() method to read CSV file in Python. Here you should u
 
 The file object returned when using this method can be read using the reader() method available in the CSV module. This method returns a reader object that iterates through every line of the CSV document allowing the user to open a CSV file in Python.
 
-![CSV.reader()](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.25.20-PM.png)
+![CSV.reader()](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.25.20-PM.png)
 
 ## CSV.DictReader()
 
@@ -124,13 +124,13 @@ However, here we use the DictReader class available in the CSV module. While ope
 
 As observed in the output, the first line of the file holds the dictionary keys.  
 
-![CSV.DictReader()](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.24.05-PM.png)
+![CSV.DictReader()](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.24.05-PM.png)
 
 ## pandas.read\_CSV()
 
 The standard answer to how to read CSV file in Python should be a simple use of read\_CSV() provided by the open-source library pandas. This function requires the user to mention the file location and file name of the CSV file along with the extension.
 
-## ![pandas.read\_CSV()](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.20.31-PM.png)
+## ![pandas.read\_CSV()](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.20.31-PM.png)
 
 All the methods mentioned above can enable you to read CSV files. However, certain issues can arise due to the delimiters used in the CSV file.
 
@@ -142,11 +142,11 @@ While most CSV files use a comma as the separator, there can be a situation wher
 
 For example, Let’s assume the separator is ‘**:**’ and the data looks something like-
 
-![csv file dataset](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.27.53-PM.png)
+![csv file dataset](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.27.53-PM.png)
 
 If you use the functions mentioned above where the **_delimiter is a comma_**, the CSV file will be imported incorrectly .
 
-![delimiter issue](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.29.50-PM.png)
+![delimiter issue](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.29.50-PM.png)
 
  If you had explicitly mentioned the correct delimiter, then the CSV would have imported correctly. 
 
@@ -156,17 +156,17 @@ Let’s look at how it functions in the two modes of reading a CSV file in Pytho
 
 If you use CSV.reader(), you can use the argument ‘**delimiter =**‘ and mention the delimiter.
 
-![argument delimiter =](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.32.35-PM.png)
+![argument delimiter =](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.32.35-PM.png)
 
 ### pandas.read\_CSV()
 
 If using the pandas library to read the CSV file, you can use the ‘**delimiter =’ argument in the code again**.
 
-![how to read csv file delimiter](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.34.05-PM.png)
+![how to read csv file delimiter](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.34.05-PM.png)
 
 The Output is as follows:
 
-![Python code output](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/8.jpg)
+![Python code output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/8.jpg)
 
 Now that you know how to read CSV file in Python, let’s also explore writing to a CSV file.
 
@@ -188,7 +188,7 @@ data = \[\['AD121', 'Shirt', '$23', '$34'\],\['PA231', 'Bag', '$56', '$7
 
 You then define the file name and open it using the Open() method. Once done, you create a CSVwriter object using the CSV.writer() method and then write the header and the data. The code looks like –
 
-![CSV.writer() method](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.40.08-PM.png)
+![CSV.writer() method](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.40.08-PM.png)
 
 ### writelines()
 
@@ -200,7 +200,7 @@ data = \[\['AD121', 'Shirt', '$23', '$34'\],\['PA231', 'Bag', '$56', '$7
 
 The code will look like:
 
-![writelines() method](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.41.54-PM.png)
+![writelines() method](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.41.54-PM.png)
 
 ### to\_CSV()
 
@@ -208,7 +208,7 @@ The last, simplest, and most common method uses pandas’ to\_CSV() function. He
 
 In the following code, the lists (headers and data) are first transformed into pandas dataframe that is then written into a CSV file. If you already have pandas dataframe whose contents you wish to write as a CSV file then you can skip the converting of lists into pandas dataframe step.
 
-![to\_CSV() method](https://www.analytixlabs.co.in/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.44.19-PM.png)
+![to\_CSV() method](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/02/Screenshot-2023-02-01-at-3.44.19-PM.png)
 
 That’s all on writing and reading CSV file in Python. Below are a few frequently asked questions that can help you grasp the subject better.
 

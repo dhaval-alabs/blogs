@@ -4,7 +4,7 @@ slug: regularization-in-machine-learning
 date: "2021-06-09T05:25:24+00:00"
 modified: ""
 description: Regularization is one of the most important concepts of machine learning. Read this article to know what is regularization in machine learning.
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Blog-1-Title-Banner-Option-B-1-1.jpeg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Blog-1-Title-Banner-Option-B-1-1.jpeg"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -32,7 +32,7 @@ So, before diving into regularization, let’s take a step back to understand wh
 
 Bias is the deviation between the values predicted by the model and the actual values whereas, variance is the difference between the predictions when the model fits different datasets.
 
-![The Problem of Overfitting](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/B1_The-problem-of-overfitting.-1.jpeg)
+![The Problem of Overfitting](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/B1_The-problem-of-overfitting.-1.jpeg)
 
 In the above panel, the rightmost graph shows that the model can perfectly differentiate between the green and purple points. This is on the training data. In this case, the bias is low. In fact, it can be said to be zero since there is no difference between the predicted and the actual values. This model will give accurate predictions.
 
@@ -48,7 +48,7 @@ So, how do we prevent this overfitting? How to ensure that the model predicts we
 
 There is a principle called Occam’s Razor, which states: “When faced with two equally good hypotheses, always choose the simpler.”
 
-![Occam’s Razor Principle](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/B1_What-is-Regularization-in-Machine-Learning-Option-1-1.jpeg)
+![Occam’s Razor Principle](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/B1_What-is-Regularization-in-Machine-Learning-Option-1-1.jpeg)
 
 Regularization is an application of Occam’s Razor. It is one of the key concepts in Machine learning as it helps choose a simple model rather than a complex one.
 
@@ -68,7 +68,7 @@ We will see how the regularization works and each of these regularization techni
 
 Regularization works by shrinking the beta coefficients of a linear regression model. To understand why we need to shrink the coefficients, let us see the below example:
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/B1_How-does-regularization-work-1.jpeg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/B1_How-does-regularization-work-1.jpeg)
 
 In the above graph, the two lines represent the relationship between total years of experience and salary, where salary is the target variable. These are slopes indicating the change in salary per unit change in total years of experience. As the slope b1 + b3 decreases to slope b1, we see that the salary is less sensitive to the total years of experience.
 
@@ -89,11 +89,11 @@ Now, to do this, we penalize the model that has higher variance. So, Regularizat
 
 It becomes :
 
-![Terms in Loss function](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1.png)
+![Terms in Loss function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1.png)
 
 The goal of the linear regression model is to minimize the loss function. Now for Regularization, the goal becomes to minimize the following cost function:
 
-![Cost function](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture2.png)
+![Cost function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture2.png)
 
 Where, the penalty term comprises the regularization parameter and the weights associated with the variables. Hence, the penalty term is:
 
@@ -130,7 +130,7 @@ The Ridge regression technique is used to analyze the model where the variables 
 
 The cost function of the Ridge regression becomes:
 
-![Cost function in Ridge regression or L2 regularisation](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1-1.png)
+![Cost function in Ridge regression or L2 regularisation](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1-1.png)
 
 ### b. Lasso Regression
 
@@ -143,7 +143,7 @@ Least Absolute Shrinkage and Selection Operator (or LASSO) Regression penalizes 
 
 It is useful when there are many variables, as this technique can be used as a feature selection method by itself. The cost function for the LASSO regression is:
 
-![cost function in LASSO regression or L1 regularisation](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1-2.png)
+![cost function in LASSO regression or L1 regularisation](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1-2.png)
 
 ### c. Elastic Net Regression
 
@@ -153,7 +153,7 @@ The model using elastic net regression allows the learning of the sparse model w
 
 The cost function of Elastic Net Regression is:
 
-![Cost function in elastic net regression or L1 L2 regularization](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1-3.png)
+![Cost function in elastic net regression or L1 L2 regularization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1-3.png)
 
 **The regularization parameters for the implementation of Elastic Net Regression are:**
 
@@ -162,7 +162,7 @@ The cost function of Elastic Net Regression is:
 
 where, λ = λ(Ridge) + λ(Lasso) and is written as:
 
-![L1_ratio](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1-4.png)
+![L1_ratio](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1-4.png)
 
 #### **The formula for L1\_ratio for all the methods becomes:**
 
@@ -229,7 +229,7 @@ L1 regularization shrinks the beta coefficients or the weights of the features i
 
 Yes, regularization is helpful for logistic regression. As the logistic regression is applied for classification problems, wherein the case of binary classification predicts whether it belongs to class 1 or class 0, therefore the loss function changes to:
 
-![Logloss function in logistic regression](https://www.analytixlabs.co.in/wp-content/uploads/2021/06/Picture1-5.png)
+![Logloss function in logistic regression](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/06/Picture1-5.png)
 
 To understand in detail how the loss function for Logistic Regression works and gets updated post the regularization, refer to this blog [here](https://towardsdatascience.com/optimization-loss-function-under-the-hood-part-ii-d20a239cde11).
 

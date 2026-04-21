@@ -4,7 +4,7 @@ slug: activation-function-in-neural-network
 date: "2023-08-16T08:05:57+00:00"
 modified: "2024-09-09T04:51:51+00:00"
 description: Learn how activation function in neural network takes input received by an artificial neuron and processes it to achieve the desired output.
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/08/activation-function-in-neural-network.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/activation-function-in-neural-network.webp"
 author: AnalytixLabs
 categories:
   - Deep Learning
@@ -46,7 +46,7 @@ The main components of the cell are –
 3.  Axon
 4.  Axon terminal
 
-![human neuron](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Understanding-Human-Neuron.jpg)
+![human neuron](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Understanding-Human-Neuron.jpg)
 
 _Suppose your hand touches a hot surface._
 
@@ -62,7 +62,7 @@ This causes the fingers to feel the heat which turns this into an electric signa
 
 The same concept of neurons is applied mathematically to solve various problems. Here the neurons are artificially created where the input features are the signals the neuron receives.
 
-![artificial neuron](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Understanding-Artificial-Neuron.jpg)
+![artificial neuron](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Understanding-Artificial-Neuron.jpg)
 
 The value of the weights (multiplied by the values of the input feature) determines the strength of the signal. A ‘bias’ value is also added to the node along with the input, which acts as an additional weight determining how easy it would be for the ‘incoming signal’ to pass through the ‘nucleus’.
 
@@ -76,7 +76,7 @@ Thus the three main components of an artificial neural network are: 
 2.  Hidden layer(s)
 3.  Output layer
 
-![artificial neuron structure](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Understanding-Artificial-Neuron-1.jpg)
+![artificial neuron structure](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Understanding-Artificial-Neuron-1.jpg)
 
 Let us now try to understand the role of an activation function in deep learning, i.e., in a [neural network](https://www.analytixlabs.co.in/blog/what-is-perceptron/).
 
@@ -86,7 +86,7 @@ The node is where the ‘input signal’ (the values of the input features) and 
 
 Therefore, it’s the activation layer that is responsible for making the nodes ‘fire’. It processes the input, returns an output propionate to the quantum of the received signal, checks if the output is crossing the threshold, and if it does, then allows the output to go the neurons of the next attached layer. Hence, the activation function plays a crucial role in an artificial neuron. 
 
-![activation function in neural network](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Activation-function-in-neural-network-1.jpg)
+![activation function in neural network](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Activation-function-in-neural-network-1.jpg)
 
 However, the question remains unanswered: using _the_ _activation layer_, i.e., the multiple activation functions in neural networks.
 
@@ -122,7 +122,7 @@ To understand the need and use of differentiation in neural networks, first, you
 
 The input is used by some intermediate function in the hidden layer to calculate the output. The issue with the method is that there is no mechanism to make the network better by itself, and _this is where backpropagation comes into play_.
 
-![backpropagation](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Why-derivative-differentiation-is-used.jpg)
+![backpropagation](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Why-derivative-differentiation-is-used.jpg)
 
 > _Backpropagation_ refers to the repeated and iterative adjustment of weights and bias values to minimize the cost function, which is the difference between the actual and desired output vectors.
 
@@ -152,7 +152,7 @@ The linear activation function is also called an ‘identity function’ or ‘n
 
 Thus, such a function provides you with the weighted sum of the input and technically returns the value fed into the network.
 
-![linear activation function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Linear-Activation-Function.jpg)
+![linear activation function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Linear-Activation-Function.jpg)
 
 The primary issue with such a function is that no form of backpropagation can occur as derivation is performed during backpropagation to reduce cost. The issue with the linear activation function is that the derivate of the linear function is constant that has no relation to the input x.
 
@@ -174,13 +174,13 @@ There are many such non-linear activation functions discussed in the next sectio
 
 Mathematically represented as:
 
-![binary step function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Binary-Step.jpg)
+![binary step function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Binary-Step.jpg)
 
 Another important activation function for you to know is the binary step function. The binary step function uses a threshold that decides whether the neuron should fire, i.e., neuron activation.
 
 Such a function checks whether the input to the activation function is above the threshold. If the input doesn’t cross the threshold, the neuron is deactivated and doesn’t function, whereas the next layer considers the output if the input crosses the threshold.
 
-![Binary-Step-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Binary-Step-Function.jpg)
+![Binary-Step-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Binary-Step-Function.jpg)
 
 As you can imagine, such an activation function creates a binary classifier. The issue with using such a function is that it cannot return multiple outputs, i.e., it cannot work with multiclass classification output. Also, backpropagation cannot work because the gradient of the binary step function is zero, causing issues in the backpropagation process.
 
@@ -190,7 +190,7 @@ As you can imagine, such an activation function creates a binary classifier. The
 
 A common question asked during AI-based interviews is, ‘_Which all are activation functions?_‘ The answer to that is that there are many types of activation functions.
 
-![Types-of-activation-function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Types-of-activation-function.jpg)
+![Types-of-activation-function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Types-of-activation-function.jpg)
 
 While we have already discussed Linear and Binary Step functions, this section will focus on the numerous non-linear activation functions.
 
@@ -198,11 +198,11 @@ While we have already discussed Linear and Binary Step functions, this section w
 
 Mathematically represented as:
 
-![sigmoid function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Sigmoid-Logistic-Mathematically-represented-as.jpg)
+![sigmoid function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Sigmoid-Logistic-Mathematically-represented-as.jpg)
 
 The sigmoid or logistic activation function is the most widely used. It can accept any real value and squishes the output values to be between 0 and 1, with larger input closer to 1 and smaller closer to 0.
 
-![Sigmoid-(Logistic)-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Sigmoid-Logistic-Function.jpg)
+![Sigmoid-(Logistic)-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Sigmoid-Logistic-Function.jpg)
 
 It’s typically used where the network needs to predict probabilities. It’s also useful as it provides a smooth gradient (represented by the S-shaped sigmoid function), ensuring values don’t jump in the output.
 
@@ -210,7 +210,7 @@ The derivative function of the sigmoid activation function is
 
 `_f’(x) = sigmoid(x)  * (1-sigmoid(x))_`
 
-![logistic-activation-function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/logistic-activation-function.jpg)
+![logistic-activation-function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/logistic-activation-function.jpg)
 
 The function, while differentiable, suffers from a few issues. The gradient values of the sigmoid function in neural networks are significant between -3 and 3, making values outside this range have a small gradient.
 
@@ -224,17 +224,17 @@ Thus, the _logistic activation function_ _is typically used in the output layers
 
 Mathematically represented as –
 
-![tanh formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Tanh-Hyperbolic-Tangent-Mathematically-it-can-be-represented-as.jpg)
+![tanh formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Tanh-Hyperbolic-Tangent-Mathematically-it-can-be-represented-as.jpg)
 
 While Tanh is similar to the sigmoid activation function because it has an S-shape. However, it is different because, unlike sigmoid, whose output is between 0 and 1, the output of tanh is between -1 and 1, with larger input being closer to 1 and smaller being closer to -1.
 
-![tanh function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Tanh-Hyperbolic-Tangent-Function.jpg)
+![tanh function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Tanh-Hyperbolic-Tangent-Function.jpg)
 
 The advantage of such a function is that it can easily map output in terms of neutral, significantly positive, or significantly negative because it is zero-centered in its design.
 
 Also, it is easy for the neural network to learn when using such a function because of its -1 to 1 range, as the mean of the hidden layer can come close to 0, helping the network to center the data.
 
-![Tanh-(derivative)](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Tanh-derivative.jpg)
+![Tanh-(derivative)](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Tanh-derivative.jpg)
 
 However, the function faces the same vanishing gradient problem as the sigmoid function, with a steeper gradient. However, tanh is still preferred over sigmoid mainly because it is zero-centered, which allows the gradient to move in both directions allowing tanh non-linearity to be preferred over sigmoids.  
 
@@ -242,13 +242,13 @@ However, the function faces the same vanishing gradient problem as the sigmoid f
 
 Mathematically represented as –
 
-![relu function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Relu-Mathematically-it-can-be-represented-as.jpg)
+![relu function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Relu-Mathematically-it-can-be-represented-as.jpg)
 
 The ReLU function can easily be considered nearly a linear function, and in a way, it is a piecewise linear function with two linear pieces. However, because it has a derivative function, it’s considered a non-linear activation function and allows for backpropagation.
 
 The function allows the network to be computationally efficient, keeping the neurons deactivated when the linear transformation’s output is less than 0. Another advantage is that its linear properties (for the output greater than 0) provide the impetus for the convergence of the gradient descent towards the global minima of the loss function.
 
-![relu problem](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/The-Dying-ReLU-problem.jpg)
+![relu problem](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/The-Dying-ReLU-problem.jpg)
 
 The issue with ReLU is a peculiar one known as the problem of dying ReLU where for the negative side, the gradient becomes zero, causing weights and biases not to get updated during backpropagation, hence creating ‘dead neurons’. This issue decreases the network’s ability to fit the data properly.
 
@@ -256,7 +256,7 @@ The issue with ReLU is a peculiar one known as the problem of dying ReLU where f
 
 Mathematically represented as –
 
-![leaky relu function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Leaky-ReLU-Mathematically-it-can-be-represented-as.jpg)
+![leaky relu function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Leaky-ReLU-Mathematically-it-can-be-represented-as.jpg)
 
 Given the advantages of ReLU, researchers have been working on the dying ReLU problem and have come up with an improved version known as Leaky ReLU.
 
@@ -264,7 +264,7 @@ Given the advantages of ReLU, researchers have been working on the dying ReLU pr
 
 Therefore, rather than the previous horizontal line, there is a non-horizontal sloped line for the negative part, allowing backpropagation for negative input values, bypassing the ‘dead neuron’ problem.
 
-![leaky relu derivative](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Leaky-ReLU-derivative.jpg)
+![leaky relu derivative](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Leaky-ReLU-derivative.jpg)
 
 However, some issues remain, such as that prediction will be inconsistent for negative input values and the gradient (while not zero) will be small, making the learning of parameters to be slow.
 
@@ -272,13 +272,13 @@ However, some issues remain, such as that prediction will be inconsistent for ne
 
 Mathematically represented as –
 
-![parametric relu function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Parametric-ReLU-Mathematically-it-can-be-represented-as.jpg)
+![parametric relu function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Parametric-ReLU-Mathematically-it-can-be-represented-as.jpg)
 
 Another variant of ReLU aimed at resolving the dying neurons problem is Parametric ReLU.
 
 Here, the negative input values slope is provided through an argument α. During backpropagation, α is tuned, and its best value is learned. It is popularly used as an alternative to Leaky ReLU.
 
-![parametric rectified linear unit function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/PReLU-Parametric-Rectified-Linear-Unit-Function.jpg)
+![parametric rectified linear unit function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/PReLU-Parametric-Rectified-Linear-Unit-Function.jpg)
 
 The unfortunate fact of parametric ReLU is that by allowing tuning the activation function itself, the issue of inconsistency appears as it performs differently for different problems. This is because the function’s behavior depends on the value of α, i.e., the slope parameter. 
 
@@ -286,7 +286,7 @@ The unfortunate fact of parametric ReLU is that by allowing tuning the activatio
 
 Mathematically represented as –
 
-![elu mathematical formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/ELU-Mathematically-it-can-be-represented-as.jpg)
+![elu mathematical formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/ELU-Mathematically-it-can-be-represented-as.jpg)
 
 ELU is yet another attempt at resolving the issue of ReLU. Here the slope for the negative part of the function is modified such that a log curve is used.
 
@@ -296,11 +296,11 @@ ELU doesn’t have a straight line like ReLU, Leaky ReLU, and parametric ReLU an
 
 The introduction of a log curve resolves the problem of dead neurons and allows the network to judge better the direction in which the weights and biases need to be tuned.
 
-![ELU-(a=1)-+-Derivative](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/ELU-a1-Derivative.jpg)
+![ELU-(a=1)-+-Derivative](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/ELU-a1-Derivative.jpg)
 
 The log function stands as –
 
-![elu derivation function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/ELU-derivative-Mathematically-it-can-be-represented-as.jpg)
+![elu derivation function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/ELU-derivative-Mathematically-it-can-be-represented-as.jpg)
 
 With all these innovations, there are still a few issues with ELU, such as the associated computational time because of the exponential operation, lack of learning for the slope parameter α, and exploding gradient problem (i.e., the accumulation of significant error gradients resulting in abnormally large updates to the parameters causing hindrance in the learning process).
 
@@ -308,25 +308,25 @@ With all these innovations, there are still a few issues with ELU, such as the a
 
 Mathematically represented as –
 
-![softmax function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Softmax-Mathematically-represented-as-.jpg)
+![softmax function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Softmax-Mathematically-represented-as-.jpg)
 
 Softmax, also known as the **soft argmax function** or **multiclass logistic regression function**, is a non-linear function. It’s typically used for handling multiclass problems as it acts like a combination of multiple sigmoid functions.
 
 Like the sigmoid function, it squeezes the output between 0 and 1 for each mutually exclusive class of the target variable. Like the sigmoid function, softmax is typically used in the output layer to get probabilities in the output.
 
-![Softmax-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Softmax-Function.jpg)
+![Softmax-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Softmax-Function.jpg)
 
 ### #8. Swish function
 
 Mathematically represented as –
 
-![swish function formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Swish-Mathematically-represented-as-.jpg)
+![swish function formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Swish-Mathematically-represented-as-.jpg)
 
 Developed by Google, this function often outperforms ReLU, and just like it, it is also applied to solve difficult problems like machine translation, image classification, etc.
 
 The function is a combination of bounded and unbounded, as its unbounded above but bounded below. The Swish function doesn’t abruptly change direction (the way ReLU does near x = 0), gradually bends from 0 towards the negative values, and then moves upwards.
 
-![Swish-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/Swish-Function.jpg)
+![Swish-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/Swish-Function.jpg)
 
 Because of this bend, unlike ReLU, which eliminated negative values that might be crucial to capture patterns in the data, the Swish function can retain the negative values and only zeros out the large negative values.
 
@@ -334,7 +334,7 @@ Because of this bend, unlike ReLU, which eliminated negative values that might b
 
 Defined mathematically as –
 
-![Gaussian Error Linear Unit formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/GELU-Defined-mathematically-as-.jpg)
+![Gaussian Error Linear Unit formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/GELU-Defined-mathematically-as-.jpg)
 
 This activation function combines RELU, Dropout, and Zoneout properties. Let’s quickly understand these properties. Dropout is a regularization mechanism that works by stochastically multiplying a few activations by zero.
 
@@ -346,7 +346,7 @@ These methods help the networks become computationally effective and add noise t
 
 > GELU combines all these properties so that the function randomly multiplies the input by 1 or 0 and gets the output from the activation function deterministically.
 
-![Gaussian-Error-Linear-Unit-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/GELU-Gaussian-Error-Linear-Unit-Function.jpg)
+![Gaussian-Error-Linear-Unit-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/GELU-Gaussian-Error-Linear-Unit-Function.jpg)
 
 GELU is commonly used with NLP modes such as BERT, ALBERT, ROBERTa, etc. As it’s created by combining properties of RELU, Zoneout, and Dropout, its non-linearity is considered better than ReLU and ELU, especially for performing tasks related to NLP, Computer Vision, Speech Recognition, etc.
 
@@ -354,7 +354,7 @@ GELU is commonly used with NLP modes such as BERT, ALBERT, ROBERTa, etc. As it�
 
 Mathematically represented as –
 
-![Scaled Exponential Linear Unit](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/SELU-Mathematically-represented-as-.jpg)
+![Scaled Exponential Linear Unit](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/SELU-Mathematically-represented-as-.jpg)
 
 The values of α and λ are predefined for the function to work.
 
@@ -362,7 +362,7 @@ SELU performs internal normalization by preserving the mean and variance of each
 
 Both negative and positive values are used to shift the mean. Such a mechanism is impossible for activations functions like ReLU as it does produce negative values.
 
-![Scaled-Exponential-Linear-Unit-Function](https://www.analytixlabs.co.in/wp-content/uploads/2023/08/SELU-Scaled-Exponential-Linear-Unit-Function.jpg)
+![Scaled-Exponential-Linear-Unit-Function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/08/SELU-Scaled-Exponential-Linear-Unit-Function.jpg)
 
 The variable in SELU is adjusted using gradients. As external normalization is slower than internal normalization, SELU has the edge over other networks as it converges quickly. The limitations of this function are yet to be explored as it’s a relatively new function, and researchers need to analyze its performance on networks like CNN and RNN.
 

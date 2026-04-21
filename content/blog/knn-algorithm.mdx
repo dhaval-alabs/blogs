@@ -4,7 +4,7 @@ slug: knn-algorithm
 date: "2023-04-18T10:29:49+00:00"
 modified: "2024-09-09T05:44:08+00:00"
 description: KNN algorithm in machine learning is used to solve regression and classification problems. Learn how it works and its practical applications
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/04/knn-algorithm.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/knn-algorithm.webp"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -24,7 +24,7 @@ To understand the KNN algorithm, you must first be clear about various aspects o
 
 Machine Learning algorithms are categorized as follows:
 
-![machine learning algorithms category](https://www.analytixlabs.co.in/wp-content/uploads/2023/03/machine-learning-algorithms-category.png)
+![machine learning algorithms category](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/03/machine-learning-algorithms-category.png)
 
 -   ### **Linear vs. Non-Linear**
     
@@ -91,7 +91,7 @@ One of the most common applications of the KNN algorithm in machine learning is 
 
 The best way to explore KNN in machine learning is to start by visually understanding how a KNN classifier works (once understood, the concept can easily be extrapolated and modified to understand regression).
 
-![knn algorithm visual understanding](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/3.jpg)
+![knn algorithm visual understanding](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/3.jpg)
 
 -   Suppose a dataset has two categories (in the dependent variable)- Category A: White and Category B: Green. 
 -   Let x1 be a new data point, and you are tasked with finding the category x1 belongs to. The idea behind KNN is to consider the K number of data points closest to x1 that we will refer to as neighbors from this point forward. 
@@ -100,14 +100,14 @@ The best way to explore KNN in machine learning is to start by visually understa
 -   In our example, as seen below, out of the five closest neighbors of the new data point x1, three belong to Category A: White, while only two belong to Category B: Green.
 -   Now we use the majority voting, and as the majority of classes closest to x1 is White, we predict that x1 belongs to Category A: White.
 
-![k neighbor](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/4.jpg)
+![k neighbor](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/4.jpg)
 
 -   ### Mathematical understanding
     
 
 Let’s now get a bit more practical and mathematical with the working of the KNN algorithm in machine learning. The idea of K closest neighbors needs to be calculated and quantified. To explore this, we take an example dataset and calculate the K nearest neighbor for a new observation.
 
-![mathematical understanding](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/5.jpg)
+![mathematical understanding](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/5.jpg)
 
 #### Setting the example
 
@@ -117,7 +117,7 @@ As K nearest neighbor is a supervised learning algorithm, it requires historical
 
 Here we consider knowing the Loan Status as the dependent variable, with 1 indicating a defaulter and 0 as a repayer.
 
-![mathematical dataset example](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/6.jpg)
+![mathematical dataset example](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/6.jpg)
 
 A new loan application is received with the following details-
 
@@ -133,7 +133,7 @@ Therefore, if most of the applicants similar to ‘A’ could not pay the loan a
 
 #### Distance algorithm
 
-![distance algorithm](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/7.jpg)
+![distance algorithm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/7.jpg)
 
 The first step of any KNN algorithm in machine learning is to calculate the distance from the new data point (in the model development understanding, this new data point refers to the observations in the test dataset) to all the other data points (refers to the training dataset). The question is now how to calculate the distance. Here you can use several formulas to calculate the distance between two data points. Common distance calculating metrics include-
 
@@ -144,17 +144,17 @@ The first step of any KNN algorithm in machine learning is to calculate the dist
 
 Here let’s consider the Euclidean distance, whose formula is-
 
-![Euclidean distance formula](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/8.jpg)
+![Euclidean distance formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/8.jpg)
 
 Therefore, we calculate the distance from the new applicant C\_New to all the other historical applicants, such as C001, C002, etc.
 
 For example, the distance from C\_New to C001 will be-
 
-![Euclidean distance calculate](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/Euclidean-distance-calculate.png)
+![Euclidean distance calculate](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/Euclidean-distance-calculate.png)
 
 Similarly, we calculate the Euclidean distance from C\_New to all other data points.
 
-![knn distance calculate](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/9.jpg)
+![knn distance calculate](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/9.jpg)
 
 #### Majority Voting
 
@@ -162,7 +162,7 @@ Once the distances are calculated, you must decide on the K nearest neighbors yo
 
 Here let’s pick three as the value of K. Therefore, we sort the data by distance in an ascending order to find those three applicants closest to C\_New.
 
-![knn majority voting](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/10.jpg)
+![knn majority voting](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/10.jpg)
 
 C001, C004, and C002 are the three applicants most similar/closest to C\_New. If you look at the dependent variable, two applicants eventually repaid the loan out of these three, while C001 defaulted. 
 
@@ -194,7 +194,7 @@ If you consider an extremely small value of K, for example, one, then the predic
 
 This will cause the model to become extremely complex, causing it to overfit.
 
-![small k value](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/11.jpg)
+![small k value](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/11.jpg)
 
 #### Large value of K
 
@@ -220,7 +220,7 @@ To find this value of K, you can run a for loop calculating the level of accurac
 
 One of the most significant benefits of K Nearest Neighbor in machine learning is that it can naturally solve classification and regression problems.
 
-![knn regression](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/13.jpg)
+![knn regression](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/13.jpg)
 
 KNN is different in this sense as algorithms like Naïve Bayes cannot be used for solving regression problems.
 
@@ -230,7 +230,7 @@ In contrast, algorithms such as Support Vector Machines use a considerably diffe
 
 Let’s modify the previous example by making the dependent variable continuous. Here rather than the loan status, the dependent variable is the amount of savings.
 
-![regression data set](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/14.jpg)
+![regression data set](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/14.jpg)
 
 For the following new observation, we need to predict the amount of savings.
 
@@ -240,7 +240,7 @@ For the following new observation, we need to predict the amount of savings.
 
 Similar to what we discussed earlier, we consider K=3, and the closest data points to C\_New pertained to C001, C002, and C004. As the dependent variable here is continuous, the KNN regressor, rather than performing majority voting, calculates the average.
 
-![knn regression averaging](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/15.jpg)
+![knn regression averaging](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/15.jpg)
 
 ### Outcome
 
@@ -300,19 +300,19 @@ There are multiple ways of making the data be on the same scale, such as: 
 
 -   Minimum Max Scaling
 
-![minimum max scaling](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/16.jpg)
+![minimum max scaling](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/16.jpg)
 
 -   Normalization
 
-![normalization scaling](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/17.jpg)
+![normalization scaling](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/17.jpg)
 
 -   Standardization
 
-![standardization](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/18.jpg)
+![standardization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/18.jpg)
 
 -   Robust scaling
 
-![robust scaling](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/19.jpg)
+![robust scaling](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/19.jpg)
 
 While we are on the topic of the limitations of KNN, let’s also discuss the pros and cons of KNN.
 
@@ -356,7 +356,7 @@ KNN, in its testing phase, has to calculate the distance from each testing data 
 
 To resolve this problem, methods such as KD-Trees, Ball-Tree, and Local Sensitive Hashing should be used that limit the training data involved in the process.
 
-![data training method KNN](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/20.jpg)
+![data training method KNN](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/20.jpg)
 
 -   Limitation of majority voting
 
@@ -366,7 +366,7 @@ To resolve this, alternatives to majority voting should be exploited, such as Pa
 
 You can also use Kernels, where the involvement of the observations in deciding the outcome diminishes as the distance from the new data point increases.
 
-![majority voting KNN](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/21.jpg)
+![majority voting KNN](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/21.jpg)
 
 ## How KNN Helps – Real-time Examples
 
@@ -401,7 +401,7 @@ The idea behind facial recognition is to use a data bank that acts as the traini
 
 You can also explore some more AI-based projects with our _[21 Artificial Intelligence Project Ideas](https://www.analytixlabs.co.in/blog/ai-projects/)_ blog.
 
-![facial recognition knn](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/22.jpg)
+![facial recognition knn](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/22.jpg)
 
 ## Understanding KNN with Coding in R
 
@@ -417,7 +417,7 @@ Start with importing the iris dataset available in the CSV format.
 
 You get:
 
-![import data for knn](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/23.jpg)
+![import data for knn](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/23.jpg)
 
 `# Counting the number of rows   nrow(iris)   `
 
@@ -429,7 +429,7 @@ As mentioned earlier, the iris dataset is comprised of three classes.
 
 `# Counting the number of classes in the dependent variable   dplyr::count(iris, Species, sort = TRUE)`
 
-![iris dependent variable](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/iris-dependent-variable.png)
+![iris dependent variable](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/iris-dependent-variable.png)
 
 `# Dropping the Id variable   iris$Id <- NULL`
 
@@ -437,7 +437,7 @@ A major prerequisite for using KNN is ensuring the independent variables are on 
 
 `# Scaling the data (except the dependent variable)   iris_scaled <- iris   iris_scaled[, -5] <- scale(iris_scaled[, -5])   head(iris_scaled)`
 
-![scaling data except variables](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/24.jpg)
+![scaling data except variables](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/24.jpg)
 
 You now split the data into train and test, where the KNN algorithm will learn from the train data and will predict the labels for the test data.
 
@@ -447,13 +447,13 @@ You can first run the KNN classifier using any value of K. Here, I consider K=3.
 
 `# Running KNN using K=3   library(class)   Test_k3 <- class::knn(trainData[,-5], testData[,-5],trainData$Species, k=3, prob=TRUE)   Test_k3`
 
-![run knn classifier](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/25.jpg)
+![run knn classifier](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/25.jpg)
 
 Let’s now **evaluate the predictions generated** on the test data from the above-created KNN model.
 
 `# creating Confusion matrix   table(testData$Species, Test_k3)`
 
-![evaluate knn model](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/26.jpg)
+![evaluate knn model](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/26.jpg)
 
 > Also read: [Confusion Matrix in Machine Learning: How it Helps in Solving Classification Issues](https://www.analytixlabs.co.in/blog/confusion-matrix/)
 
@@ -489,7 +489,7 @@ However, it then perpetually drops as you increase the value of K.
 
 `# Representing the findings in the form of a table   accuracy_scores <- cbind(data.frame(1:100),data.frame(accuracy))   colnames(accuracy_scores) <- c('K','Accuracy')   accuracy_scores[accuracy_scores$Accuracy==max(accuracy_scores$Accuracy),]`
 
-![highest value of K](https://www.analytixlabs.co.in/wp-content/uploads/2023/04/27.jpg)
+![highest value of K](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/04/27.jpg)
 
 As the accuracy score stagnates for the value of K between 5 and 15, you can create a KNN classifier using any of these values.
 

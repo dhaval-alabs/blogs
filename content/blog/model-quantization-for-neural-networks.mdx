@@ -4,7 +4,7 @@ slug: model-quantization-for-neural-networks
 date: "2024-06-21T15:33:14+00:00"
 modified: "2025-06-05T09:35:35+00:00"
 description: "Model Quantization for Neural Networks: Explore the in-depth discussion about Quantization, methods, tools, and more with this article."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/06/model-quantization.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/model-quantization.webp"
 author: AnalytixLabs
 categories:
   - Data Visualisation
@@ -35,7 +35,7 @@ To comprehend quantization, you must first understand data types in deep learnin
 
 [Neural Networks (NN)](https://www.analytixlabs.co.in/blog/fundamentals-of-neural-networks/) are floating-point numbers stored in a computer’s memory. As the complexity of NN increases, so does the magnitude of these numbers. In deep learning, 32-bit floats (FP32) and 16-bit floats (FP16) are commonly utilized.
 
-![data types in quantization](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/1-2.jpg)
+![data types in quantization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/1-2.jpg)
 
 Specific floating-point formats, such as NVIDIA’s TensorFloat (TF32), AMD’s FP24, and Google’s BrainFloat (Bfloat16), are also designed to enhance performance. Moreover, there are various smaller formats known colloquially as minifloats (e.g., FP8,) which find applications in microcontrollers for embedded devices and are supported by new-generation GPUs like NVIDIA’s H100.
 
@@ -43,15 +43,15 @@ All these different formats or representations for storing numbers are crucial a
 
 **Float32 (FP32)**:  1b for sign, 8b for exponent, 23b for mantissa (fraction)
 
-![Float32 (FP32)](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/2-2-e1718962084637.jpg)
+![Float32 (FP32)](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/2-2-e1718962084637.jpg)
 
 **Float16 (FP16)**: 1b for sign, 5b for exponent, 10b for mantissa
 
-![Float16 (FP16)](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/3-2-e1718962102243.jpg)
+![Float16 (FP16)](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/3-2-e1718962102243.jpg)
 
 **BF16 (B is Google Brain)**: 1b for sign, 8b for exponent, and 7b for mantissa
 
-![BF16](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/4-2-e1718962153828.jpg)
+![BF16](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/4-2-e1718962153828.jpg)
 
 -   ### **Model Quantization**
     
@@ -104,7 +104,7 @@ The primary objective of quantitative analysis in neural networks (NN) is to enh
 
 For instance, an NN comprises activation functions, weights, and biases (also known as parameters), and millions of such parameters can exist within a single NN architecture.
 
-![neural networks](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/5-2.jpg)
+![neural networks](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/5-2.jpg)
 
 Consider a 50-layer ResNet architecture. Such a simple model will contain approximately 26 million weights and 16 million activations, and when stored using 32-bit floating-point values, it will consume about 168 MB of memory. Performing complex arithmetic operations on such volumes of data can be extremely demanding, especially for edge devices.
 
@@ -130,7 +130,7 @@ Check out [our upcoming batches](https://www.analytixlabs.co.in/upcoming-batches
 
 Two primary machine and deep learning model quantization modes exist – PTQ and QAT. Let’s understand them both. 
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/6-1.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/6-1.jpg)
 
 -   ### **PTQ**
     
@@ -144,7 +144,7 @@ In this mode, the developer just needs the calibration data from the model to ca
 
 The next deep learning model quantization mode is **quantization-aware training** (QAT), in which the model is quantized during the training phase. Here, the 8-bit weights are learned and not converted later than in PTQ.
 
-![quantization aware training](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/7-1.jpg)
+![quantization aware training](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/7-1.jpg)
 
 While PTQ can lead to a loss of model accuracy as the quantized model can differ from the original model, no such issue exists in QAT. This is because various other processes, like scaling, clipping, rounding, etc, are incorporated during model training, ensuring that the accuracy is retained after quantization.
 
@@ -154,7 +154,7 @@ After this introduction to quantization models, the next thing to explore is the
 
 Quantization can be categorized into two types: uniform and non-uniform. Below, we will briefly discuss each type.
 
-![types of quantization](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/8-1.jpg)
+![types of quantization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/8-1.jpg)
 
 -   ### **Uniform Quantization**
     
@@ -178,7 +178,7 @@ A crucial aspect of quantization is its method. This is so because the quantizat
 
 You can perform quantization on NN in five broad ways. These are as follows-
 
-![quantization methods in neural networks](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/10-2.jpg)
+![quantization methods in neural networks](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/10-2.jpg)
 
 ### **1) Weight Quantization**
 
@@ -210,7 +210,7 @@ Now that all the key aspects of model quantization have been covered, it’s tim
 
 Several algorithms can help you quantify your deep-learning models with varying degrees of accuracy and size reduction. Below, we will discuss a few of the key ones.
 
-![quantization algorithms](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/11-1.jpg)
+![quantization algorithms](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/11-1.jpg)
 
 ### **1) Integer Quantization**
 
@@ -308,7 +308,7 @@ After understanding all these advantages and disadvantages, next, you must be aw
 
 A few of the most prominent tools and frameworks commonly used for large-scale deployment of quantized models are as follows.
 
-![tools and frameworks for large-scale deployment](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/12-1.jpg)
+![tools and frameworks for large-scale deployment](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/12-1.jpg)
 
 -   ### **PyTorch Mobile**
     
@@ -361,7 +361,7 @@ Several examples of large-scale deployment of quantized models exist worldwide. 
 
 Several industries have benefited from model quantization. The key industries that have found applications for quantized models include-
 
-![industry applications of model quantization](https://www.analytixlabs.co.in/wp-content/uploads/2024/06/13-2.jpg)
+![industry applications of model quantization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/06/13-2.jpg)
 
 -   ### **Healthcare**
     

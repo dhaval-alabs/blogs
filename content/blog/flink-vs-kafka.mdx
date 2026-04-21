@@ -4,7 +4,7 @@ slug: flink-vs-kafka
 date: "2024-01-17T06:28:01+00:00"
 modified: "2024-09-06T13:55:41+00:00"
 description: "Flink vs Kafka: learn about their stream processing capabilities, architectural differences, and efficient data pipelines."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/01/flink-vs-kafka.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/flink-vs-kafka.webp"
 author: AnalytixLabs
 categories:
   - Big Data
@@ -27,7 +27,7 @@ This article will discuss the most prominent stream processing platforms, such a
 
 Stream processing engines refer to run time engines and libraries that allow programmers to write relatively simple code to process data that come in as streams. These libraries and frameworks empower programmers to process data without delving into the intricacies of lower-level stream mechanics.
 
-![stream processing engine](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/1-3.jpg)
+![stream processing engine](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/1-3.jpg)
 
 Few of these stream libraries have built-in algorithms that allow for complex types of processing, such as [Apache Spark](https://spark.apache.org/), which has MLLib enabling the use of machine learning algorithms.
 
@@ -36,7 +36,7 @@ Few of these stream libraries have built-in algorithms that allow for complex ty
 
 A [Direct Acyclic Graph (DAG)](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html) is crucial for processing engines, where functions in these engines progress through DAG processes. This concept allows multiple functions to be linked in a specific order, ensuring the process never regresses to an earlier point. See the accompanying graph for a visual representation of DAG in action.
 
-![direct acyclic graph](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/direct-acyclic-graph.jpeg)
+![direct acyclic graph](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/direct-acyclic-graph.jpeg)
 
 DAG usage gives rise to two processing engines: declarative and compositional. In a declarative engine, users channel functions, and the engine executes the DAG, handling data flow. A compositional engine requires users to explicitly define and pump data through the DAG.
 
@@ -70,7 +70,7 @@ The two major streaming platforms are **Apache Flink** and **Kafka**. _Let’s u
 
 [Flink](https://flink.apache.org/), originating from Berlin TU University, embraces the lambda architecture, functioning as a true streaming engine. It handles batch processing as a special case of streaming, particularly for bounded data.
 
-![flink framework](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/Screenshot-2024-01-18-at-12.43.04 PM.png)
+![flink framework](/wp-content/uploads/2024/01/Screenshot-2024-01-18-at-12.43.04 PM.png)
 
 Flink excels in auto-adjustment, minimizing the need for extensive parameter tuning and establishing itself as the first true streaming framework. Its advanced capabilities, including event time processing and watermarks, contribute to its widespread adoption in major companies like Uber and Alibaba.
 
@@ -79,7 +79,7 @@ Flink excels in auto-adjustment, minimizing the need for extensive parameter tun
 
 [Kafka](https://kafka.apache.org/) serves multiple purposes, from message passing to stream processing applications. It finds applications in stream processing, website activity tracking, metrics collection, log aggregation, real-time analytics, microservices, etc.
 
-![kafka framework](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/Screenshot-2024-01-18-at-12.44.55 PM.png)
+![kafka framework](/wp-content/uploads/2024/01/Screenshot-2024-01-18-at-12.44.55 PM.png)
 
 Kafka Streams, a lightweight library, is specifically designed for stream processing activities. The key comparison between Kafka and Flink centers around [Kafka Streams](https://kafka.apache.org/documentation/streams/) vs Flink.
 
@@ -109,7 +109,7 @@ Traditionally, data was processed at rest in databases, but Flink and Kafka now 
 
 However,  companies can integrate these two leading open-source technologies to enable numerous stream processing use cases.  These include mission-critical transaction workloads, global, hybrid, multi-cloud deployments, analytics embedded with machine learning, etc. Thus, if one looks for a Kafka Streams alternative, Flink is the best option.
 
-![kafka and flink data pipeline](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/2-5.jpg)
+![kafka and flink data pipeline](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/2-5.jpg)
 
 ### _**How can creating a data pipeline using both systems can be helpful?**_
 
@@ -125,7 +125,7 @@ You start with understanding what these two technologies are all about. While so
 
 The second step is to install and configure Kafka. The official [Kafka](https://kafka.apache.org/) website provides clear instructions on installing and configuring it. Once done, you need to create new topics – flink\_input and flink\_output. You can use the following commands to do so-
 
-![kafka command](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/3-3.jpg)
+![kafka command](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/3-3.jpg)
 
 -   #### Flink Usage
     
@@ -151,7 +151,7 @@ The next step is to add Flink. There are multiple third-party systems that Flink
 
 You can include certain Maven dependencies, allowing you to consume and produce to and from Kafka projects. Refer to the code below-
 
-![maven dependency kafka code](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/4-2.jpg)
+![maven dependency kafka code](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/4-2.jpg)
 
 -   #### Kafka String Consumer
     
@@ -160,14 +160,14 @@ Now, provide a Kafka address and a topic for Flink to consume data from Kafka. A
 
 You can use the code below that takes a _kafkaGroup_, _kafkaAddress_, and topic to create _FlinkKafkaConsumer_ that consumes data from a given topic as a _String_ (because to decode data, you provide _SimpleStringSchema_). Do note that the number 001 in the code refers to the version of Kafka that you are using, and you may have to change it based on the version you are currently running.
 
-![kafka string code](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/5-2.jpg)
+![kafka string code](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/5-2.jpg)
 
 -   #### Kafka String Producer
     
 
 The next step is to provide a Kafka address and topic so that data can be produced in Kafka. We create producers for the different topics by creating a static method again. Refer to the code below and note that this time, the method takes only two arguments- _kafkaAddress_ and _topic_ because group id is unnecessary when producing Kafka topics.
 
-![kafka string producer](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/6-3.jpg)
+![kafka string producer](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/6-3.jpg)
 
 -   #### String Stream Processing
     
@@ -178,18 +178,18 @@ For example, if you intend to make the words in your data uppercase and write th
 
  Creating Map Function-
 
-![mapfunction kafka vs flink](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/7-1.jpg)
+![mapfunction kafka vs flink](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/7-1.jpg)
 
 Using Function-
 
-![flink vs kafka use function](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/8.jpg)
+![flink vs kafka use function](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/8.jpg)
 
 -   #### Custom Object Deserialization
     
 
 First, you create a class representing a message with the senders’ and recipients’ information.
 
-![Custom Object Deserialization](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/9-1.jpg)
+![Custom Object Deserialization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/9-1.jpg)
 
 To deserialize data directly to custom objects, you must have a custom _DeserializationSchema_. Note that previously, you used to deserialize messages from Kafka using _SimpleStringSchema_.
 
@@ -199,7 +199,7 @@ Note that schemas in Flink are always serializable mainly because the operators 
 
 Here, we fix this issue by initializing fields as _static,_ as done with _ObjectMapper_ below. Also, if a stream needs to be processed until specific data is reviewed, then _isEndOfStream_ can be used; however, this is not the case in the example below.
 
-![kafka schema](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/10-1.jpg)
+![kafka schema](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/10-1.jpg)
 
 -   #### Custom Object Serialization
     
@@ -208,11 +208,11 @@ Let’s take an example to understand custom object serialization. Imagine a sys
 
 Creating Class-
 
-![Custom Object Serialization](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/11-1.jpg)
+![Custom Object Serialization](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/11-1.jpg)
 
 Creating _SerializationSchema-_
 
-![Serialization Schema](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/12-1.jpg)
+![Serialization Schema](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/12-1.jpg)
 
 -   #### Timestamping Messages
     
@@ -229,7 +229,7 @@ Another issue with Flink is that the format in which it expects time contains mi
 
 Through _Watermark_, the user can define the acceptable lateness allowed for processing elements with timestamps below the _Watermark_ being left unprocessed. 
 
-![timestamp assigner](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/13-1.jpg)
+![timestamp assigner](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/13-1.jpg)
 
 -   #### Creating Time Windows & Aggregating Backups
     
@@ -240,11 +240,11 @@ The _AggregateFunction_ also aggregates the split messages from each window to b
 
 Creating Time Windows-
 
-![timestamp windows](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/14-1.jpg)
+![timestamp windows](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/14-1.jpg)
 
 Aggregating Backups-
 
-![backup aggregator](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/15-1.jpg)
+![backup aggregator](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/15-1.jpg)
 
 The above data pipeline would have given you a sense of the power of Flink and Kafka. However, before discussing how different other platforms are from each other, let’s better understand Kafka, particularly Kafka Streams API.
 
@@ -252,7 +252,7 @@ The above data pipeline would have given you a sense of the power of Flink and K
 
 As briefly discussed when comparing Kafka and Flink, Kafka Streams is a component of Kafka. When comparing Kafka and Flink, many discussions surround Kafka Streams vs Flink.
 
-![kafka stream API](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/16-1.jpg)
+![kafka stream API](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/16-1.jpg)
 
 The Streams API of Kafka is a lightweight library available through Java. As hinted earlier, the specialty is that it enables distributed applications and microservices and is highly elastic, scalable, and fault tolerant.
 
@@ -268,7 +268,7 @@ However, with all its advantages, a great Kafka Streams alternative is Flink, wh
 
 [Apache Samza](https://samza.apache.org/) is another popular real-time stream processing engine. It is relatively easy to understand the discussion around Samza vs Flink. It’s mainly because, at a higher level, Samza is similar to Kafka Streams.
 
-![sazma architecture kafka vs flink](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/17-1.jpg)
+![sazma architecture kafka vs flink](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/17-1.jpg)
 
 As we have already discussed the difference between Kafka Streams and Flink, you can get a fair idea of what Samza is all about and how it differs from Flink. Both Kafka Streams and Samza can be easily and tightly integrated with Kafka.
 
@@ -291,7 +291,7 @@ The main differences include the following-
 -   Spark utilizes time-based window criteria, while Flink employs record-based window criteria that users can customize.
 -   The Spark processing model is slower, whereas Flink architecture makes it much faster.
 
-![flink vs spark](https://www.analytixlabs.co.in/wp-content/uploads/2024/01/flink-vs-spark.jpg)
+![flink vs spark](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/01/flink-vs-spark.jpg)
 
 Both frameworks are remarkable. However, a significant point of discussion in Spark vs Flink is that Spark’s community is much more mature, while Flink is much faster and better equipped for data streaming. 
 

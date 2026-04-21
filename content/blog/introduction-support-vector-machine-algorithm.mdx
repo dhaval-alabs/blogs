@@ -4,7 +4,7 @@ slug: introduction-support-vector-machine-algorithm
 date: "2026-02-18T05:14:19+00:00"
 modified: "2026-02-19T05:53:59+00:00"
 description: "Learn what SVM in machine learning is, how it works, and explore its key concepts, implementation tips, and real-world uses."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-01.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-01.jpg"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -26,7 +26,7 @@ Discover how to use langchain and its components in data science, analytics, and
 
 Let’s start by answering what is SVM in machine learning. Support Vector Machine (SVM) is a supervised machine learning algorithm that has two versions – SVM classifier (designed to solve classification problems and SVM regressor (for regression problems).  While both work to address overfitting, svm algorithm in machine learning got famous primarily due to its classifier that works by identifying an optimal decision boundary between data classes.
 
-![what is svm in machine learning](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-02.jpg)
+![what is svm in machine learning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-02.jpg)
 
 The main objective of SVM is to construct a hyperplane that separates classes while maximizing the margin, which is the distance between the hyperplane and the nearest data points from each class. SVM full form in machine learning is support vector machines, which is because the nearest data points mentioned above are known as support vectors, and they alone determine the position and orientation of the decision boundary.
 
@@ -70,7 +70,7 @@ This dual formulation not only simplifies computation but also makes it possible
 
 Thus, the final optimization objective combines margin maximization with error control and is expressed as:
 
-![kernel formula](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/Screenshot-2026-02-18-at-4.18.02-PM.png)
+![kernel formula](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/Screenshot-2026-02-18-at-4.18.02-PM.png)
 
 Here, the first term encourages a wider margin, the second term penalizes classification errors, and the regularization parameter C controls the trade-off between these two objectives, thereby preventing the model from becoming overly complex and reducing the risk of overfitting.
 
@@ -88,17 +88,17 @@ The four key concepts that can help you further understand SVM are support vecto
 
 As discussed, support vectors are the most influential data points in an SVM model. That’s because they lie closest to the decision boundary and directly determine the position and orientation of the hyperplane. This makes SVM fundamentally different from other algorithms because many algorithms that depend on all training samples, whereas SVM relies only on these critical points, which makes the model sparse and memory efficient.
 
-![support vectors in svm](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-04.jpg)
+![support vectors in svm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-04.jpg)
 
 Thus, even if the non-support-vector points are removed or slightly altered, the decision boundary typically remains unchanged, whereas altering support vectors can significantly shift the hyperplane. Understanding this property is key, as it explains why SVM often generalizes well to unseen data, especially in high-dimensional spaces where irrelevant features can be extremely common.
 
 ### ii. Hard Margin vs. Soft Margin
 
-![hard margin vs soft margin](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-05.jpg)
+![hard margin vs soft margin](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-05.jpg)
 
 SVM has one major constraint – the level of misclassification it can allow, and this leads to two types of margins, viz., hard and soft. Hard margin SVM enforces a very strict separation between classes by requiring all data points to be correctly classified and lie outside the margin.  
 
-![hard margib soft margin in svm](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-06.jpg)
+![hard margib soft margin in svm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-06.jpg)
 
 This approach works only when the data is perfectly linearly separable and contains no noise or outliers. Obviously, in the real world, such datasets that can have perfect separability are rare, which makes hard margin classification highly sensitive to even a single outlier, and that’s why soft margin configuration exists.
 
@@ -108,11 +108,11 @@ Soft margin SVM relaxes this constraint by allowing certain data points to viola
 
 Imagine a situation where classes cannot be separated using a linear hyperplane.
 
-![Kernel Trick and Non-linear Classification](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-07.jpg)
+![Kernel Trick and Non-linear Classification](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-07.jpg)
 
 This is where SVM applies the kernel trick to handle non-linear relationships. The kernel trick works by implicitly mapping input data into a higher-dimensional feature space where linear separation is possible, without explicitly computing the transformed features. This approach avoids the computational burden associated with manual feature expansion and allows SVM to remain efficient even when dealing with complex decision boundaries.
 
-![SVM in Machine Learning](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-08.jpg)
+![SVM in Machine Learning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-08.jpg)
 
 Several kernel functions exist, with the most common one being-
 
@@ -264,7 +264,7 @@ Tuning an SVM model focuses on selecting hyperparameter values that balance bias
 
 ### Kernel selection strategies
 
-![kernel selection strategies in svm](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-09.jpg)
+![kernel selection strategies in svm](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-09.jpg)
 
 Kernel selection is typically driven by data characteristics and feature space structure, rather than trial-and-error alone. Linear kernels are often preferred when dealing with high-dimensional and sparse data, such as text or gene expression datasets. This is because linear separation is mostly sufficient and computationally efficient. On the other hand, for datasets that are complex and require curved class boundaries, non-linear kernels such as polynomial or radial basis function (RBF) are evaluated to capture non-linear relationships.
 
@@ -272,7 +272,7 @@ Practically speaking, kernel selection is validated using cross-validation rathe
 
 ### Regularisation parameter (C) tuning
 
-![regularisation parameter tuning](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-10.jpg)
+![regularisation parameter tuning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-10.jpg)
 
 Tuning the regularisation parameter C involves identifying a value that minimizes validation error rather than maximizing training accuracy. An extremely large value of C may cause the model to memorize training samples, leading to poor generalization, while extremely small values may oversimplify the decision boundary and reduce predictive power. 
 
@@ -284,7 +284,7 @@ As discussed above, gamma tuning determines how well the model adapts to local v
 
 Below in the left image the value of gamma is high while its low for the right image.
 
-![gamma value implications](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-11.jpg)
+![gamma value implications](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-11.jpg)
 
  For all practical purposes, effective gamma tuning is only possible when performed jointly with tuning C using cross-validation, as these parameters interact closely in shaping the final decision boundary.
 
@@ -298,7 +298,7 @@ While there is no doubt that SVM is an amazing algorithm, it’s also true that 
 
 The following are the five most amazing advantages of SVM.
 
-![advantages of svm in machine learning](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-12.jpg)
+![advantages of svm in machine learning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-12.jpg)
 
 #### High predictive accuracy
 
@@ -324,7 +324,7 @@ Lastly, SVMs are memory efficient. That’s because only support vectors contrib
 
 Apart from the various advantages, several disadvantages also exist with SVM. Below are the five critical ones.
 
-![disadvantages of SVM in Machine Learning](https://www.analytixlabs.co.in/wp-content/uploads/2021/07/SVM-in-Machine-Learning-13.jpg)
+![disadvantages of SVM in Machine Learning](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2021/07/SVM-in-Machine-Learning-13.jpg)
 
 #### High training time for large datasets
 

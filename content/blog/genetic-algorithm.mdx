@@ -4,7 +4,7 @@ slug: genetic-algorithm
 date: "2023-10-11T15:34:48+00:00"
 modified: "2024-09-09T04:35:00+00:00"
 description: "Understand genetic algorithm, its evolution, and related concepts like natural selection, survival of the fittest, mutation, crossover, etc."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2023/10/genetic-algorithm.webp"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/genetic-algorithm.webp"
 author: AnalytixLabs
 categories:
   - Machine Learning
@@ -33,7 +33,7 @@ To understand genetic algorithms, you first need to understand evolution and its
 
 As per biological evolution, every living organism evolves, i.e., adapts to its surroundings and gets better (in terms of survivability and replicating themselves successfully) through evolution.
 
-![genetic evolution](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/genetic-evolution.png)
+![genetic evolution](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/genetic-evolution.png)
 
 In a population, due to random alterations in the genes (mutation) during reproduction, certain individuals are more apt to the surroundings than others, i.e., are fitter than others.
 
@@ -55,11 +55,11 @@ There are specific terminologies in the domain of genetic algorithms that you mu
 
 <table><tbody><tr><td>Population</td><td>It refers to the subset of all possible solutions to a problem</td></tr><tr><td>Chromosome aka. Solution aka. Individual</td><td><ol><li>An individual solution is referred to as a chromosome.</li><li>A chromosome is a finite-length vector of variable components.</li></ol></td></tr><tr><td>Gene</td><td>Each variable component is referred to as a gene. Thereby, a collection of genes forms a chromosome</td></tr></tbody></table>
 
-![genetic algorithms key terminologies](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/1.jpg)
+![genetic algorithms key terminologies](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/1.jpg)
 
 <table><tbody><tr><td>Selection</td><td>A stage where the optimal solution is selected for the next iteration for breeding (crossover)</td></tr><tr><td>Crossover</td><td>Recombination of genetic information to generate new solutions</td></tr><tr><td>Mutation</td><td><ul><li>A process to maintain genetic diversity in a population is achieved by randomly editing certain solutions.</li><li>This is typically achieved by flipping an arbitrary bit in a genetic sequence</li></ul></td></tr></tbody></table>
 
-![genetic algorithm key terms](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/genetic-algorithm-key-terms.png)
+![genetic algorithm key terms](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/genetic-algorithm-key-terms.png)
 
 <table><tbody><tr><td>Allele</td><td>Within a particular chromosome, it refers to the value provided to a gene</td></tr><tr><td>Fitness Function</td><td><ul><li>The fitness function is the basis for determining each individual’s fitness in a population.</li><li>It returns a fitness score for each individual based on their performance and ability to compete with other individuals.</li></ul></td></tr><tr><td>Genetic Operators</td><td>The genetic operator changes the genetic composition of offspring, ensuring that the offspring is better than the parents</td></tr><tr><td>Search Space</td><td>The search space is where the population is maintained, where each individual is a solution</td></tr></tbody></table>
 
@@ -81,19 +81,19 @@ The three broad steps to such a type of algorithm are as follows-
 
 Thus, the pseudo-code looks something like-
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/4.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/4.jpg)
 
 Now that the definition of genetic algorithm is clear let’s dive deep into how genetic algorithms work. However, before doing so, let’s quickly understand how they differ from traditional, i.e., classical algorithms.
 
 ## **Genetic Algorithm vs. Traditional Algorithm**
 
-![difference between genetic algorithms and traditional algorithms ](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/Untitled-design-e1696957563499.jpg)
+![difference between genetic algorithms and traditional algorithms ](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/Untitled-design-e1696957563499.jpg)
 
 ## **How Genetic Algorithm Work?**
 
 There are broadly **six steps** in the workings of a genetic algorithm. These include setting up the initial population, determining fitness, the selection, crossover, and mutation phase, and the termination of the process upon convergence. Let’s start with population.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/7.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/7.jpg)
 
 ### **(1) Initial Population**
 
@@ -111,19 +111,19 @@ Other forms of representation include –
 
 Using float and real-valued numbers to represent genes. 
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/8.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/8.jpg)
 
 -   _**Integer Representation**_
 
 Integers can be used to represent genes. For example, North, South, East, and West are represented by 1,2,3 and 4.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/9.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/9.jpg)
 
 -   _**Permutation Representation**_
 
 They are typically used when there is order to the elements being represented. For example, the time consumed in distance traveling can be encoded, with 0 representing the lowest and 9 representing the maximum consumed time.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/10.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/10.jpg)
 
 ### **(2) Fitness Function**
 
@@ -144,21 +144,21 @@ The wheel is then rotated, and the region of the wheel that falls in front of th
 
 > As fitter individuals have a larger pie, they have more chances of making it as a parent. 
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/11.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/11.jpg)
 
 -   #### **Stochastic Universal Sampling**
     
 
 This method is similar, with the difference being that multiple selection points allow for the selection of parents in a single spin, increasing the chances of selecting highly fit individuals at least once.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/12.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/12.jpg)
 
 -   #### **Tournament Selection**
     
 
 K-individuals are selected randomly from the population, and the fittest individual from this group is considered a parent. This step is then repeated to find the next parent.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/13.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/13.jpg)
 
 -   #### **Elitism Selection**
     
@@ -169,7 +169,7 @@ Through elitism selection, one can ensure that the best individuals of a generat
 
 This, in turn, increases the chances of finding the local or global optima result.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/14.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/14.jpg)
 
 This method ensures that good genes are not destroyed due to crossover and mutation. However, the proportion of elite individuals in the population cannot be too high. It will degenerate the population, reduce diversity, decrease chances of exploring new search space, and consequently stall progress.
 
@@ -199,14 +199,14 @@ There are many more such selection mechanisms with their own merits and demerits
 -   Linear Ranking Selection
 -   Non-Linear Ranking Selection
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/15.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/15.jpg)
 
 4\. Survivor Selection
 
 -   Age-Based
 -   Fitness Based Selection such as GENITOR Selection etc.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/16.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/16.jpg)
 
 ### **(4) Crossover**
 
@@ -221,21 +221,21 @@ One point or single point crossover operator is where a single point is selected
 -   Exchange of genes till crossover point is reached.
 -   The two new offspring are A5 and A6.
 
-![one point crossover](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/ONE-POINT-CROSSOVER.png)
+![one point crossover](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/ONE-POINT-CROSSOVER.png)
 
 -   #### **Two Point Crossover**
     
 
 It’s a particular case of the K-point crossover technique with K=2 as two random points are used in the chromosome to exchange the genetic material.
 
-![two point crossover](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/two-point-crossover-.png)
+![two point crossover](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/two-point-crossover-.png)
 
 -   #### **Uniform Crossover**
     
 
 Each bit in the chromosome of the offspring is selected randomly from one of the corresponding genes of the parent chromosomes.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/23.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/23.jpg)
 
 #### **Other Crossover Operators**
 
@@ -257,7 +257,7 @@ There are many more such crossover operators, such as
 
 Note: Each technique has its advantages and disadvantages.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/24.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/24.jpg)
 
 ### **(5) Mutation**
 
@@ -268,21 +268,21 @@ To maintain genetic diversity and prevent premature convergence, genes of certai
 
 Some of the bits in the bit string are flipped at random.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/25.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/25.jpg)
 
 -   #### **Gaussian Mutation**
     
 
 The Gaussian error function is used where a  random value from the Gaussian distribution is used for mutation.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/26.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/26.jpg)
 
 -   #### **Exchange/Swap Mutation**
     
 
 Two positions at random are selected on the chromosome to interchange the values.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/27.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/27.jpg)
 
 ### **(5) Termination**
 
@@ -306,7 +306,7 @@ For example, the desired solution is to have a string ‘I study @ AnalytixLabs�
 
 Let’s look at the flowchart below and decide the architecture we will follow for the algorithm.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/35.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/35.jpg)
 
 -   _Acceptable Genes_: The acceptable genes are A-Z, a-z, 0-9, and other commonly used symbols. A string of all these characters (genes) will be a plausible solution (chromosome).
 -   _Population_: The population will be set to 100, i.e., in any given generation, the number of chromosomes will be 100.
@@ -316,7 +316,7 @@ Let’s look at the flowchart below and decide the architecture we will follow f
 1.  The top 15% of the population is considered elite and selected to move to the next generation.
 2.  The top 50% of the population will be selected for crossover and considered for mutation to create offspring for the next generation.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/29.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/29.jpg)
 
 -   _Crossover_: Random probabilities pull the genome from the first and second parent.
 -   _Mutation_: Flipping a random gene in the chromosome.
@@ -394,7 +394,7 @@ The output shows that the best-performing chromosome in the first few generation
 
 As the generations progress, the fitness score gets better (lower), and the solution tends to reach the optimal one. The process finally terminates when the required fitness level is achieved.
 
-![genetic algorithm output](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/genetic-evolution-1.png)
+![genetic algorithm output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/genetic-evolution-1.png)
 
 If you want to know the languages, you must try writing C++ genetic algorithms or Java genetic algorithms, as many genetic algorithm ideas are available in these languages.
 
@@ -433,7 +433,7 @@ With all the advantages and disadvantages, the genetic algorithm can and is bein
 
 Multiple genetic algorithm examples illustrate the types of problems, domains, and areas where implementing the genetic algorithm can yield great results. These include the following-
 
-![genetic algorithm applications](https://www.analytixlabs.co.in/wp-content/uploads/2023/10/36.jpg)
+![genetic algorithm applications](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/10/36.jpg)
 
 1.  **Machine Learning**: Genetic algorithm in [machine learning](https://www.analytixlabs.co.in/blog/importance-of-machine-learning/) helps in tuning multiple hyperparameters.
 2.  **DNA Analysis & Medical Science**: Given how many genetic concepts such algorithms use, it’s no surprise that they are heavily used in DNA analysis, helping medical professionals to establish DNA structure using spectrometric information.

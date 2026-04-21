@@ -4,7 +4,7 @@ slug: exception-handling-in-python
 date: "2026-01-08T10:42:29+00:00"
 modified: "2026-01-09T06:02:48+00:00"
 description: "Learn Exception Handling in Python with examples, types, try-except, and best practices. Master error handling to write robust Python code."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2025/12/Exception-handling-in-Python-01.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/Exception-handling-in-Python-01.jpg"
 author: Pritha Bose
 categories:
   - Python
@@ -101,7 +101,7 @@ String Input
 load_discount("five")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/2.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/2.png)
 
 To address the issue, you can introduce manual validation rules to enforce business constraints. In this updated function, you explicitly raise your own ValueError when the discount violates the rule of not allowing negative values. As this exception is triggered directly at the source, it allows you to provide clear, specific messages that guide the user toward fixing the input issue.
 
@@ -131,15 +131,15 @@ Now, if the input is negative, then you get a custom business-rule-specific erro
 load_discount(-5.1)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/3.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/3.png)
 
 However, if you provide a non-numeric input, Python’s own validation takes over as the conversion fails during float(value), and Python raises its default ValueError.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/4.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/4.png)
 
 #### 2) Raising exceptions inside try–except
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/Exception-handling-in-Python-02.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/Exception-handling-in-Python-02.jpg)
 
 In many cases, you catch an exception and then raise a clearer message, as this is helpful when you want to clearly explain what went wrong. For example, you can further modify the above function because the float(value) can fail, and rather than letting Python throw a vague message, you catch it and raise a clear one. So now the code first tries to convert the input into a float, assuming the input is a numeric discount value. If that conversion fails, Python raises a built-in ValueError; however, this time instead of letting that vague system error surface, you catch it and raise a clearer, more user-friendly message- “Discount must be a numeric value”. This approach keeps the original exception type but replaces the message so the reader or user immediately understands what went wrong and how to fix it.
 
@@ -173,7 +173,7 @@ def load_discount(value):
 
 As you can see, now, with the Python try except approach, rather than getting a generic error message, we get a business-specific, context-aware error message.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/5.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/5.png)
 
 #### 3) Raising multiple exceptions inside try
 
@@ -218,7 +218,7 @@ Triggering Type Error
 load_discount([0.5])
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/6.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/6.png)
 
 Triggering Overflow Error
 
@@ -226,7 +226,7 @@ Triggering Overflow Error
 load_discount(0.99)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/7.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/7.png)
 
 Triggering Value Error (Technical)
 
@@ -234,7 +234,7 @@ Triggering Value Error (Technical)
 load_discount("five")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/8.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/8.png)
 
 Triggering Value Error (Business Specific)
 
@@ -242,7 +242,7 @@ Triggering Value Error (Business Specific)
 load_discount(-0.5)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/9.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/9.png)
 
 If you carefully go through all of the code written above, you can understand that:
 
@@ -282,7 +282,7 @@ def load_discount(value):
 load_discount("five")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/10.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/10.png)
 
 #### 5) Chaining Exceptions
 
@@ -326,7 +326,7 @@ def load_discount(value):
 load_discount("five")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/8-1.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/8-1.png)
 
 ### When should you raise exceptions?
 
@@ -381,7 +381,7 @@ def safe_ratio(a, b):
 safe_ratio(10, 0)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/11.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/11.png)
 
 ####  2) FileNotFoundError
 
@@ -395,7 +395,7 @@ except FileNotFoundError as e:
     print(e)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/12.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/12.png)
 
 #### 3) ValueError
 
@@ -411,7 +411,7 @@ def convert_age(text):
 convert_age("twenty")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/13.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/13.png)
 
 #### 4) TypeError
 
@@ -427,7 +427,7 @@ def add_numbers(a, b):
 add_numbers("5", 10)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/14.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/14.png)
 
 #### 5) IndexError
 
@@ -441,7 +441,7 @@ except IndexError as e:
     print(e)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/15.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/15.png)
 
 #### 6) KeyError
 
@@ -455,7 +455,7 @@ except KeyError:
     print("Key not found in dictionary.")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/16.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/16.png)
 
 #### 7) AttributeError
 
@@ -473,7 +473,7 @@ except AttributeError as e:
     print(e)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/17.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/17.png)
 
 #### 8) ImportError
 
@@ -486,7 +486,7 @@ except ImportError as e:
     print(e)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/18.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/18.png)
 
 #### 9) RuntimeError
 
@@ -499,7 +499,7 @@ except RuntimeError as e:
     print(e)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/19.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/19.png)
 
 Other key built-in exceptions include NameError, ModuleNotFoundError, NotImplementedError etc.
 
@@ -569,13 +569,13 @@ All the following instances of calling the functions will return errors-
 load_discount("five")
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/20.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/20.png)
 
 ```
 load_discount([0.5])
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/21.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/21.png)
 
 The following are the errors raised using the custom exception indicating that the discount value is business invalid.
 
@@ -583,37 +583,37 @@ The following are the errors raised using the custom exception indicating that t
 load_discount(0.0555)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/22.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/22.png)
 
 ```
 load_discount(0)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/23.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/23.png)
 
 ```
 load_discount(-0.10)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/24.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/24.png)
 
 ```
 load_discount(1.0)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/25.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/25.png)
 
 ```
 load_discount(0.95)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/26.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/26.png)
 
 ```
 load_discount(0.07)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/27.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/27.png)
 
 #### 2) Why create custom exceptions?
 
@@ -830,7 +830,7 @@ Let’s now understand the execution flow of Python’s Try-Except-Else-Finally 
 
 Let’s understand this step by step in a bit more detail.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2025/12/Exception-handling-in-Python-03.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2025/12/Exception-handling-in-Python-03.jpg)
 
 #### Step 1: try
 

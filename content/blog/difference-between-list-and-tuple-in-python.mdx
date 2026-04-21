@@ -4,7 +4,7 @@ slug: difference-between-list-and-tuple-in-python
 date: "2026-03-26T06:56:37+00:00"
 modified: "2026-03-27T07:15:01+00:00"
 description: "Learn the key differences between list and tuple in Python. Understand mutability, speed, memory, and use cases."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-01.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-01.jpg"
 author: Pritha Bose
 categories:
   - Python
@@ -37,7 +37,7 @@ In order to answer what is the difference between list and tuple in python, you 
 
 A Python list is a built-in data structure. It stores an ordered sequence of elements and can also preserve insertion order. Lists use zero-based indexing, meaning the first element is at index 0. 
 
-![list in python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-03.jpg)
+![list in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-03.jpg)
 
 They are undoubtedly one of Python’s most commonly used collection types due to their flexibility. The main features of a list that you should know are as follows-
 
@@ -47,13 +47,13 @@ Lists are mutable, which means you can modify, replace, insert, or delete elemen
 
 ### 2\. Ordered and Indexed
 
-![ordered and indexed list in python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-04.jpg)
+![ordered and indexed list in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-04.jpg)
 
 Lists maintain element order and support both positive and negative indexing. Also note that they also allow slicing to efficiently extract subsets of data.
 
 ### 3\. Heterogeneous and Nestable
 
-![Heterogeneous and Nestable list in python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-05.jpg)
+![Heterogeneous and Nestable list in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-05.jpg)
 
 Lists can store mixed data types, including numbers, strings, dictionaries, tuples, and other lists, thereby making them a heterogeneous as well as a nestable data structure. Thanks to this feature, they are able to support real-world data modeling and structured records.
 
@@ -65,7 +65,7 @@ mixed_list = [10, "Python", 3.14, None]
 mixed_list
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-1.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-1.png)
 
 ### 4\. Dynamic and Growable
 
@@ -134,7 +134,7 @@ numbers.remove(10)
 print(numbers)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-2.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-2.png)
 
 Thus, the list updates in place without restriction. This is a stark contrast to a tuple, which is immutable, meaning its elements cannot change once defined. Notice below how, when I attempt to modify a tuple, Python raises a TypeError.
 
@@ -146,7 +146,7 @@ coordinates = (10, 20, 30)
 coordinates[1] = 50
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-3.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-3.png)
 
 Similarly, tuples also do not allow appending or element deletion.
 
@@ -177,7 +177,7 @@ print("Disassembly of Tuple Function:")
 dis(my_tuple)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-9.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-9.png)
 
 This means list creation involves additional bytecode steps, thereby increasing execution overhead.
 
@@ -202,7 +202,7 @@ coordinates = {
 coordinates
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-4.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-4.png)
 
 This works because tuples are immutable.  Lists, on the other hand, are not hashable and cannot be used as dictionary keys. Attempting to use a list as a key raises a TypeError.
 
@@ -216,7 +216,7 @@ coordinates = {
 }
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-7.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-7.png)
 
 This distinction becomes critical in scenarios involving mapping, caching, or lookup tables.
 
@@ -271,13 +271,13 @@ Both constructors can convert iterables into their respective types.
 
 Tuples support sequence packing and unpacking. This means it groups multiple values into a single tuple automatically.
 
-![difference between list and tuple in python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-06.jpg)
+![difference between list and tuple in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-06.jpg)
 
 ```
 t = (1, 2, 3)   # tuple packing
 ```
 
-![packing and unpacking python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-07.jpg)
+![packing and unpacking python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-07.jpg)
 
 Unpacking assigns tuple elements directly to variables.
 
@@ -286,7 +286,7 @@ a, b, c = t
 print(a, b, c)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-5.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-5.png)
 
 This syntax assigns values directly without indexing, i.e., eliminating the need for indexing 
 
@@ -300,7 +300,7 @@ x, y = y, x
 print(x, y)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-6.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-6.png)
 
 Lists also support unpacking.
 
@@ -322,7 +322,7 @@ items.remove(2)
 items
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-7.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-7.png)
 
 The list adjusts automatically after each modification. A tuple, on the other hand, has a fixed length once created. This means you cannot add or remove elements from a tuple, and any attempt raises a TypeError. Because tuples cannot resize, Python allocates memory only once. Lists, however, may reallocate memory as they expand. Thanks to this dynamic behavior, the list dramatically improves flexibility but introduces resizing overhead. In contrast, tuples enforce structural consistency by maintaining a constant length throughout their lifecycle.
 
@@ -361,7 +361,7 @@ numbers.clear()
 print("After clear():", numbers)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-8.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-8.png)
 
 These operations directly alter the list structure. Also, lists support slicing assignments, allowing multiple elements to be replaced at once.
 
@@ -375,7 +375,7 @@ numbers[1:4] = [200, 300]
 print("After slicing assignment:", numbers)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-10.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-10.png)
 
 These extensive methods make lists suitable for frequent insertions and deletions.
 
@@ -387,7 +387,7 @@ l1 = [10, 20, 30]
 print([method for method in dir(l1) if not method.startswith("_")])
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-15.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-15.png)
 
 Tuples, in contrast, support very few built-in methods.
 
@@ -399,7 +399,7 @@ t1 = (10, 20, 30)
 print([method for method in dir(t1) if not method.startswith("_")])
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-12.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-12.png)
 
 Because tuples are immutable, they only provide accessor methods such as count() and index().
 
@@ -410,7 +410,7 @@ values.index(3)
 values
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-11.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-11.png)
 
 As you can see, tuples do not support append(), remove(), or insert(). Such a restriction helps in reducing accidental structural modifications.
 
@@ -452,7 +452,7 @@ copy = original.copy()
 print("New Copy ID:", id(copy))
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-29.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-29.png)
 
 Now the memory address differs. This behavior is critical in large programs where unintended mutations cause bugs.
 
@@ -469,7 +469,7 @@ print("Tuple ID:", id(t1))
 print("Assigned ID:", id(t2))
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-16.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-16.png)
 
 Here, both reference the same object, but immutability prevents any side effects. Thus, assigning a tuple to another variable does not risk accidental modification. Even operations that appear to “modify” a tuple actually create a new tuple object.
 
@@ -482,7 +482,7 @@ responses += ("Yes",)
 print("After addition ID:", id(responses))
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-17.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-17.png)
 
 Notice how the memory ID changes after concatenation, with each concatenation creating a new tuple in memory. Python therefore allocates a new tuple instead of modifying the original. This differs from lists, where append() keeps the same memory address. Because each addition creates a new object, tuples are inefficient for dynamic accumulation tasks.
 
@@ -522,7 +522,7 @@ print("After modification ID:", id(numbers))
 print("Updated list:", numbers)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-19.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-19.png)
 
 2.  #### **Tuple: Attempting Direct Modification**
     
@@ -537,12 +537,12 @@ values = (10, 20, 30)
 values[1] = 25
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-20.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-20.png)
 
 3.  #### **Tuple: Concatenation Creates a New Object**
     
 
-![tuple in python](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-09.jpg)
+![tuple in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/List-vs-Tuple-in-Pythan-09.jpg)
 
 Now observe what happens if you try to “modify” a tuple by using concatenation. Notice how the memory address before concatenation is different from the memory address after concatenation. This shows that Python creates a new tuple object rather than modifying the original one, thereby maintaining the immutability of tuples by design.
 
@@ -560,7 +560,7 @@ print("After concatenation ID:", id(values))
 print("Updated tuple:", values)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-22.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-22.png)
 
 ### Example 2 – Performance and Memory Analysis
 
@@ -584,7 +584,7 @@ print("List creation time:", list_time)
 print("Tuple creation time:", tuple_time)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-26.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-26.png)
 
 2.  #### **Iteration Speed**
     
@@ -608,7 +608,7 @@ print("List iteration time:", list_iter)
 print("Tuple iteration time:", tuple_iter)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-23.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-23.png)
 
 3.  #### **Lookup Time**
     
@@ -639,7 +639,7 @@ end = time.perf_counter()
 print("Lookup time for TUPLE:", end - start)
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-24.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-24.png)
 
 4.  #### **Memory Consumption**
     
@@ -663,7 +663,7 @@ print("Size of the list :", sys.getsizeof(l1))
 print("Size of the tuple :", sys.getsizeof(t1)) 
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-25.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-25.png)
 
 5.  #### **Memory Growth**
     
@@ -701,7 +701,7 @@ for num in range(1, 20):
     prev_size = current_size
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-28.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-28.png)
 
 Thus, the memory does not increase with every append operation (linearly) but increases in larger blocks, which, while increasing performance, also increases memory overhead.
 
@@ -736,7 +736,7 @@ for i in range(1, 11):
     prev_size = current_size
 ```
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2026/03/image-27.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2026/03/image-27.png)
 
 Overall, tuples consume less memory and avoid dynamic reallocation overhead, making them preferable when storage efficiency is critical.
 

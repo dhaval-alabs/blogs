@@ -4,7 +4,7 @@ slug: binary-tree-in-data-structure
 date: "2024-10-04T13:57:31+00:00"
 modified: "2026-02-04T08:14:06+00:00"
 description: "Binary Tree in Data Structure: Explore the fundamentals, properties, and implementation with code snippets for easy understanding."
-featuredImage: "https://www.analytixlabs.co.in/wp-content/uploads/2024/10/Binary-Tree-in-Data-Structure-01-01-770x515-1.jpg"
+featuredImage: "https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/Binary-Tree-in-Data-Structure-01-01-770x515-1.jpg"
 author: Archish Rai Kapil
 categories:
   - Data Science
@@ -33,7 +33,7 @@ Once you define binary tree in data structure, the next step is understanding th
 
 Understanding the terminologies associated with binary trees is crucial for comprehending how this data structure functions. Below are the key concepts:
 
-![concepts of binary tree](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-02-1-scaled.jpg)
+![concepts of binary tree](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-02-1-scaled.jpg)
 
 1.  **Node**: A fundamental element of a binary tree that stores data. Nodes are the building blocks of the tree.
 2.  **Root Node**: It is the tree’s starting point and the topmost node. It has no parent, and all other nodes in the tree are its descendants.
@@ -77,7 +77,7 @@ We’ll start with exploring the basic definitions of arrays and arrays before d
 
 The definitions would have given you some idea of how these data structures differ. However, to understand the differences further, let’s compare them using different parameters.
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-03-scaled.jpg)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-03-scaled.jpg)
 
 Another critical aspect you must know is the properties associated with the binary trees. Below, we will explore the most critical ones.
 
@@ -94,45 +94,45 @@ The maximum number of nodes at a given level ‘l’ in a binary tree is 2 raise
 **2) Maximum Number of Nodes of Height ‘h’:**  
 To find the highest number of nodes in a binary tree whose height ‘h’, you need to 
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image8.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image8.png)
 
 This is derived from a tree having the maximum number of nodes when all levels are fully populated. The total number of nodes can be represented as a geometric series
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image7.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image7.png)
 
 In some conventions where the root height is 0, the formula adjusts to 2 raised to the power of (h+1) minus 1, i.e.,
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image6.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image6.png)
 
 **3) Minimum Height of a Binary Tree:**  
 The minimum number of levels, i.e., height in a binary tree with ‘N’ nodes, can be calculated by considering the logarithm (base 2) of (N+1), i.e.,
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image9.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image9.png)
 
 This formula is derived from the property that the height cannot exceed the number of nodes. The maximum number of possible nodes in a binary tree with height ‘h’ is
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image8.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image8.png)
 
 Therefore, N is less than or equal to 2 raised to the power of ‘h’ minus 1. Thus, the height ‘h’ is >= logarithm (base 2) of (N+1), i.e.,
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image12.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image12.png)
 
 **4) Minimum Number of Levels in a Binary Tree with ‘L’ Leaves:**  
 A binary tree with ‘L’ leaves has at least the logarithm (base 2) of ‘L’ plus 1 levels. This property assumes that the binary tree is filled at each level, maximizing the number of leaves. Hence, the number of levels can be derived as:
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image10.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image10.png)
 
 **5) Number of Leaf Nodes:**  
 In a full binary tree where every node has either no or two children, the number of leaf nodes (L) is always one more than the number of nodes with two children (T), i.e.,
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image11.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image11.png)
 
 This is because each internal node with two children contributes to the structure by leaving one extra leaf node when all connections are accounted for.
 
 **6) Total Number of Edges in a Binary Tree:**  
 In a non-empty binary tree with ‘n’ nodes, the total number of edges ‘e’ is n-1. Apart from the root note, every other node has only one parent, and each connection between a parent and a child represents one edge. Thus making the formula to be
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image13.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image13.png)
 
 **7) Leaf Nodes and Internal Nodes Relationship:**  
 In a binary tree, leaf nodes are always one more than the internal nodes (nodes with children). The reason is that every internal node in a binary tree contributes to creating exactly one additional leaf node.
@@ -146,7 +146,7 @@ Knowing all the above binary tree properties in data structure helps you properl
 
 There are many types of binary trees in data structure. This is mainly because binary trees are versatile data structures used in various computational applications. Depending on the arrangement of nodes and the properties they exhibit, binary trees can be classified into several distinct types. Below are the main types of binary trees in data structure:
 
-![types of binary trees in data structure](https://www.analytixlabs.co.in/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-04-scaled.jpg)
+![types of binary trees in data structure](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/09/Binary-Tree-in-Data-Structure-04-scaled.jpg)
 
 ### **1) Full Binary Tree**
 
@@ -378,7 +378,7 @@ Now, we display the various elements of the binary tree using different transver
 
 **OUTPUT:**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image17.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image17.png)
 
 ### **6) Searching Elements**
 
@@ -387,7 +387,7 @@ We now look for different values in the binary tree. We searched for 30, which i
 
 **OUTPUT:**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image18.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image18.png)
 
 ### **7) Deleting Elements**
 
@@ -396,7 +396,7 @@ Lastly, we delete an element (20 in this example) and, once we have done this, d
 
 **OUTPUT:**
 
-![](https://www.analytixlabs.co.in/wp-content/uploads/2024/10/image19.png)
+![](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2024/10/image19.png)
 
 As you can see above, it is fairly simple to implement a binary tree in Python and perform its various associated operations. However, to perform complex tasks, you need to learn more about their implementation and the algorithm created based on them.
 
