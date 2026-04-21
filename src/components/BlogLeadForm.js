@@ -7,7 +7,7 @@ import {
 } from "@/utils/trackAdvancedBehaviour";
 import { getStoredUtm } from "@/utils/captureUtm";
 
-const THANK_YOU_PATH = "/thank-you";
+const THANK_YOU_PATH = "/thank-you-org";
 
 const inputCls = `
   w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
