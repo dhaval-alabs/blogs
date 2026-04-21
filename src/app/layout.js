@@ -1,5 +1,6 @@
 import { Manrope, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import ClientInit from "@/components/ClientInit";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -48,7 +49,10 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <ClientInit />
+        {children}
+      </body>
     </html>
   );
 }

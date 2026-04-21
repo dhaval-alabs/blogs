@@ -16,6 +16,7 @@ import { postCommentAction, fetchCommentsAction, likeCommentAction } from "@/app
 import "@/components/TiptapEditor.css";
 import parse from "html-react-parser";
 import FrontendKnowledgeCheck from "@/components/FrontendKnowledgeCheck";
+import BlogLeadForm from "@/components/BlogLeadForm";
 
 // Generate a deterministic background color from a username string
 const AVATAR_COLORS = [
@@ -648,6 +649,13 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
               return renderedElements;
             })()}
           </article>
+
+          {/* ── Lead Capture ── */}
+          {layout.showLeadGen && (
+            <section className="mt-16">
+              <BlogLeadForm sourceName={`Blog_Article_${post.slug || "unknown"}`} />
+            </section>
+          )}
 
           {/* ── Discussion ── */}
           <section id="discussion" className="mt-20 pt-10 border-t border-outline-variant/20 dark:border-[#424754]">

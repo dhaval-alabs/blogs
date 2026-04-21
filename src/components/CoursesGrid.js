@@ -90,8 +90,8 @@ export default function CoursesGrid({ limit = 3, showViewAll = true, tags = [] }
                   {course.description}
                 </p>
                 <a
-                  href={course.url || "#"}
-                  target={course.url && course.url !== "#" ? "_blank" : undefined}
+                  href={course.url && course.url !== "#" ? course.url : "https://www.analytixlabs.co.in/courses"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="glass-chip active block w-full text-center py-2.5 rounded-xl font-bold text-sm"
                 >

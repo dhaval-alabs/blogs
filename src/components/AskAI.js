@@ -2,27 +2,30 @@
 
 import { useState, useRef, useEffect } from "react";
 
-// Render a plain-text answer that may include markdown links [text](url).
-// Streaming-safe: if a link is mid-emission we fall back to showing the raw
-// characters so nothing visibly "jumps" as tokens arrive.
+// Render a plain-text answer that may include markdown links [text](url) AND
+// bare URLs. Both become clickable anchors. Streaming-safe: unmatched fragments
+// stay as plain text so nothing jumps as tokens arrive.
 function renderAnswer(text) {
   if (!text) return null;
+  // Matches either [label](url) OR a bare http(s) URL
+  const re = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
   const parts = [];
-  const re = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
   let last = 0;
   let m;
   let i = 0;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) parts.push(text.slice(last, m.index));
+    const href = m[2] || m[3];
+    const label = m[1] || m[3];
     parts.push(
       <a
         key={`lnk-${i++}`}
-        href={m[2]}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className="underline decoration-amber-300/70 underline-offset-2 hover:text-amber-200"
       >
-        {m[1]}
+        {label}
       </a>
     );
     last = m.index + m[0].length;
@@ -226,7 +229,7 @@ export default function AskAI({
             {relatedCourses.map((c) => (
               <a
                 key={c.id}
-                href={c.url || "https://www.analytixlabs.co.in/"}
+                href={c.url && c.url !== "#" ? c.url : "https://www.analytixlabs.co.in/courses"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:-translate-y-0.5 transition-all"
