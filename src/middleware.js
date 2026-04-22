@@ -2,6 +2,21 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 
 export async function middleware(request) {
+  // Subdomain canonicalization: 301 direct hits on blog.analytixlabs.co.in
+  // to www.analytixlabs.co.in. The Cloudflare Worker that reverse-proxies
+  // www.analytixlabs.co.in/blog/* presents www.* as the client-visible host,
+  // so those requests pass through. Vercel always populates x-forwarded-host
+  // with the client's requested host, so we trust it when present.
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const effectiveHost = forwardedHost || request.headers.get('host') || '';
+  if (effectiveHost.startsWith('blog.analytixlabs.co.in')) {
+    const url = new URL(request.url);
+    url.protocol = 'https:';
+    url.host = 'www.analytixlabs.co.in';
+    url.port = '';
+    return NextResponse.redirect(url.toString(), 301);
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

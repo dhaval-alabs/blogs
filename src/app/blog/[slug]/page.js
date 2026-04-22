@@ -18,7 +18,6 @@ export async function generateMetadata({ params }) {
       return {
         title: `${mdxPost.title} | ${SITE_NAME}`,
         description: mdxPost.description || mdxPost.title,
-        robots: { index: false, follow: false },
         openGraph: {
           title: mdxPost.title,
           description: mdxPost.description || mdxPost.title,
@@ -34,7 +33,6 @@ export async function generateMetadata({ params }) {
       return {
         title: `${label.replace(/\b\w/g, (c) => c.toUpperCase())} | ${SITE_NAME}`,
         description: `Articles in ${label}`,
-        robots: { index: false, follow: false },
         alternates: { canonical: `https://www.analytixlabs.co.in/blog/${slug}/` },
       };
     }
@@ -46,7 +44,6 @@ export async function generateMetadata({ params }) {
   return {
     title: seo.metaTitle || `${post.title} | ${SITE_NAME}`,
     description: seo.metaDesc || post.excerpt || post.title,
-    robots: { index: false, follow: false },
     openGraph: {
       title: post.title,
       description: post.excerpt || post.title,
