@@ -42,6 +42,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/article/:slug',
+        destination: '/blog/:slug/',
+        permanent: true,
+      },
+      {
+        source: '/article/:slug/',
+        destination: '/blog/:slug/',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
