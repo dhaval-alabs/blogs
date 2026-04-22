@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase";
 
+// Cached for 5 minutes — blog page config changes only on admin save.
+export const revalidate = 300;
+
 /**
  * Public: returns the /blog page config (featured posts + carousels).
  * Read-only endpoint — mutations go through updateBlogPageConfigAction.

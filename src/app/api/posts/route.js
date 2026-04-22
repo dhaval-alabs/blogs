@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchPosts } from '@/lib/data.server';
+import { searchPosts, searchPostsLite } from '@/lib/data.server';
 import { getServiceClient } from '@/lib/supabase';
 import { createClient } from '@/utils/supabase/server';
 
@@ -37,6 +37,7 @@ export async function GET(request) {
     return NextResponse.json(posts);
   }
 
-  const posts = await searchPosts(query, topic, skill);
+  // Public listing — use the lightweight projection (no content column).
+  const posts = await searchPostsLite(query, topic, skill);
   return NextResponse.json(posts);
 }

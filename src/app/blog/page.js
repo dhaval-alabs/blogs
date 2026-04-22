@@ -49,18 +49,17 @@ function BlogListingContent() {
       .then((data) => {
         const posts = Array.isArray(data) ? data : [];
         setAllPosts(posts);
-        setAuthorPostCount(posts.filter((p) => p.authorId === FEATURED_AUTHOR_SLUG).length);
+        // Featured author count + spotlight are derived from embedded post.author —
+        // no separate /api/authors round-trip needed.
+        const featuredPostsByAuthor = posts.filter((p) => p.authorId === FEATURED_AUTHOR_SLUG);
+        setAuthorPostCount(featuredPostsByAuthor.length);
+        const featured = featuredPostsByAuthor[0]?.author
+          || posts.find((p) => p.author)?.author
+          || null;
+        setSpotlight(featured);
         setPostsLoading(false);
       })
       .catch(() => setPostsLoading(false));
-
-    fetch("/api/authors")
-      .then((r) => r.ok ? r.json() : [])
-      .then((authors) => {
-        const featured = authors.find((a) => a.slug === FEATURED_AUTHOR_SLUG) || authors[0] || null;
-        setSpotlight(featured);
-      })
-      .catch(() => {});
 
     fetch("/api/site-config/blog-page")
       .then((r) => r.ok ? r.json() : { featured_slugs: [], carousels: [] })

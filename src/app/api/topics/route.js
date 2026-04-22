@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
 
+// Cached for 5 minutes — topics are admin-managed and change rarely.
+export const revalidate = 300;
+
 export async function GET() {
   const db = getServiceClient();
   const { data, error } = await db
