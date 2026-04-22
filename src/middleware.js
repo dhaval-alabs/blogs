@@ -24,17 +24,21 @@ export async function middleware(request) {
   // Validate the user's session
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Normalize pathname so trailing-slash canonicalization (next.config.mjs
+  // `trailingSlash: true`) doesn't desync these checks and cause a redirect loop.
+  const pathname = request.nextUrl.pathname.replace(/\/$/, '') || '/';
+
   // If there's no user, and they are trying to access /studio pages (but not /studio/login)
-  if (!user && request.nextUrl.pathname.startsWith('/studio') && request.nextUrl.pathname !== '/studio/login') {
+  if (!user && pathname.startsWith('/studio') && pathname !== '/studio/login') {
     const url = request.nextUrl.clone();
-    url.pathname = '/studio/login';
+    url.pathname = '/studio/login/';
     return NextResponse.redirect(url);
   }
 
   // If there IS a user, and they are trying to view the login page, redirect to studio
-  if (user && request.nextUrl.pathname === '/studio/login') {
+  if (user && pathname === '/studio/login') {
     const url = request.nextUrl.clone();
-    url.pathname = '/studio';
+    url.pathname = '/studio/';
     return NextResponse.redirect(url);
   }
 
