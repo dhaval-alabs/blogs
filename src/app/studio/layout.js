@@ -12,7 +12,8 @@ export default function StudioLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, authorProfile, signOut } = useAuth();
-  const isLoginPage = pathname === "/studio/login";
+  const normalizedPath = (pathname || "").replace(/\/$/, "") || "/";
+  const isLoginPage = normalizedPath === "/studio/login";
 
   const {
     state,
@@ -45,12 +46,12 @@ export default function StudioLayout({ children }) {
 
   const handleClearEditor = () => {
     clearEditor();
-    if (pathname !== '/studio') router.push('/studio');
+    if (normalizedPath !== '/studio') router.push('/studio');
   };
 
   const handleLoadPostForEdit = (post) => {
     loadPostForEdit(post);
-    if (pathname !== '/studio') router.push('/studio');
+    if (normalizedPath !== '/studio') router.push('/studio');
   };
 
   const contextValue = {

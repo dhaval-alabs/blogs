@@ -17,7 +17,8 @@ export default function StudioSidebar({
   signOut,
   dynamicAuthor,
 }) {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = (rawPathname || "").replace(/\/$/, "") || "/";
   const router = useRouter();
   const isEditorRoute = pathname === '/studio';
 
