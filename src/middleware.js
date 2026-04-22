@@ -3,13 +3,20 @@ import { NextResponse } from 'next/server';
 
 export async function middleware(request) {
   // Subdomain canonicalization: 301 direct hits on blog.analytixlabs.co.in
-  // to www.analytixlabs.co.in. The Cloudflare Worker that reverse-proxies
-  // www.analytixlabs.co.in/blog/* presents www.* as the client-visible host,
-  // so those requests pass through. Vercel always populates x-forwarded-host
-  // with the client's requested host, so we trust it when present.
-  const forwardedHost = request.headers.get('x-forwarded-host');
-  const effectiveHost = forwardedHost || request.headers.get('host') || '';
-  if (effectiveHost.startsWith('blog.analytixlabs.co.in')) {
+  // to www.analytixlabs.co.in so Google only sees one canonical URL.
+  //
+  // The Cloudflare Worker that reverse-proxies www.analytixlabs.co.in/blog/*
+  // sets the custom header x-alabs-from-worker: 1 on every request it forwards.
+  // When we see that header we skip the redirect — because the user is actually
+  // browsing www and the Worker is just fetching content on their behalf.
+  //
+  // Custom non-standard headers like x-alabs-from-worker are not overridden or
+  // stripped by Vercel's edge, making them a reliable handshake signal.
+  const fromWorker = request.headers.get('x-alabs-from-worker') === '1';
+  const effectiveHost =
+    request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
+
+  if (!fromWorker && effectiveHost.startsWith('blog.analytixlabs.co.in')) {
     const url = new URL(request.url);
     url.protocol = 'https:';
     url.host = 'www.analytixlabs.co.in';
@@ -28,16 +35,22 @@ export async function middleware(request) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
+          cookiesToSet.forEach(({ name, value, options }) =>
+            request.cookies.set(name, value)
+          );
           supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
         },
       },
     }
   );
 
   // Validate the user's session
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Normalize pathname so trailing-slash canonicalization (next.config.mjs
   // `trailingSlash: true`) doesn't desync these checks and cause a redirect loop.
