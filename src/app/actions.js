@@ -566,6 +566,64 @@ export async function subscribeAction({ email, name = '', source = 'newsletter' 
   }
 }
 
+// ── fetchSubscribersAction (admin) ────────────────────────────────
+// Returns the full subscribers list, newest first. Admin-only.
+export async function fetchSubscribersAction() {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { data, error } = await db
+      .from('subscribers')
+      .select('id, email, name, source, subscribed_at, is_active')
+      .order('subscribed_at', { ascending: false });
+
+    if (error) throw error;
+    return { success: true, subscribers: data || [] };
+  } catch (error) {
+    console.error('fetchSubscribersAction failed:', error);
+    return { success: false, error: 'Failed to fetch subscribers.' };
+  }
+}
+
+// ── toggleSubscriberAction (admin) ────────────────────────────────
+export async function toggleSubscriberAction(id, isActive) {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { error } = await db
+      .from('subscribers')
+      .update({ is_active: !!isActive })
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    console.error('toggleSubscriberAction failed:', error);
+    return { success: false, error: 'Failed to update subscriber.' };
+  }
+}
+
+// ── deleteSubscriberAction (admin) ────────────────────────────────
+export async function deleteSubscriberAction(id) {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { error } = await db.from('subscribers').delete().eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    console.error('deleteSubscriberAction failed:', error);
+    return { success: false, error: 'Failed to delete subscriber.' };
+  }
+}
+
 // ── postCommentAction ─────────────────────────────────────────────
 // Comments are inserted with status='pending' and must be approved
 // by an admin before appearing publicly. Returns { pending: true }

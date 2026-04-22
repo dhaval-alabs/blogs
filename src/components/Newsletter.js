@@ -2,25 +2,33 @@
 
 import { useState } from "react";
 import { useToast } from "./Toast";
+import { subscribeAction } from "@/app/actions";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const addToast = useToast();
 
-  function handleSubscribe(e) {
+  async function handleSubscribe(e) {
     e.preventDefault();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       addToast("Please enter a valid email address.", "error");
       return;
     }
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const result = await subscribeAction({ email, source: "sidebar" });
+      if (result.success) {
+        addToast("Successfully subscribed! Check your inbox.", "success");
+        setEmail("");
+      } else {
+        addToast(result.error || "Subscription failed.", "error");
+      }
+    } catch {
+      addToast("Something went wrong. Try again.", "error");
+    } finally {
       setLoading(false);
-      setEmail("");
-      addToast("Successfully subscribed! Check your inbox.", "success");
-    }, 1200);
+    }
   }
 
   return (

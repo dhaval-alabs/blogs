@@ -12,11 +12,23 @@ export async function middleware(request) {
   //
   // Custom non-standard headers like x-alabs-from-worker are not overridden or
   // stripped by Vercel's edge, making them a reliable handshake signal.
+  // Only redirect paths that the Cloudflare Worker actually forwards at
+  // www.analytixlabs.co.in (/blog/*). /studio, /api, and other internal
+  // paths must stay reachable on the Vercel subdomain — if we redirect
+  // them to www they fall through to WordPress and 404.
+  const rawPathname = request.nextUrl.pathname;
+  const isWorkerForwardedPath =
+    rawPathname === '/blog' || rawPathname.startsWith('/blog/');
+
   const fromWorker = request.headers.get('x-alabs-from-worker') === '1';
   const effectiveHost =
     request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
 
-  if (!fromWorker && effectiveHost.startsWith('blog.analytixlabs.co.in')) {
+  if (
+    !fromWorker &&
+    isWorkerForwardedPath &&
+    effectiveHost.startsWith('blog.analytixlabs.co.in')
+  ) {
     const url = new URL(request.url);
     url.protocol = 'https:';
     url.host = 'www.analytixlabs.co.in';

@@ -85,6 +85,7 @@ export async function getPosts() {
     .from('posts')
     .select('*')
     .eq('status', 'Published')
+    .order('published_at', { ascending: false, nullsFirst: false })
     .order('id', { ascending: false });
 
   if (error) {
@@ -182,7 +183,9 @@ export async function searchPosts(query = '', activeTopic = null, activeSkill = 
     qb = qb.eq('skill_level', activeSkill);
   }
 
-  const { data, error } = await qb.order('id', { ascending: false });
+  const { data, error } = await qb
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('id', { ascending: false });
   if (error) {
     console.error('[data.server] searchPosts error:', error.message);
     return [];
