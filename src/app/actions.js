@@ -1105,7 +1105,7 @@ export async function toggleSuperAdminAction(targetSlug, makeSuperAdmin) {
 }
 
 // ── Super admin: update /blog page config (featured posts + carousels) ─
-export async function updateBlogPageConfigAction({ featuredSlugs = [], carousels = [] }) {
+export async function updateBlogPageConfigAction({ featuredSlugs = [], carousels = [], categoriesWidget = null }) {
   try {
     const db = await requireSuperAdmin();
 
@@ -1137,11 +1137,33 @@ export async function updateBlogPageConfigAction({ featuredSlugs = [], carousels
           .slice(0, 10)
       : [];
 
+    // Preserve existing widget config when caller omits it (partial update)
+    const existingWidget = currentZones?.blog_page?.categories_widget || null;
+    const cw = categoriesWidget ?? existingWidget;
+    const cleanCategoriesWidget = cw && typeof cw === 'object'
+      ? {
+          enabled:    cw.enabled !== false,
+          title:      String(cw.title || 'Categories').trim().slice(0, 60),
+          mode:       cw.mode === 'manual' ? 'manual' : 'auto',
+          limit:      Math.min(Math.max(parseInt(cw.limit) || 12, 1), 30),
+          categories: Array.isArray(cw.categories)
+            ? cw.categories.map((s) => String(s).trim()).filter(Boolean).slice(0, 30)
+            : [],
+        }
+      : {
+          enabled: true,
+          title: 'Categories',
+          mode: 'auto',
+          limit: 12,
+          categories: [],
+        };
+
     const newZones = {
       ...currentZones,
       blog_page: {
-        featured_slugs: cleanFeatured,
-        carousels: cleanCarousels,
+        featured_slugs:    cleanFeatured,
+        carousels:         cleanCarousels,
+        categories_widget: cleanCategoriesWidget,
       },
     };
 

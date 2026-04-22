@@ -15,6 +15,7 @@ import SidebarCourseCard from "@/components/SidebarCourseCard";
 import SidebarSalaryWidget from "@/components/SidebarSalaryWidget";
 import SidebarAuthorSpotlight from "@/components/SidebarAuthorSpotlight";
 import RecommendedPosts from "@/components/RecommendedPosts";
+import SidebarCategories from "@/components/SidebarCategories";
 import NewsletterBanner from "@/components/NewsletterBanner";
 import DiscussionSection from "@/components/DiscussionSection";
 import CoursesGrid from "@/components/CoursesGrid";
@@ -37,7 +38,7 @@ function BlogListingContent() {
   const [authorPostCount, setAuthorPostCount] = useState(0);
   const [spotlight, setSpotlight]     = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogConfig, setBlogConfig]   = useState({ featured_slugs: [], carousels: [] });
+  const [blogConfig, setBlogConfig]   = useState({ featured_slugs: [], carousels: [], categories_widget: null });
 
   // Reset to page 1 when filters change
   useEffect(() => { setCurrentPage(1); }, [search, activeTopic, activeSkill]);
@@ -269,6 +270,7 @@ function BlogListingContent() {
               placeholder="Ask anything about data science…"
             />
             <SidebarCourseCard course={courses[0]} />
+            <SidebarCategories posts={allPosts} config={blogConfig.categories_widget} />
             <RecommendedPosts posts={allPosts.slice(1, 5)} />
             <SidebarAuthorSpotlight author={spotlight} articleCount={authorPostCount} />
             <SidebarSalaryWidget />

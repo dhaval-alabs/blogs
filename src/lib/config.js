@@ -72,8 +72,8 @@ export const SUGGESTED_AI_QUERIES = [
 
 // ── Newsletter ────────────────────────────────────────────────────
 export const NEWSLETTER = {
-  title:       "Weekly Data Science Digest",
-  subtitle:    "Join 50,000+ data professionals. Research, tutorials & career insights, every Friday.",
+  title:       "Weekly Data Science and AI Digest",
+  subtitle:    "Join 50,000+ data professionals and get instant access to research, tutorials & career insights, every Thursday.",
   placeholder: "Enter your work email",
   cta:         "Subscribe →",
   footnote:    "Free gift: Data Science Career Roadmap 2026 PDF on sign-up",

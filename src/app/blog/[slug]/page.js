@@ -1,7 +1,8 @@
-import { getPostBySlug, getRecommendations, getCourseMatch, getAuthorPostCount } from "@/lib/data.server";
+import { getPostBySlug, getRecommendations, getCourseMatch, getAuthorPostCount, isCategorySlug } from "@/lib/data.server";
 import { getSiteConfig } from "@/lib/site-config.server";
 import { notFound } from "next/navigation";
 import ArticleContent from "./ArticleContent";
+import CategoryView from "@/components/CategoryView";
 import { SITE_NAME } from "@/lib/config";
 import { getMdxPostBySlug, mdxToHtml, mapMdxToPost } from "@/lib/mdx-posts";
 
@@ -26,6 +27,15 @@ export async function generateMetadata({ params }) {
           images: mdxPost.featuredImage ? [{ url: mdxPost.featuredImage }] : [],
         },
         alternates: { canonical: mdxPost.canonical || undefined },
+      };
+    }
+    if (await isCategorySlug(slug)) {
+      const label = slug.replace(/-/g, " ");
+      return {
+        title: `${label.replace(/\b\w/g, (c) => c.toUpperCase())} | ${SITE_NAME}`,
+        description: `Articles in ${label}`,
+        robots: { index: false, follow: false },
+        alternates: { canonical: `https://www.analytixlabs.co.in/blog/${slug}/` },
       };
     }
     return { title: "Article Not Found" };
@@ -110,7 +120,12 @@ export default async function ArticlePage({ params }) {
     }
   }
 
-  if (!post) notFound();
+  if (!post) {
+    if (await isCategorySlug(slug)) {
+      return <CategoryView categorySlug={slug} />;
+    }
+    notFound();
+  }
 
   const [recommendedArticles, courseMatch, authorPostCount, siteConfig] = await Promise.all([
     getRecommendations(slug, 3),

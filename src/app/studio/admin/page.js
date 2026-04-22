@@ -25,6 +25,13 @@ export default function AdminDashboard() {
   const [allPostsForPicker, setAllPostsForPicker] = useState([]);
   const [featuredSlugs, setFeaturedSlugs] = useState([]);
   const [carousels, setCarousels] = useState([]); // [{id,title,source,category,slugs,limit,enabled}]
+  const [categoriesWidget, setCategoriesWidget] = useState({
+    enabled: true,
+    title: "Categories",
+    mode: "auto",
+    limit: 12,
+    categories: [],
+  });
   const [blogCfgSaving, setBlogCfgSaving] = useState(false);
   const [blogCfgMsg, setBlogCfgMsg] = useState(null);
 
@@ -83,6 +90,14 @@ export default function AdminDashboard() {
       const bp = data?.zones?.blog_page || {};
       setFeaturedSlugs(Array.isArray(bp.featured_slugs) ? bp.featured_slugs : []);
       setCarousels(Array.isArray(bp.carousels) ? bp.carousels : []);
+      const cw = bp.categories_widget || {};
+      setCategoriesWidget({
+        enabled:    cw.enabled !== false,
+        title:      typeof cw.title === "string" ? cw.title : "Categories",
+        mode:       cw.mode === "manual" ? "manual" : "auto",
+        limit:      Number.isFinite(cw.limit) ? cw.limit : 12,
+        categories: Array.isArray(cw.categories) ? cw.categories : [],
+      });
     }
     async function fetchPostsForPicker() {
       const { data } = await supabase
@@ -853,13 +868,123 @@ export default function AdminDashboard() {
               ))}
             </div>
 
+            {/* Categories Widget (right sidebar on /blog) */}
+            <div style={{ marginTop: 8, marginBottom: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <label style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
+                  Categories Widget (right sidebar)
+                </label>
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text3)' }}>
+                  <input
+                    type="checkbox"
+                    checked={categoriesWidget.enabled}
+                    onChange={(e) => setCategoriesWidget({ ...categoriesWidget, enabled: e.target.checked })}
+                  />
+                  Show on /blog
+                </label>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
+                <input
+                  type="text"
+                  value={categoriesWidget.title}
+                  onChange={(e) => setCategoriesWidget({ ...categoriesWidget, title: e.target.value })}
+                  placeholder="Widget title"
+                  style={{ padding: '7px 10px', fontSize: 13, borderRadius: 6, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}
+                />
+                <select
+                  value={categoriesWidget.mode}
+                  onChange={(e) => setCategoriesWidget({ ...categoriesWidget, mode: e.target.value })}
+                  style={{ padding: '7px 10px', fontSize: 13, borderRadius: 6, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}
+                >
+                  <option value="auto">Auto — top by post count</option>
+                  <option value="manual">Manual — pick & order</option>
+                </select>
+                <input
+                  type="number"
+                  min="1" max="30"
+                  value={categoriesWidget.limit}
+                  onChange={(e) => setCategoriesWidget({ ...categoriesWidget, limit: parseInt(e.target.value) || 12 })}
+                  disabled={categoriesWidget.mode === 'manual'}
+                  title="Auto mode: max categories to show"
+                  placeholder="Limit"
+                  style={{ padding: '7px 10px', fontSize: 13, borderRadius: 6, border: '1px solid var(--border)', background: categoriesWidget.mode === 'manual' ? 'var(--bg3)' : 'var(--bg)', color: 'var(--text)' }}
+                />
+              </div>
+
+              {categoriesWidget.mode === 'manual' && (
+                <div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                    {categoriesWidget.categories.map((name, idx) => (
+                      <span key={name} style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        padding: '4px 8px 4px 10px', borderRadius: 6,
+                        background: 'var(--blue-dim, rgba(59,130,246,0.12))', color: 'var(--blue, #3b82f6)',
+                        fontSize: 12, fontWeight: 600,
+                      }}>
+                        <span style={{ opacity: 0.6 }}>#{idx + 1}</span>
+                        <span>{name}</span>
+                        <button
+                          onClick={() => setCategoriesWidget({
+                            ...categoriesWidget,
+                            categories: categoriesWidget.categories.filter((c) => c !== name),
+                          })}
+                          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'inherit', display: 'flex', padding: 2 }}
+                          title="Remove"
+                        ><X size={12} /></button>
+                      </span>
+                    ))}
+                    {categoriesWidget.categories.length === 0 && (
+                      <span style={{ fontSize: 12, color: 'var(--text4, #aaa)', fontStyle: 'italic' }}>
+                        No categories selected. Auto-fill will be used until you add at least one.
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <select
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (!v || categoriesWidget.categories.includes(v) || categoriesWidget.categories.length >= 30) return;
+                        setCategoriesWidget({ ...categoriesWidget, categories: [...categoriesWidget.categories, v] });
+                        e.target.value = "";
+                      }}
+                      style={{ flex: 1, padding: '7px 10px', fontSize: 13, borderRadius: 6, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}
+                    >
+                      <option value="">+ Pick an existing category…</option>
+                      {[...new Set(allPostsForPicker.map((p) => p.category).filter(Boolean))]
+                        .sort()
+                        .filter((cat) => !categoriesWidget.categories.includes(cat))
+                        .map((cat) => (
+                          <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="…or type a new one + Enter"
+                      onKeyDown={(e) => {
+                        if (e.key !== 'Enter') return;
+                        const v = e.currentTarget.value.trim();
+                        if (!v || categoriesWidget.categories.includes(v) || categoriesWidget.categories.length >= 30) return;
+                        setCategoriesWidget({ ...categoriesWidget, categories: [...categoriesWidget.categories, v] });
+                        e.currentTarget.value = "";
+                      }}
+                      style={{ flex: 1, padding: '7px 10px', fontSize: 13, borderRadius: 6, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}
+                    />
+                  </div>
+                  <p style={{ marginTop: 8, fontSize: 11, color: 'var(--text4, #aaa)' }}>
+                    Order here determines render order in the sidebar. Drag to reorder is not available yet — remove & re-add to reorder.
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* Save + status */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
               <button
                 onClick={async () => {
                   setBlogCfgSaving(true);
                   setBlogCfgMsg(null);
-                  const res = await updateBlogPageConfigAction({ featuredSlugs, carousels });
+                  const res = await updateBlogPageConfigAction({ featuredSlugs, carousels, categoriesWidget });
                   setBlogCfgMsg(res.success ? { type: "success", text: "Blog page config saved!" } : { type: "err", text: res.error });
                   setBlogCfgSaving(false);
                 }}

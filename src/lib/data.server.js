@@ -111,6 +111,24 @@ export async function getPostBySlug(slug) {
   return (await mapPosts([data]))[0];
 }
 
+/** Check whether a URL slug resolves to a known post category.
+ *  `categorySlug` is the URL-safe form (e.g. "data-analytics"). Matches
+ *  against any `posts.category` whose slugified form equals it. */
+export async function isCategorySlug(categorySlug) {
+  if (!categorySlug) return false;
+  const target = categorySlug.toLowerCase();
+  const { data, error } = await supabase
+    .from('posts')
+    .select('category')
+    .not('category', 'is', null)
+    .neq('category', '');
+  if (error) return false;
+  return (data || []).some(r => {
+    const s = (r.category || '').toLowerCase().trim().replace(/\s+/g, '-');
+    return s === target;
+  });
+}
+
 /** Count published posts by a given author */
 export async function getAuthorPostCount(authorId) {
   const { count, error } = await supabase
