@@ -229,23 +229,33 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
   async function handlePostComment(e) {
     e.preventDefault();
     if (!newComment.trim()) { addToast("Please write something!", "error"); return; }
-    const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: newComment });
-    if (result.success) {
-      setNewComment("");
-      addToast("Your comment has been submitted and is awaiting moderation.", "success");
-    } else {
-      addToast(result.error || "Failed to post", "error");
+    try {
+      const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: newComment });
+      if (result.success) {
+        setNewComment("");
+        addToast("Your comment has been submitted and is awaiting moderation.", "success");
+      } else {
+        addToast(result.error || "Failed to post comment.", "error");
+      }
+    } catch (err) {
+      console.error("Comment submission error:", err);
+      addToast("Failed to post comment: " + (err?.message || "Unknown error"), "error");
     }
   }
 
   async function handlePostReply(commentId) {
     if (!replyText.trim()) return;
-    const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: replyText, parentCommentId: commentId });
-    if (result.success) {
-      setReplyText(""); setReplyingTo(null);
-      addToast("Your reply has been submitted and is awaiting moderation.", "success");
-    } else {
-      addToast(result.error || "Failed to reply", "error");
+    try {
+      const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: replyText, parentCommentId: commentId });
+      if (result.success) {
+        setReplyText(""); setReplyingTo(null);
+        addToast("Your reply has been submitted and is awaiting moderation.", "success");
+      } else {
+        addToast(result.error || "Failed to reply.", "error");
+      }
+    } catch (err) {
+      console.error("Reply submission error:", err);
+      addToast("Failed to reply: " + (err?.message || "Unknown error"), "error");
     }
   }
 
