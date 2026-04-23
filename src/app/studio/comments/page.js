@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   fetchPendingCommentsAction, 
+  fetchApprovedCommentsAction,
   approveCommentAction, 
   rejectCommentAction,
   batchModerateCommentsAction
@@ -23,6 +24,7 @@ export default function CommentsModerationPage() {
   const [actioning, setActioning] = useState(new Set());
   const [toast, setToast] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const [activeTab, setActiveTab] = useState("pending"); // "pending" or "published"
 
   // ── Auth Handling ──────────────────────────────────────────
   useEffect(() => {
@@ -36,10 +38,13 @@ export default function CommentsModerationPage() {
   // ── Data Loading ───────────────────────────────────────────
   const load = useCallback(async () => {
     setFetching(true);
-    const result = await fetchPendingCommentsAction();
+    setComments([]);
+    const result = activeTab === "pending" 
+      ? await fetchPendingCommentsAction() 
+      : await fetchApprovedCommentsAction();
     if (result.success) setComments(result.comments);
     setFetching(false);
-  }, []);
+  }, [activeTab]);
 
   useEffect(() => {
     if (authorProfile?.is_super_admin) {
@@ -86,9 +91,9 @@ export default function CommentsModerationPage() {
     if (result.success) {
       setComments(prev => prev.filter(c => c.id !== id));
       setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n; });
-      showToast("Comment rejected and deleted.");
+      showToast(activeTab === "pending" ? "Comment rejected and deleted." : "Comment deleted.");
     } else {
-      showToast(result.error || "Failed to reject", "err");
+      showToast(result.error || "Failed to delete", "err");
     }
     setActioning(prev => { const n = new Set(prev); n.delete(id); return n; });
   }
@@ -102,7 +107,7 @@ export default function CommentsModerationPage() {
     if (result.success) {
       setComments(prev => prev.filter(c => !selectedIds.has(c.id)));
       setSelectedIds(new Set());
-      showToast(`Successfully ${action === 'approve' ? 'approved' : 'rejected'} ${ids.length} comments.`);
+      showToast(`Successfully ${action === 'approve' ? 'approved' : 'deleted'} ${ids.length} comments.`);
     } else {
       showToast(result.error || `Batch ${action} failed`, "err");
     }
@@ -156,14 +161,40 @@ export default function CommentsModerationPage() {
 
           <div className="workspace" style={{ background: "var(--bg2)", padding: "32px 40px", overflowY: "auto", display: "block" }}>
             
+            {/* Tabs */}
+            <div style={{ display: "flex", gap: 32, borderBottom: "1px solid var(--border)", marginBottom: 32 }}>
+              <button 
+                onClick={() => setActiveTab("pending")}
+                style={{ 
+                  padding: "12px 4px", fontSize: 14, fontWeight: 700, border: "none", background: "none", cursor: "pointer",
+                  color: activeTab === "pending" ? "var(--blue)" : "var(--text3)",
+                  borderBottom: activeTab === "pending" ? "2px solid var(--blue)" : "2px solid transparent",
+                  transition: "all 0.2s"
+                }}
+              >
+                Pending Review
+              </button>
+              <button 
+                onClick={() => setActiveTab("published")}
+                style={{ 
+                  padding: "12px 4px", fontSize: 14, fontWeight: 700, border: "none", background: "none", cursor: "pointer",
+                  color: activeTab === "published" ? "var(--blue)" : "var(--text3)",
+                  borderBottom: activeTab === "published" ? "2px solid var(--blue)" : "2px solid transparent",
+                  transition: "all 0.2s"
+                }}
+              >
+                Published
+              </button>
+            </div>
+
             {/* Action Bar */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
               <div>
                 <h2 style={{ fontSize: 24, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: "-0.5px" }}>
-                  Pending Review
+                  {activeTab === "pending" ? "Pending Review" : "Published Comments"}
                 </h2>
                 <p style={{ color: "var(--text3)", fontSize: 13, margin: "4px 0 0" }}>
-                  {comments.length} comments awaiting publication
+                  {comments.length} comments {activeTab === "pending" ? "awaiting publication" : "currently live"}
                 </p>
               </div>
 
@@ -178,19 +209,21 @@ export default function CommentsModerationPage() {
                   </button>
                   {selectedIds.size > 0 && (
                     <>
-                      <button 
-                        className="tb-share" 
-                        onClick={() => handleBatchAction('approve')}
-                        style={{ background: "var(--green)", color: "white", borderColor: "var(--green)" }}
-                      >
-                         Approve Selected ({selectedIds.size})
-                      </button>
+                      {activeTab === "pending" && (
+                        <button 
+                          className="tb-share" 
+                          onClick={() => handleBatchAction('approve')}
+                          style={{ background: "var(--green)", color: "white", borderColor: "var(--green)" }}
+                        >
+                           Approve Selected ({selectedIds.size})
+                        </button>
+                      )}
                       <button 
                         className="tb-ghost" 
                         onClick={() => handleBatchAction('reject')}
                         style={{ color: "var(--red)", border: "1px solid var(--red-dim)" }}
                       >
-                         Reject Selected
+                         Delete Selected
                       </button>
                     </>
                   )}
@@ -211,10 +244,18 @@ export default function CommentsModerationPage() {
                   <span className="material-symbols-outlined" style={{ fontSize: 32 }}>chat_bubble</span>
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, color: "var(--text)", fontSize: 18 }}>Inbox Zero</h3>
-                  <p style={{ margin: "4px 0 0", color: "var(--text3)", fontSize: 14 }}>No pending comments to moderate. You're all caught up!</p>
+                  <h3 style={{ margin: 0, color: "var(--text)", fontSize: 18 }}>
+                    {activeTab === "pending" ? "Inbox Zero" : "No Published Comments"}
+                  </h3>
+                  <p style={{ margin: "4px 0 0", color: "var(--text3)", fontSize: 14 }}>
+                    {activeTab === "pending" 
+                      ? "No pending comments to moderate. You're all caught up!"
+                      : "There are no approved comments to display."}
+                  </p>
                 </div>
-                <button className="tb-ghost" onClick={() => router.push("/studio")}>Return to Dashboard</button>
+                {activeTab === "pending" && (
+                  <button className="tb-ghost" onClick={() => router.push("/studio")}>Return to Dashboard</button>
+                )}
               </div>
             )}
 
@@ -317,16 +358,18 @@ export default function CommentsModerationPage() {
                           disabled={isBusy}
                           style={{ color: "var(--red)", border: "none", fontSize: 13 }}
                         >
-                           Reject & Trash
+                           {activeTab === "pending" ? "Reject & Trash" : "Delete Comment"}
                         </button>
-                        <button 
-                          className="tb-ghost" 
-                          onClick={() => handleApprove(c.id)}
-                          disabled={isBusy}
-                          style={{ background: "var(--green-dim)", color: "var(--green)", border: "none", padding: "8px 16px", fontSize: 13, fontWeight: 700 }}
-                        >
-                           Approve Comment
-                        </button>
+                        {activeTab === "pending" && (
+                          <button 
+                            className="tb-ghost" 
+                            onClick={() => handleApprove(c.id)}
+                            disabled={isBusy}
+                            style={{ background: "var(--green-dim)", color: "var(--green)", border: "none", padding: "8px 16px", fontSize: 13, fontWeight: 700 }}
+                          >
+                             Approve Comment
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

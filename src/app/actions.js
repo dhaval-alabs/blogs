@@ -801,6 +801,41 @@ export async function fetchPendingCommentsAction() {
   }
 }
 
+// ── fetchApprovedCommentsAction ───────────────────────────────────
+// Returns all approved comments for management. Super-admin only.
+export async function fetchApprovedCommentsAction() {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { data, error } = await db
+      .from('comments')
+      .select('*, parent:parent_comment_id(text, user_name)')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const comments = (data || []).map(row => ({
+      id: row.id,
+      postSlug: row.post_slug,
+      user: row.user_name,
+      text: row.text,
+      likes: row.likes || 0,
+      parentCommentId: row.parent_comment_id,
+      parentContext: row.parent ? { text: row.parent.text, user: row.parent.user_name } : null,
+      createdAt: row.created_at,
+      time: formatRelativeTime(row.created_at),
+    }));
+
+    return { success: true, comments };
+  } catch (error) {
+    console.error('fetchApprovedCommentsAction failed:', error);
+    return { success: false, error: 'Failed to fetch approved comments.' };
+  }
+}
+
 // ── approveCommentAction ──────────────────────────────────────────
 // Sets a comment status to 'approved', making it publicly visible.
 export async function approveCommentAction(commentId) {
