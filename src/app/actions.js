@@ -629,8 +629,17 @@ export async function deleteSubscriberAction(id) {
 // by an admin before appearing publicly. Returns { pending: true }
 // so the UI can show a "awaiting moderation" message instead of
 // immediately appending the comment.
-export async function postCommentAction({ postSlug, userName, text, parentCommentId = null }) {
+//
+// IMPORTANT: Never throw inside a server action in production.
+// Next.js intercepts thrown errors and replaces them with a generic
+// sanitized message, preventing real error info from reaching the client.
+export async function postCommentAction(input) {
   try {
+    const postSlug = input?.postSlug;
+    const userName = input?.userName;
+    const text = input?.text;
+    const parentCommentId = input?.parentCommentId ?? null;
+
     if (!postSlug || !text?.trim()) {
       return { success: false, error: 'Comment text is required.' };
     }
@@ -646,13 +655,17 @@ export async function postCommentAction({ postSlug, userName, text, parentCommen
       status: 'pending',
     };
 
-    const { error } = await db.from('comments').insert(row);
-    if (error) throw error;
+    const { error: dbError } = await db.from('comments').insert(row);
+
+    if (dbError) {
+      console.error('postCommentAction DB error:', dbError.message, dbError.code, dbError.details);
+      return { success: false, error: String(dbError.message || 'Database error') };
+    }
 
     return { success: true, pending: true };
-  } catch (error) {
-    console.error('postCommentAction failed:', error);
-    return { success: false, error: error?.message || 'Failed to post comment.' };
+  } catch (err) {
+    console.error('postCommentAction crashed:', err);
+    return { success: false, error: String(err?.message || 'Failed to post comment.') };
   }
 }
 
@@ -667,20 +680,26 @@ export async function likeCommentAction(commentId, delta = 1) {
       .select('likes')
       .eq('id', commentId)
       .single();
-    if (fetchErr) throw fetchErr;
+    if (fetchErr) {
+      console.error('likeCommentAction fetch error:', fetchErr.message);
+      return { success: false, error: String(fetchErr.message) };
+    }
 
     const newLikes = Math.max(0, (current.likes || 0) + delta);
 
-    const { error } = await db
+    const { error: updateErr } = await db
       .from('comments')
       .update({ likes: newLikes })
       .eq('id', commentId);
-    if (error) throw error;
+    if (updateErr) {
+      console.error('likeCommentAction update error:', updateErr.message);
+      return { success: false, error: String(updateErr.message) };
+    }
 
     return { success: true, likes: newLikes };
-  } catch (error) {
-    console.error('likeCommentAction failed:', error);
-    return { success: false, error: 'Failed to like comment.' };
+  } catch (err) {
+    console.error('likeCommentAction crashed:', err);
+    return { success: false, error: String(err?.message || 'Failed to like comment.') };
   }
 }
 
@@ -692,14 +711,17 @@ export async function fetchCommentsAction(postSlug) {
 
     const db = getServiceClient();
 
-    const { data, error } = await db
+    const { data, error: fetchErr } = await db
       .from('comments')
       .select('*')
       .eq('post_slug', postSlug)
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (fetchErr) {
+      console.error('fetchCommentsAction error:', fetchErr.message);
+      return { success: true, comments: [] }; // graceful fallback
+    }
 
     // Build nested tree: separate top-level from replies
     const topLevel = [];
