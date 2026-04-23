@@ -31,11 +31,12 @@ export const FOOTER_LINKS = [
 
 // ── Filtering ─────────────────────────────────────────────────────
 export const FILTER_CHIPS = [
-  "Hot Topic",
+  "Ai",
+  "Data Analytics",
   "Data Science",
+  "Machine Learning",
   "Deep Learning",
-  "Business Analyst",
-  "Cyber Security",
+  "Business Analytics",
 ];
 
 export const SKILL_LEVELS = ["All", "Beginner", "Intermediate", "Advanced"];
