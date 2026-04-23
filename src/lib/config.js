@@ -31,7 +31,7 @@ export const FOOTER_LINKS = [
 
 // ── Filtering ─────────────────────────────────────────────────────
 export const FILTER_CHIPS = [
-  "Ai",
+  "Artificial Intelligence",
   "Data Analytics",
   "Data Science",
   "Machine Learning",
