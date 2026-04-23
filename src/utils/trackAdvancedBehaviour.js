@@ -41,10 +41,10 @@ export const initAdvancedTracking = () => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && entry.target) {
           const id =
             entry.target.id ||
-            entry.target.textContent?.slice(0, 20) ||
+            (entry.target.textContent || "").slice(0, 20).trim() ||
             "Unknown Section";
           logEvent(`Entered: ${id}`);
         }
@@ -81,7 +81,10 @@ export const initAdvancedTracking = () => {
     }
 
     const target = e.target;
-    const tocLink = target?.closest?.('a[href^="#"]');
+    const tocLink = (target && typeof target.closest === "function") 
+      ? target.closest('a[href^="#"]') 
+      : null;
+
     if (tocLink) {
       logEvent(`TOC/Anchor Click: ${tocLink.getAttribute("href")}`);
     }

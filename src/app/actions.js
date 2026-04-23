@@ -1304,3 +1304,46 @@ export async function updateBlogPageConfigAction({ featuredSlugs = [], carousels
     return { success: false, error: error.message || 'Failed to update blog config.' };
   }
 }
+
+/** Increment/Decrement like count on an article */
+export async function likePostAction(slug, delta) {
+  try {
+    const db = getServiceClient();
+    
+    // 1. Get current likes
+    const { data, error: fetchErr } = await db
+      .from('posts')
+      .select('likes')
+      .eq('slug', slug)
+      .single();
+
+    if (fetchErr) {
+      console.error(`[likePostAction] Fetch error for slug ${slug}:`, fetchErr.message, fetchErr.code);
+      return { success: false, error: `Article not found or DB error: ${fetchErr.message}` };
+    }
+
+    // data.likes might be undefined if column missing but query didn't throw
+    const currentLikes = typeof data?.likes === 'number' ? data.likes : 0;
+    const newLikes = Math.max(0, currentLikes + delta);
+
+    // 2. Update
+    const { error: updateErr } = await db
+      .from('posts')
+      .update({ likes: newLikes })
+      .eq('slug', slug);
+
+    if (updateErr) {
+      console.error(`[likePostAction] Update error for slug ${slug}:`, updateErr.message, updateErr.code);
+      return { success: false, error: `Database update failed: ${updateErr.message}` };
+    }
+
+    console.log(`[likePostAction] Successfully updated ${slug}: ${currentLikes} -> ${newLikes}`);
+
+    revalidatePath(`/blog/${slug}`);
+    revalidatePath('/');
+    return { success: true, likes: newLikes };
+  } catch (err) {
+    console.error('[likePostAction] Crashed:', err);
+    return { success: false, error: String(err?.message || 'Failed to like article.') };
+  }
+}

@@ -12,31 +12,12 @@ import AskAI from "@/components/AskAI";
 import SidebarAuthorSpotlight from "@/components/SidebarAuthorSpotlight";
 import SidebarSalaryWidget from "@/components/SidebarSalaryWidget";
 import SidebarCourseCard from "@/components/SidebarCourseCard";
-import { postCommentAction, fetchCommentsAction, likeCommentAction } from "@/app/actions";
+import { likePostAction } from "@/app/actions";
+import DiscussionSection from "@/components/DiscussionSection";
 import "@/components/TiptapEditor.css";
 import parse from "html-react-parser";
 import FrontendKnowledgeCheck from "@/components/FrontendKnowledgeCheck";
 import BlogLeadForm from "@/components/BlogLeadForm";
-
-// Generate a deterministic background color from a username string
-const AVATAR_COLORS = [
-  { bg: "#003b93", text: "#ffffff" },
-  { bg: "#0e7490", text: "#ffffff" },
-  { bg: "#7c3aed", text: "#ffffff" },
-  { bg: "#b45309", text: "#ffffff" },
-  { bg: "#059669", text: "#ffffff" },
-  { bg: "#dc2626", text: "#ffffff" },
-  { bg: "#0369a1", text: "#ffffff" },
-  { bg: "#9333ea", text: "#ffffff" },
-];
-function getAvatarColor(name = "") {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-}
-function getInitials(name = "") {
-  return name.split(" ").map(w => w[0] || "").join("").toUpperCase().slice(0, 2) || "?";
-}
 
 // Generate contextual AI questions from post domain tags / FAQ headings
 function buildSuggestedQuestions(post) {
@@ -84,13 +65,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
   const [liked, setLiked]       = useState(false);
   const [likeCount, setLikeCount] = useState(post.likeCount ?? 0);
   const [bookmarked, setBookmarked] = useState(false);
-  const [comments, setComments]   = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [commentName, setCommentName] = useState("Anonymous");
-  const [replyingTo, setReplyingTo]   = useState(null);
-  const [replyText, setReplyText]     = useState("");
   const [showMobileToc, setShowMobileToc] = useState(false);
-  const [likedComments, setLikedComments] = useState(new Set());
   const [showShare, setShowShare] = useState(false);
 
   const articleRef = useRef(null);
@@ -98,23 +73,14 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
   const author = post.author || {};
   const suggestedQuestions = buildSuggestedQuestions(post);
 
-  // Load comments from Supabase
-  const loadComments = useCallback(async () => {
-    const result = await fetchCommentsAction(post.slug);
-    if (result.success) setComments(result.comments);
-  }, [post.slug]);
-
-  // Restore local-only state from localStorage + fetch comments from DB
   useEffect(() => {
     setBookmarked(localStorage.getItem(`bookmark_${post.slug}`) === "true");
     const wasLiked = localStorage.getItem(`like_${post.slug}`) === "true";
     setLiked(wasLiked);
-    const storedCount = localStorage.getItem(`likeCount_${post.slug}`);
-    if (storedCount !== null) setLikeCount(Number(storedCount));
-    const storedLiked = localStorage.getItem(`likedComments_${post.slug}`);
-    if (storedLiked) { try { setLikedComments(new Set(JSON.parse(storedLiked))); } catch {} }
-    loadComments();
-  }, [post.slug, loadComments]);
+    // Reset like count to server value whenever slug or server-side count changes.
+    // We no longer read likeCount from localStorage to avoid stale global data.
+    setLikeCount(post.likeCount ?? 0);
+  }, [post.slug, post.likeCount]);
 
   // Reading progress
   useEffect(() => {
@@ -200,12 +166,26 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
     });
   };
 
-  function handleLike() {
-    const n = !liked;
-    const c = n ? likeCount + 1 : likeCount - 1;
-    setLiked(n); setLikeCount(c);
-    localStorage.setItem(`like_${post.slug}`, String(n));
-    localStorage.setItem(`likeCount_${post.slug}`, String(c));
+  async function handleLike() {
+    const alreadyLiked = liked;
+    const delta = alreadyLiked ? -1 : 1;
+    const newCount = Math.max(0, likeCount + delta);
+
+    // Optimistic Update
+    setLiked(!alreadyLiked);
+    setLikeCount(newCount);
+    localStorage.setItem(`like_${post.slug}`, String(!alreadyLiked));
+
+    // Persist to DB
+    const result = await likePostAction(post.slug, delta);
+    
+    if (!result.success) {
+      // Revert optimistic update on failure
+      addToast(result.error || "Failed to sync like with server", "error");
+      setLiked(alreadyLiked);
+      setLikeCount(likeCount);
+      localStorage.setItem(`like_${post.slug}`, String(alreadyLiked));
+    }
   }
 
   function handleBookmark() {
@@ -226,61 +206,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
   // Sidebar search removed — use FilterBar on /article page instead
 
-  async function handlePostComment(e) {
-    e.preventDefault();
-    if (!newComment.trim()) { addToast("Please write something!", "error"); return; }
-    try {
-      const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: newComment });
-      if (result.success) {
-        setNewComment("");
-        addToast("Your comment has been submitted and is awaiting moderation.", "success");
-      } else {
-        addToast(result.error || "Failed to post comment.", "error");
-      }
-    } catch (err) {
-      console.error("Comment submission error:", err);
-      addToast("Failed to post comment: " + (err?.message || "Unknown error"), "error");
-    }
-  }
-
-  async function handlePostReply(commentId) {
-    if (!replyText.trim()) return;
-    try {
-      const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: replyText, parentCommentId: commentId });
-      if (result.success) {
-        setReplyText(""); setReplyingTo(null);
-        addToast("Your reply has been submitted and is awaiting moderation.", "success");
-      } else {
-        addToast(result.error || "Failed to reply.", "error");
-      }
-    } catch (err) {
-      console.error("Reply submission error:", err);
-      addToast("Failed to reply: " + (err?.message || "Unknown error"), "error");
-    }
-  }
-
-  async function handleCommentLike(commentId, replyId = null) {
-    const targetId = replyId || commentId;
-    const key = replyId ? `${commentId}_${replyId}` : `${commentId}`;
-    const already = likedComments.has(key);
-    const delta = already ? -1 : 1;
-    const next = new Set(likedComments);
-    already ? next.delete(key) : next.add(key);
-    setLikedComments(next);
-    localStorage.setItem(`likedComments_${post.slug}`, JSON.stringify([...next]));
-    // Optimistic UI update
-    setComments(prev => prev.map(c => {
-      if (replyId && c.id === commentId)
-        return { ...c, replies: c.replies.map(r => r.id === replyId ? { ...r, likes: Math.max(0, r.likes + delta) } : r) };
-      if (!replyId && c.id === commentId) return { ...c, likes: Math.max(0, c.likes + delta) };
-      return c;
-    }));
-    // Persist to DB
-    await likeCommentAction(targetId, delta);
-  }
-
   const likeDisplay = likeCount >= 1000 ? (likeCount / 1000).toFixed(1) + "k" : likeCount;
-  const totalComments = comments.length + comments.reduce((a, c) => a + c.replies.length, 0);
 
   // TOC entries including fixed items
   const tocItems = toc.length > 0 ? toc : [
@@ -420,9 +346,9 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
               {/* Comments */}
               <a href="#discussion"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold border border-outline-variant/30 dark:border-[#424754] bg-white dark:bg-[#131b2e] text-on-surface-variant dark:text-[#c2c6d6] hover:border-primary/40 transition-colors">
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold border border-outline-variant/30 dark:border-[#424754] bg-white dark:bg-[#131b2e] text-on-surface-variant dark:text-[#8c909f] hover:border-primary/40 transition-colors">
                 <span className="material-symbols-outlined text-[16px]">chat_bubble_outline</span>
-                {totalComments}
+                Comments
               </a>
 
               {/* Share */}
@@ -664,110 +590,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
           {/* ── Discussion ── */}
           <section id="discussion" className="mt-20 pt-10 border-t border-outline-variant/20 dark:border-[#424754]">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-[family-name:var(--font-headline)] text-2xl font-extrabold text-on-background dark:text-[#dae2fd]">
-                Discussion
-              </h2>
-              <span className="text-sm font-bold text-on-surface-variant dark:text-[#c2c6d6]">
-                {totalComments} Comments
-              </span>
-            </div>
-
-            {/* New comment */}
-            <form onSubmit={handlePostComment}
-              className="mb-10 flex gap-3 p-5 bg-surface-container-low dark:bg-[#131b2e] rounded-2xl border border-outline-variant/10 dark:border-[#424754]">
-              <div className="w-10 h-10 rounded-full bg-surface-container-high dark:bg-[#2d3449] flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-secondary dark:text-[#c2c6d6]">person</span>
-              </div>
-              <div className="flex-1 flex flex-col gap-3 min-w-0">
-                <input
-                  type="text"
-                  className="w-full p-3 bg-surface-container-lowest dark:bg-[#060e20] dark:text-[#dae2fd] border border-outline-variant/30 dark:border-[#424754] rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline/60 dark:placeholder:text-slate-500 outline-none"
-                  placeholder="Your name (optional)"
-                  value={commentName === "Anonymous" ? "" : commentName}
-                  onChange={e => setCommentName(e.target.value || "Anonymous")}
-                />
-                <textarea
-                  className="w-full p-4 bg-surface-container-lowest dark:bg-[#060e20] dark:text-[#dae2fd] border border-outline-variant/30 dark:border-[#424754] rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline/60 dark:placeholder:text-slate-500 resize-none outline-none"
-                  placeholder="Ask a question or share your thoughts..."
-                  rows="3" value={newComment} onChange={e => setNewComment(e.target.value)} />
-                <div className="flex justify-end">
-                  <button type="submit"
-                    className="glass-chip active px-6 py-2.5 rounded-full font-bold text-sm">
-                    Post Comment
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {/* Comments list */}
-            <div className="space-y-8">
-              {comments.map(comment => {
-                const avatarColor = getAvatarColor(comment.user);
-                return (
-                <div key={comment.id} className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
-                    style={{ background: avatarColor.bg, color: avatarColor.text }}>
-                    {getInitials(comment.user)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <span className="font-bold text-sm text-on-background dark:text-[#dae2fd]">{comment.user}</span>
-                      <span className="text-[11px] text-secondary dark:text-[#8c909f] uppercase font-bold tracking-wider">{comment.time}</span>
-                    </div>
-                    <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed mb-2">{comment.text}</p>
-                    <div className="flex gap-5 items-center">
-                      <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-                        className="text-xs font-bold text-primary dark:text-[#adc6ff] hover:underline">Reply</button>
-                      <button onClick={() => handleCommentLike(comment.id)}
-                        className={`flex items-center gap-1.5 text-xs transition-colors ${likedComments.has(`${comment.id}`) ? "text-primary dark:text-[#adc6ff]" : "text-secondary dark:text-[#c2c6d6] hover:text-primary dark:hover:text-[#adc6ff]"}`}>
-                        <span className="material-symbols-outlined text-sm"
-                          style={{ fontVariationSettings: likedComments.has(`${comment.id}`) ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
-                        <span className="font-bold">{comment.likes}</span>
-                      </button>
-                    </div>
-
-                    {replyingTo === comment.id && (
-                      <div className="reply-form show mt-4">
-                        <div className="flex gap-2">
-                          <input className="flex-1 p-3 bg-surface-container-lowest dark:bg-[#060e20] dark:text-[#dae2fd] border border-outline-variant/30 dark:border-[#424754] rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none"
-                            placeholder="Write a reply..."
-                            value={replyText} onChange={e => setReplyText(e.target.value)} />
-                          <button onClick={() => handlePostReply(comment.id)}
-                            className="px-5 py-2 bg-primary text-on-primary rounded-full font-bold text-sm whitespace-nowrap">
-                            Reply
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {comment.replies?.map(reply => {
-                      const replyColor = getAvatarColor(reply.user);
-                      return (
-                      <div key={reply.id} className="mt-6 flex gap-3 pl-5 border-l-2 border-outline-variant/10 dark:border-[#424754]">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-                          style={{ background: replyColor.bg, color: replyColor.text }}>
-                          {getInitials(reply.user)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-bold text-sm text-on-background dark:text-[#dae2fd]">{reply.user}</span>
-                            <span className="text-[11px] text-secondary dark:text-[#8c909f] uppercase font-bold tracking-wider">{reply.time}</span>
-                          </div>
-                          <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed mb-2">{reply.text}</p>
-                          <button onClick={() => handleCommentLike(comment.id, reply.id)}
-                            className={`flex items-center gap-1 text-xs transition-colors ${likedComments.has(`${comment.id}_${reply.id}`) ? "text-primary dark:text-[#adc6ff]" : "text-secondary dark:text-[#c2c6d6] hover:text-primary"}`}>
-                            <span className="material-symbols-outlined text-sm"
-                              style={{ fontVariationSettings: likedComments.has(`${comment.id}_${reply.id}`) ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
-                            <span className="font-bold">{reply.likes}</span>
-                          </button>
-                        </div>
-                      </div>
-                    ); })}
-                  </div>
-                </div>
-              ); })}
-            </div>
+            <DiscussionSection postSlug={post.slug} />
           </section>
         </main>
 

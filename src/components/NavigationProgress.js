@@ -15,7 +15,11 @@ export default function NavigationProgress() {
 
   useEffect(() => {
     const handleClick = (e) => {
-      const target = e?.target?.closest?.("a[href]");
+      // Defensive check for target and closest support
+      const target = (e?.target && typeof e.target.closest === "function") 
+        ? e.target.closest("a[href]") 
+        : null;
+      
       if (!target) return;
       
       const href = target.getAttribute("href");

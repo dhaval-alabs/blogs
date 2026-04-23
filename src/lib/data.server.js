@@ -20,7 +20,7 @@ const POST_WITH_AUTHOR_SELECT = `
   id, title, slug, excerpt, content, category, domain_tags, skill_level,
   read_time, author_id, image, status, published_at, updated_at,
   seo, course_mappings, course_cta, newsletter, quiz, ai_hints,
-  trust, discussion, advanced,
+  trust, discussion, advanced, likes,
   author:authors!posts_author_id_fkey (
     slug, name, initials, color, image, bio, linkedin, expertise, experience, position
   )
@@ -30,7 +30,7 @@ const POST_WITH_AUTHOR_SELECT = `
 // Used by getRecommendations. Drops heavy JSONB / content blobs.
 const POST_LIST_SELECT = `
   id, title, slug, excerpt, category, domain_tags, skill_level,
-  read_time, author_id, image, published_at,
+  read_time, author_id, image, published_at, likes,
   author:authors!posts_author_id_fkey (
     slug, name, initials, color, image, position
   )
@@ -76,6 +76,7 @@ function mapPostRow(row) {
     trust:          row.trust ?? {},
     discussion:     row.discussion ?? {},
     advanced:       row.advanced ?? {},
+    likeCount:      row.likes ?? 0,
     author,
   };
 }
@@ -96,6 +97,7 @@ function mapPostRowLite(row) {
     authorId:    row.author_id,
     image:       row.image,
     publishedAt: formatDate(row.published_at),
+    likeCount:   row.likes ?? 0,
     author,
   };
 }
