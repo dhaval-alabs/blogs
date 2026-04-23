@@ -65,7 +65,7 @@ export async function generateMetadata({ params }) {
  * into a schema.org FAQPage JSON-LD block that Google uses to display
  * "People Also Ask" rich results in search.
  */
-function extractFaqJsonLd(htmlContent) {
+function extractFaqJsonLd(htmlContent, slug = "") {
   // Parse on the server using a simple regex-based approach (no DOM available)
   const pairs = [];
   // Match heading or <p><strong>...</strong></p> patterns ending with "?"
@@ -96,6 +96,7 @@ function extractFaqJsonLd(htmlContent) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    '@id': `https://www.analytixlabs.co.in/blog/${slug}/#faq`,
     mainEntity: pairs.map(({ question, answer }) => ({
       '@type': 'Question',
       name: question,
@@ -132,7 +133,7 @@ export default async function ArticlePage({ params }) {
   ]);
 
   const faqJsonLd = post.discussion?.faqSchema && post.content
-    ? extractFaqJsonLd(post.content)
+    ? extractFaqJsonLd(post.content, post.slug)
     : null;
 
   return (

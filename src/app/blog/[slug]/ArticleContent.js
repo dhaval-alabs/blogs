@@ -599,6 +599,12 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   <div key={idx} className="tiptap-prose">
                     {parse(part, {
                       replace(domNode) {
+                        // Strip any embedded script tags (e.g. old schema or tracking code)
+                        // to prevent duplication with our modern schema injection.
+                        if (domNode.type === "script" || domNode.name === "script") {
+                          return <></>;
+                        }
+
                         if (
                           domNode.type === "tag" &&
                           domNode.name === "div" &&
