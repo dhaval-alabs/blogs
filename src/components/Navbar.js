@@ -55,9 +55,18 @@ export default function Navbar({ activeCategory = "Data Science" }) {
       <nav className={`fixed top-0 w-full z-50 glass-nav ${scrolled ? "glass-nav--scrolled shadow-md" : "shadow-sm"}`} id="main-nav">
         <div className="flex justify-between items-center max-w-7xl mx-auto px-6 h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority style={{ objectFit: "contain" }} />
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center">
+              <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority style={{ objectFit: "contain" }} />
+            </Link>
+            <div className="w-[1px] h-6 bg-slate-300 dark:bg-[#424754] hidden md:block" />
+            <Link 
+              href="/blog" 
+              className="font-[family-name:var(--font-headline)] font-bold text-sm text-slate-500 hover:text-[#003b93] dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
+            >
+              Blog
+            </Link>
+          </div>
 
           {/* Right Controls */}
           <div className="flex items-center space-x-3">
