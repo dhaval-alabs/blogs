@@ -3,36 +3,31 @@ import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useRef, useEffect } from "react";
 
-// Render a plain-text answer that may include markdown links [text](url) AND
-// bare URLs. Both become clickable anchors. Streaming-safe: unmatched fragments
-// stay as plain text so nothing jumps as tokens arrive.
-function renderAnswer(text) {
-  if (!text) return null;
-  // Matches either [label](url) OR a bare http(s) URL
-  const re = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
-  const parts = [];
-  let last = 0;
-  let m;
-  let i = 0;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > last) parts.push(text.slice(last, m.index));
-    const href = m[2] || m[3];
-    const label = m[1] || m[3];
-    parts.push(
-      <a
-        key={`lnk-${i++}`}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline decoration-amber-300/70 underline-offset-2 hover:text-amber-200"
-      >
-        {label}
-      </a>
-    );
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) parts.push(text.slice(last));
-  return parts;
+function formatMarkdownLite(text) {
+  if (!text) return "";
+  
+  // Escape HTML first for safety
+  let safeText = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold
+  safeText = safeText.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-white/95">$1</strong>');
+  
+  // Inline code
+  safeText = safeText.replace(/`([^`]+)`/g, '<code class="bg-black/20 px-1.5 py-0.5 rounded font-mono text-[11px] text-amber-100">$1</code>');
+
+  // Links [text](url)
+  safeText = safeText.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="underline decoration-amber-300/70 underline-offset-2 hover:text-amber-200">$1</a>');
+
+  // Bare URLs (not already in href="")
+  safeText = safeText.replace(/(^|\s)(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="underline decoration-amber-300/70 underline-offset-2 hover:text-amber-200">$2</a>');
+
+  // Lists (- item or * item or 1. item)
+  safeText = safeText.replace(/^(?:-|\*|\d+\.) (.+)$/gm, '<div class="ml-4 flex gap-2"><span class="text-white/50">•</span><span class="flex-1">$1</span></div>');
+
+  return safeText;
 }
 
 export default function AskAI({
@@ -197,12 +192,12 @@ export default function AskAI({
 
           {/* Streamed answer */}
           {answer && (
-            <div className="text-[13px] leading-relaxed text-white whitespace-pre-wrap break-words">
-              {renderAnswer(answer)}
-              {loading && (
-                <span className="inline-block w-0.5 h-3.5 bg-white animate-pulse ml-0.5 translate-y-0.5 rounded-full" />
-              )}
-            </div>
+            <div 
+              className="text-[13px] leading-relaxed text-white whitespace-pre-wrap break-words"
+              dangerouslySetInnerHTML={{ 
+                __html: formatMarkdownLite(answer) + (loading ? '<span class="inline-block w-0.5 h-3.5 bg-white animate-pulse ml-0.5 translate-y-0.5 rounded-full"></span>' : '') 
+              }}
+            />
           )}
         </div>
       )}

@@ -12,7 +12,7 @@ import Link from "next/link";
  */
 export default function PostCard({ post, bookmarked = false, onToggleBookmark, onShare }) {
   return (
-    <article className="flex flex-col rounded-2xl overflow-hidden border bg-surface-container-lowest dark:bg-[#0b1326] border-outline-variant/20 dark:border-[#424754] hover:shadow-lg transition-shadow group">
+    <article className="relative flex flex-col rounded-2xl overflow-hidden border bg-surface-container-lowest dark:bg-[#0b1326] border-outline-variant/20 dark:border-[#424754] hover:shadow-lg transition-shadow group">
       <div className="aspect-video relative bg-surface-container-high dark:bg-[#131b2e] overflow-hidden">
         {post.image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -39,7 +39,7 @@ export default function PostCard({ post, bookmarked = false, onToggleBookmark, o
           </span>
         </div>
         <h3 className="font-[family-name:var(--font-headline)] font-bold text-[15px] leading-snug text-on-surface dark:text-[#dae2fd] group-hover:text-primary dark:group-hover:text-[#adc6ff] transition-colors">
-          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+          <Link href={`/blog/${post.slug}`} className="before:absolute before:inset-0 before:z-0">{post.title}</Link>
         </h3>
         <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed line-clamp-2 flex-1">
           {post.excerpt}
@@ -66,25 +66,11 @@ export default function PostCard({ post, bookmarked = false, onToggleBookmark, o
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {onToggleBookmark && (
-              <button
-                onClick={() => onToggleBookmark(post.slug)}
-                className="text-outline hover:text-primary dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
-              >
-                <span
-                  className="material-symbols-outlined text-[18px]"
-                  style={{
-                    fontVariationSettings: bookmarked ? "'FILL' 1" : "'FILL' 0",
-                  }}
-                >
-                  bookmark
-                </span>
-              </button>
-            )}
+
             {onShare && (
               <button
-                onClick={() => onShare(post.slug)}
-                className="text-outline hover:text-primary dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
+                onClick={(e) => { e.preventDefault(); onShare(post.slug); }}
+                className="relative z-10 text-outline hover:text-primary dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">share</span>
               </button>

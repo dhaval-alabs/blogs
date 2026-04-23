@@ -79,7 +79,7 @@ export default async function AuthorPage({ params }) {
       </main>
 
       <Footer />
-      <MobileBottomNav activePage="home" />
+      <MobileBottomNav activePage="none" />
     </div>
   );
 }

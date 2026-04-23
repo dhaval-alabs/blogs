@@ -68,14 +68,6 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
             >
               Read More
             </Link>
-            {onToggleBookmark && (
-              <button
-                onClick={() => onToggleBookmark(post.slug)}
-                className="glass-btn px-6 py-3 rounded-full font-bold text-sm"
-              >
-                {bookmarked ? "Saved ✓" : "Save Article"}
-              </button>
-            )}
           </div>
         </div>
       </div>

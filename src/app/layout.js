@@ -2,6 +2,7 @@ import { Manrope, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ClientInit from "@/components/ClientInit";
 import TrackingScripts from "@/components/TrackingScripts";
+import NavigationProgress from "@/components/NavigationProgress";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({ children }) {
         </noscript>
         <ClientInit />
         <TrackingScripts />
+        <NavigationProgress />
         {children}
       </body>
     </html>

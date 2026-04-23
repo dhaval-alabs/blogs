@@ -129,7 +129,7 @@ export default function SalaryHub() {
       </main>
 
       <Footer />
-      <MobileBottomNav activePage="home" />
+      <MobileBottomNav activePage="none" />
     </div>
   );
 }

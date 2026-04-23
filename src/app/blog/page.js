@@ -245,8 +245,6 @@ function BlogListingContent() {
                     <PostCard
                       key={post.id}
                       post={post}
-                      bookmarked={bookmarked.has(post.slug)}
-                      onToggleBookmark={toggleBookmark}
                       onShare={handleShare}
                     />
                   ))}
@@ -292,7 +290,7 @@ function BlogListingContent() {
 
       <CoursesGrid />
       <Footer />
-      <MobileBottomNav activePage="insights" />
+      <MobileBottomNav activePage="home" />
     </>
   );
 }

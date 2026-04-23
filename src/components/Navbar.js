@@ -145,11 +145,8 @@ export default function Navbar({ activeCategory = "Data Science" }) {
       <div
         className={`fixed top-0 left-0 bottom-0 w-72 z-[46] bg-white dark:bg-[#131b2e] transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:hidden overflow-y-auto p-8`}
+        } md:hidden overflow-y-auto px-8 pb-8 pt-24`}
       >
-        <Link href="/" className="block mb-8">
-          <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={120} height={28} style={{ objectFit: "contain" }} />
-        </Link>
         <nav className="flex flex-col gap-4">
           {NAV_CATEGORIES.map((cat) => (
             <Link

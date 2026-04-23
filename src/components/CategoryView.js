@@ -132,7 +132,7 @@ function CategoryContent({ categorySlug: rawSlug }) {
       </div>
 
       <Footer />
-      <MobileBottomNav activePage="insights" />
+      <MobileBottomNav activePage="home" />
     </>
   );
 }

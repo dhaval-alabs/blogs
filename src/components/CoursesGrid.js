@@ -38,7 +38,7 @@ export default function CoursesGrid({ limit = 3, showViewAll = true, tags = [] }
 
   return (
     <section
-      className="py-16 border-t bg-surface-container-low dark:bg-[#131b2e] border-outline-variant/10 dark:border-[#424754] fade-in-section"
+      className="py-16 border-t bg-surface-container-low dark:bg-[#131b2e] border-outline-variant/10 dark:border-[#424754]"
       id="courses"
     >
       <div className="max-w-7xl mx-auto px-6">

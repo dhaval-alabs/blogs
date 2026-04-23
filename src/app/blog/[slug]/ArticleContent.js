@@ -440,17 +440,6 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                 )}
               </div>
 
-              {/* Save */}
-              <button onClick={handleBookmark}
-                className={`bookmark-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold border transition-all ml-auto ${
-                  bookmarked
-                    ? "border-primary dark:border-[#adc6ff] bg-primary/8 dark:bg-[#adc6ff]/10 text-primary dark:text-[#adc6ff]"
-                    : "border-outline-variant/30 dark:border-[#424754] bg-white dark:bg-[#131b2e] text-on-surface-variant dark:text-[#c2c6d6] hover:border-primary/40"
-                }`}>
-                <span className="material-symbols-outlined text-[16px]"
-                  style={{ fontVariationSettings: bookmarked ? "'FILL' 1" : "'FILL' 0" }}>bookmark</span>
-                {bookmarked ? "Saved" : "Save"}
-              </button>
             </div>
           </header>
 
@@ -855,7 +844,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
       <CoursesGrid showViewAll={false} tags={post.domain_tags || []} />
 
       <Footer />
-      <MobileBottomNav activePage="insights" />
+      <MobileBottomNav activePage="none" />
     </>
   );
 }
