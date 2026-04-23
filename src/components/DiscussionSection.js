@@ -131,7 +131,30 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
     );
 
     // Persist to DB
-    await likeCommentAction(commentId, delta);
+    const result = await likeCommentAction(commentId, delta);
+    
+    if (!result.success) {
+      // Revert optimistic update on failure
+      addToast(result.error || "Failed to sync like with server", "error");
+      
+      const revertedLiked = new Set(likedSet);
+      if (already) revertedLiked.add(key);
+      else revertedLiked.delete(key);
+      setLikedSet(revertedLiked);
+      localStorage.setItem(`likedComments_${postSlug}`, JSON.stringify([...revertedLiked]));
+
+      setComments((prev) =>
+        prev.map((c) => {
+          if (c.id === commentId) return { ...c, likes: Math.max(0, c.likes - delta) };
+          return {
+            ...c,
+            replies: c.replies.map((r) =>
+              r.id === commentId ? { ...r, likes: Math.max(0, r.likes - delta) } : r
+            ),
+          };
+        })
+      );
+    }
   }
 
   const totalComments = comments.length + comments.reduce((a, c) => a + (c.replies?.length || 0), 0);

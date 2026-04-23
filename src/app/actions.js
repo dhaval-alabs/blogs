@@ -702,6 +702,7 @@ export async function likeCommentAction(commentId, delta = 1) {
       return { success: false, error: String(updateErr.message) };
     }
 
+    revalidatePath('/');
     return { success: true, likes: newLikes };
   } catch (err) {
     console.error('likeCommentAction crashed:', err);
