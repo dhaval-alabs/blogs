@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useRef, useState } from "react";
 import { STUDIO_SCHEMA_TYPES } from "@/lib/config";
@@ -29,7 +30,7 @@ export default function SeoPanel({ state, set, showToast }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) { set("ogImage", data.url); setIsOverriding(false); }
       else showToast("Upload failed: " + (data.error || "unknown"), "err");

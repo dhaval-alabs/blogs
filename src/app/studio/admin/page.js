@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -73,11 +74,11 @@ export default function AdminDashboard() {
       setFetching(false);
     }
     async function fetchTopics() {
-      const r = await fetch("/api/topics");
+      const r = await apiFetch("/api/topics");
       if (r.ok) setTopics(await r.json());
     }
     async function fetchCourses() {
-      const r = await fetch("/api/courses");
+      const r = await apiFetch("/api/courses");
       if (r.ok) setCoursesList(await r.json());
       setCoursesFetching(false);
     }
@@ -169,7 +170,7 @@ export default function AdminDashboard() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) setCourseForm((f) => ({ ...f, image: data.url }));
       else setCoursesMsg({ type: "err", text: "Image upload failed: " + (data.error || "unknown") });
@@ -185,7 +186,7 @@ export default function AdminDashboard() {
       ? await updateCourseAction(editingCourse.id, courseForm)
       : await createCourseAction(courseForm);
     if (res.success) {
-      const r = await fetch("/api/courses");
+      const r = await apiFetch("/api/courses");
       if (r.ok) setCoursesList(await r.json());
       closeCourseForm();
       setCoursesMsg({ type: "success", text: editingCourse ? "Course updated!" : "Course added!" });
@@ -246,7 +247,7 @@ export default function AdminDashboard() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) {
         setImage(data.url);

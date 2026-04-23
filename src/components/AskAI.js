@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -49,14 +50,20 @@ export default function AskAI({
   const [relatedCourses, setRelatedCourses] = useState([]);
   const abortRef = useRef(null);
 
+  // Stable string key derived from the tags array so the effect only re-runs
+  // when the actual tag values change, not on every render (arrays are always
+  // a new reference which would cause an infinite fetch loop).
+  const tagsKey = JSON.stringify(tags || []);
+
   // Fetch + rank courses by tag overlap once (used after an answer renders)
   useEffect(() => {
     let cancel = false;
-    fetch("/api/courses")
+    const parsedTags = JSON.parse(tagsKey);
+    apiFetch("/api/courses")
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => {
         if (cancel || !Array.isArray(data)) return;
-        const tagSet = new Set((tags || []).map((t) => String(t).toLowerCase()));
+        const tagSet = new Set(parsedTags.map((t) => String(t).toLowerCase()));
         const ranked = tagSet.size === 0
           ? data
           : [...data]
@@ -71,11 +78,11 @@ export default function AskAI({
       })
       .catch(() => {});
     return () => { cancel = true; };
-  }, [tags]);
+  }, [tagsKey]);
 
   async function fetchFollowups(q, a) {
     try {
-      const res = await fetch("/api/ask-ai/followups", {
+      const res = await apiFetch("/api/ask-ai/followups", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q, answer: a, context }),
@@ -100,7 +107,7 @@ export default function AskAI({
     abortRef.current = new AbortController();
 
     try {
-      const res = await fetch("/api/ask-ai", {
+      const res = await apiFetch("/api/ask-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question, context, tags, slug }),

@@ -69,7 +69,7 @@ export default function TiptapComments({ editor, outerRef, comments = [], onUpda
   // Click outside to collapse
   useEffect(() => {
     const handleOutside = (e) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target) && !e.target.closest('.tc-avatar-btn')) {
+      if (popoverRef.current && !popoverRef.current.contains(e.target) && !e.target?.closest?.('.tc-avatar-btn')) {
         setActiveCommentId(null);
       }
     };

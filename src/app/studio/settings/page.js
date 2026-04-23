@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -46,7 +47,7 @@ export default function SettingsPage() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) {
         setImage(data.url);

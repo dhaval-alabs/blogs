@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState } from "react";
 import {
@@ -39,7 +40,7 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
     const behaviour = getAdvancedBehaviourSnapshot();
 
     try {
-      const res = await fetch("/api/submit-lead", {
+      const res = await apiFetch("/api/submit-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

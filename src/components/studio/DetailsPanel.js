@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useRef, useState, useEffect } from "react";
 import { Toggle, Section, I } from "./StudioIcons";
@@ -126,14 +127,14 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
 
   // Fetch topics from DB (admin-managed) and merge with config defaults
   useEffect(() => {
-    fetch("/api/topics")
+    apiFetch("/api/topics")
       .then((r) => r.ok ? r.json() : [])
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setCategories(data);
         } else {
           // fallback: merge from published post categories
-          fetch("/api/categories")
+          apiFetch("/api/categories")
             .then((r) => r.ok ? r.json() : [])
             .then((cats) => {
               if (Array.isArray(cats) && cats.length > 0) {
@@ -146,7 +147,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
       .catch(() => {});
 
     // Fetch courses from DB
-    fetch("/api/courses")
+    apiFetch("/api/courses")
       .then((r) => r.ok ? r.json() : [])
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -163,7 +164,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) set("featuredImage", data.url);
       else showToast("Upload failed: " + (data.error || "unknown"), "err");
@@ -178,7 +179,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) set("cardImage", data.url);
       else showToast("Upload failed: " + (data.error || "unknown"), "err");
@@ -193,7 +194,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) set("squareImage", data.url);
       else showToast("Upload failed: " + (data.error || "unknown"), "err");

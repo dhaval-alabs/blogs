@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -145,7 +146,7 @@ export default function SiteLayoutPage() {
   }, [authLoading, authorProfile, router]);
 
   useEffect(() => {
-    fetch("/api/site-config")
+    apiFetch("/api/site-config")
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data?.zones) {
@@ -219,7 +220,7 @@ export default function SiteLayoutPage() {
     setSaving(true);
     setMessage(null);
     try {
-      const res = await fetch("/api/site-config", {
+      const res = await apiFetch("/api/site-config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ zones }),

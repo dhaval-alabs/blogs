@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect } from "react";
 
@@ -13,7 +14,7 @@ export default function CoursesGrid({ limit = 3, showViewAll = true, tags = [] }
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("/api/courses")
+    apiFetch("/api/courses")
       .then((r) => r.ok ? r.json() : [])
       .then((data) => setCourses(Array.isArray(data) ? data : []))
       .catch(() => {});

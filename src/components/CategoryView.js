@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -32,8 +33,8 @@ function CategoryContent({ categorySlug: rawSlug }) {
     if (!categorySlug) return;
 
     Promise.all([
-      fetch(`/api/posts?topic=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
-      fetch(`/api/mdx-posts?category=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
+      apiFetch(`/api/posts?topic=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
+      apiFetch(`/api/mdx-posts?category=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
     ]).then(([supabaseData, mdxData]) => {
       const supabasePosts = Array.isArray(supabaseData) ? supabaseData : [];
       const mdxPosts = Array.isArray(mdxData) ? mdxData : [];

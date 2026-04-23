@@ -1,4 +1,5 @@
 "use client";
+import { withBasePath, apiFetch } from "@/utils/basePath";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -38,11 +39,11 @@ export default function ContentSettings() {
     if (authLoading) return;
     if (!authorProfile) { router.replace("/studio"); return; }
 
-    fetch("/api/topics").then((r) => r.ok ? r.json() : []).then((data) => {
+    apiFetch("/api/topics").then((r) => r.ok ? r.json() : []).then((data) => {
       if (Array.isArray(data)) setTopics(data);
     }).catch(() => {});
 
-    fetch("/api/courses").then((r) => r.ok ? r.json() : []).then((data) => {
+    apiFetch("/api/courses").then((r) => r.ok ? r.json() : []).then((data) => {
       setCoursesList(Array.isArray(data) ? data : []);
       setCoursesFetching(false);
     }).catch(() => { setCoursesFetching(false); });
@@ -94,7 +95,7 @@ export default function ContentSettings() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) setCourseForm((f) => ({ ...f, image: data.url }));
       else setCoursesMsg({ type: "err", text: "Upload failed: " + (data.error || "unknown") });
@@ -110,7 +111,7 @@ export default function ContentSettings() {
       ? await updateCourseAction(editingCourse.id, courseForm)
       : await createCourseAction(courseForm);
     if (res.success) {
-      const r = await fetch("/api/courses");
+      const r = await apiFetch("/api/courses");
       if (r.ok) setCoursesList(await r.json());
       closeCourseForm();
       setCoursesMsg({ type: "success", text: editingCourse ? "Course updated!" : "Course added!" });

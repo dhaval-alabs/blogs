@@ -1,6 +1,7 @@
 import { Manrope, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ClientInit from "@/components/ClientInit";
+import TrackingScripts from "@/components/TrackingScripts";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -47,9 +48,26 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+        <meta name="generator" content="Elementor 3.35.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-internal, google_font-enabled, font_display-swap" />
       </head>
       <body className="min-h-screen antialiased">
+        {/* GTM noscript fallback */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-MN7KJTVN"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <ClientInit />
+        <TrackingScripts />
         {children}
       </body>
     </html>
