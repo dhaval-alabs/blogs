@@ -5,6 +5,9 @@ const nextConfig = {
   // /foo → /foo/ automatically, ensuring search engines index a single canonical form.
   trailingSlash: true,
   serverExternalPackages: ['sharp'],
+  serverActions: {
+    allowedOrigins: ['www.analytixlabs.co.in', 'analytixlabs.co.in'],
+  },
   images: {
     remotePatterns: [
       {
