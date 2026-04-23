@@ -56,7 +56,7 @@ export default function Navbar({ activeCategory = "Data Science" }) {
         <div className="flex justify-between items-center max-w-7xl mx-auto px-6 h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center">
+            <Link href="/blog" className="flex items-center">
               <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority style={{ objectFit: "contain" }} />
             </Link>
             <div className="w-[1px] h-6 bg-slate-300 dark:bg-[#424754] hidden md:block" />
@@ -131,6 +131,17 @@ export default function Navbar({ activeCategory = "Data Science" }) {
                 {isDark ? "light_mode" : "dark_mode"}
               </span>
             </button>
+
+            {/* Home Icon */}
+            <Link 
+              href="https://www.analytixlabs.co.in/" 
+              className="p-2 hover:bg-slate-100/50 dark:hover:bg-[#2d3449]/50 rounded-lg transition-all"
+              title="Go to main website"
+            >
+              <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
+                home
+              </span>
+            </Link>
 
             {/* User avatar */}
             <button className="w-8 h-8 rounded-full bg-primary/10 dark:bg-[#adc6ff]/15 flex items-center justify-center border border-outline-variant/30 dark:border-[#424754] hover:bg-primary/20 dark:hover:bg-[#adc6ff]/25 transition-colors">
