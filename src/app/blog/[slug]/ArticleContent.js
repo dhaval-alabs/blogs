@@ -232,7 +232,8 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
     const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: newComment });
     if (result.success) {
       setNewComment("");
-      addToast("Your comment has been submitted and is awaiting moderation.", "success");
+      addToast("Your comment has been submitted.", "success");
+      loadComments();
     } else {
       addToast(result.error || "Failed to post", "error");
     }
@@ -243,7 +244,8 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
     const result = await postCommentAction({ postSlug: post.slug, userName: commentName.trim() || "Anonymous", text: replyText, parentCommentId: commentId });
     if (result.success) {
       setReplyText(""); setReplyingTo(null);
-      addToast("Your reply has been submitted and is awaiting moderation.", "success");
+      addToast("Your reply has been submitted.", "success");
+      loadComments();
     } else {
       addToast(result.error || "Failed to reply", "error");
     }

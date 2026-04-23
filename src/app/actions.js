@@ -643,15 +643,13 @@ export async function postCommentAction({ postSlug, userName, text, parentCommen
       text: text.trim().slice(0, 2000),
       parent_comment_id: parentCommentId || null,
       likes: 0,
-      status: 'pending',
+      status: 'approved',
     };
 
     const { error } = await db.from('comments').insert(row);
     if (error) throw error;
 
-    // Return pending flag — do NOT return the comment object.
-    // The UI should show a moderation notice, not append to the list.
-    return { success: true, pending: true };
+    return { success: true, pending: false };
   } catch (error) {
     console.error('postCommentAction failed:', error);
     return { success: false, error: 'Failed to post comment.' };

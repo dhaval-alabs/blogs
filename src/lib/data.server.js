@@ -36,6 +36,18 @@ const POST_LIST_SELECT = `
   )
 `;
 
+// ── Date Formatting ─────────────────────────────────────────────────
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
 // ── Column mapping: DB snake_case → app camelCase ─────────────────
 function mapPostRow(row) {
   if (!row) return null;
@@ -53,8 +65,8 @@ function mapPostRow(row) {
     authorId:       row.author_id,
     image:          row.image,
     status:         row.status,
-    publishedAt:    row.published_at,
-    updatedAt:      row.updated_at,
+    publishedAt:    formatDate(row.published_at),
+    updatedAt:      formatDate(row.updated_at),
     seo:            row.seo ?? {},
     courseMappings: row.course_mappings ?? [],
     courseCTA:      row.course_cta ?? '',
@@ -83,7 +95,7 @@ function mapPostRowLite(row) {
     readTime:    row.read_time,
     authorId:    row.author_id,
     image:       row.image,
-    publishedAt: row.published_at,
+    publishedAt: formatDate(row.published_at),
     author,
   };
 }
