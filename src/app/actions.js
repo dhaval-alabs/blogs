@@ -643,16 +643,16 @@ export async function postCommentAction({ postSlug, userName, text, parentCommen
       text: text.trim().slice(0, 2000),
       parent_comment_id: parentCommentId || null,
       likes: 0,
-      status: 'approved',
+      status: 'pending',
     };
 
     const { error } = await db.from('comments').insert(row);
     if (error) throw error;
 
-    return { success: true, pending: false };
+    return { success: true, pending: true };
   } catch (error) {
     console.error('postCommentAction failed:', error);
-    return { success: false, error: 'Failed to post comment.' };
+    return { success: false, error: error?.message || 'Failed to post comment.' };
   }
 }
 
