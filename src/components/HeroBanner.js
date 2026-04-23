@@ -23,11 +23,15 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
           alt=""
           aria-hidden="true"
           style={{
-            position: "absolute", inset: 0,
-            width: "100%", height: "100%",
-            objectFit: "cover", objectPosition: "center",
-            opacity: 0.35,
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+            opacity: 0.3,
             zIndex: 0,
+            filter: "blur(5px)",
           }}
         />
       )}

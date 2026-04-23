@@ -633,12 +633,16 @@ a[class*="btn"]:active {
     border-radius: 2rem;
     box-shadow: 0 10px 40px -10px rgba(0, 59, 147, 0.25);
     background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 0.5rem 1rem;
   }
   
   .dark .mobile-bottom-nav {
-    background: rgba(11, 19, 38, 0.85);
+    background: rgba(11, 19, 38, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(218, 226, 253, 0.1);
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
   }

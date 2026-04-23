@@ -9,7 +9,7 @@ export default function PreviewPane({ postTitle, postBody, excerpt, category, re
           <div className="preview-lbl">Home page Preview</div>
           <div className="preview-card-big">
             {featuredImage && (
-              <img src={featuredImage} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", borderRadius: "var(--radius-lg)", opacity: 0.35 }} />
+              <img src={featuredImage} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", borderRadius: "var(--radius-lg)", opacity: 0.3, filter: "blur(5px)" }} />
             )}
             <div style={{ position: "relative", zIndex: 1 }}>
               <span className="preview-card-feat-tag">FEATURED ANALYSIS</span>
