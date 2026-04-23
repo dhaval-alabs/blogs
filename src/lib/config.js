@@ -21,13 +21,51 @@ export const MOBILE_NAV_ITEMS = [
   { id: "courses",  icon: "school",   label: "Courses",  href: "https://www.analytixlabs.co.in/courses/" },
 ];
 
-export const FOOTER_LINKS = [
-  { label: "About Us",             href: "#" },
-  { label: "Research Methodology", href: "#" },
-  { label: "Careers",              href: "#" },
-  { label: "Privacy Policy",       href: "#" },
-  { label: "Terms of Service",     href: "#" },
-];
+export const FOOTER_DATA = {
+  popularSearches: [
+    { label: "Data Analyst Training Course In Delhi", href: "https://www.analytixlabs.co.in/data-analyst-training-course-in-delhi/" },
+    { label: "Data Analyst Training Course In Noida", href: "https://www.analytixlabs.co.in/data-analyst-training-course-in-noida/" },
+    { label: "Data Analyst Training Course In Gurgaon", href: "https://www.analytixlabs.co.in/data-analyst-training-course-in-gurgaon/" },
+    { label: "Data Analyst Training Course In Bangalore", href: "https://www.analytixlabs.co.in/data-analyst-training-course-in-bangalore/" },
+    { label: "Data Science Course in Delhi", href: "https://www.analytixlabs.co.in/data-science-course-in-delhi/" },
+    { label: "Data Science Course In Noida", href: "https://www.analytixlabs.co.in/data-science-course-in-noida/" },
+    { label: "Data Science Course In Gurgaon", href: "https://www.analytixlabs.co.in/data-science-course-in-gurgaon/" },
+    { label: "Data Science Course In Bangalore", href: "https://www.analytixlabs.co.in/data-science-course-training-bangalore/" },
+    { label: "Business Analyst Course In Bangalore", href: "https://www.analytixlabs.co.in/business-analyst-course-in-bangalore/" },
+    { label: "Business Analyst Course In Delhi", href: "https://www.analytixlabs.co.in/business-analyst-course-in-delhi/" },
+    { label: "Artificial Intelligence Course in Bangalore", href: "https://www.analytixlabs.co.in/artificial-intelligence-course-in-bangalore/" },
+    { label: "Artificial Intelligence Course in Delhi", href: "https://www.analytixlabs.co.in/artificial-intelligence-course-in-delhi/" },
+    { label: "Artificial Intelligence for Managers Leaders", href: "https://www.analytixlabs.co.in/artificial-intelligence-for-managers-leaders/" },
+    { label: "Generative AI Course", href: "https://www.analytixlabs.co.in/generative-ai-course/" },
+  ],
+  about: [
+    { label: "Why Us", href: "https://www.analytixlabs.co.in/why-us/" },
+    { label: "Courses", href: "https://www.analytixlabs.co.in/courses/" },
+    { label: "About Faculty", href: "https://www.analytixlabs.co.in/about-faculty/" },
+    { label: "Contact Us", href: "https://www.analytixlabs.co.in/contact-us/" },
+    { label: "AnalytixLabs Placements", href: "https://www.analytixlabs.co.in/placements/" },
+    { label: "System Requirements", href: "https://www.analytixlabs.co.in/system-requirements/" },
+  ],
+  etcetera: [
+    { label: "Enterprises", href: "https://www.analytixlabs.co.in/enterprises/" },
+    { label: "Free Resources", href: "https://www.analytixlabs.co.in/free-resources/" },
+    { label: "Success Stories", href: "https://www.analytixlabs.co.in/reviews-complaints-testimonials/" },
+    { label: "Colleges Universities Training Courses", href: "https://www.analytixlabs.co.in/colleges-universities-training-courses/" },
+  ],
+  socials: [
+    { platform: "Instagram", href: "https://instagram.com/analytixlabs?igshid=5outdkxzn8xq" },
+    { platform: "Facebook", href: "https://www.facebook.com/analytixlabs" },
+    { platform: "Youtube", href: "https://www.youtube.com/@analytixlabs./videos" },
+    { platform: "Linkedin", href: "https://www.linkedin.com/company/analytixlabs/" },
+    { platform: "X", href: "https://twitter.com/AnalytixLabs" },
+    { platform: "Medium", href: "https://medium.com/@byanalytixlabs" },
+  ],
+  legal: [
+    { label: "Privacy Policy", href: "https://www.analytixlabs.co.in/privacy/" },
+    { label: "Terms and Conditions", href: "https://www.analytixlabs.co.in/terms-conditions/" },
+    { label: "Sitemap", href: "https://www.analytixlabs.co.in/sitemap_index.xml" },
+  ]
+};
 
 // ── Filtering ─────────────────────────────────────────────────────
 export const FILTER_CHIPS = [
