@@ -3,6 +3,7 @@ import "./globals.css";
 import ClientInit from "@/components/ClientInit";
 import TrackingScripts from "@/components/TrackingScripts";
 import NavigationProgress from "@/components/NavigationProgress";
+import { Suspense } from "react";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -69,7 +70,9 @@ export default function RootLayout({ children }) {
         </noscript>
         <ClientInit />
         <TrackingScripts />
-        <NavigationProgress />
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         {children}
       </body>
     </html>
