@@ -81,7 +81,7 @@ export const initAdvancedTracking = () => {
     }
 
     const target = e.target;
-    const tocLink = target && target.closest && target.closest('a[href^="#"]');
+    const tocLink = target?.closest?.('a[href^="#"]');
     if (tocLink) {
       logEvent(`TOC/Anchor Click: ${tocLink.getAttribute("href")}`);
     }

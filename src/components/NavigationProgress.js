@@ -14,8 +14,7 @@ export default function NavigationProgress() {
   }, [pathname, searchParams]);
 
   useEffect(() => {
-    const handleClick = (e) => {
-      const target = e.target.closest("a[href]");
+      const target = e?.target?.closest?.("a[href]");
       if (!target) return;
       
       const href = target.getAttribute("href");

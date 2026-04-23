@@ -636,21 +636,27 @@ export async function deleteSubscriberAction(id) {
 export async function postCommentAction(input) {
   try {
     const postSlug = input?.postSlug;
-    const userName = input?.userName;
-    const text = input?.text;
-    const parentCommentId = input?.parentCommentId ?? null;
+    const userName = String(input?.userName || 'Anonymous').trim();
+    const text = String(input?.text || '').trim();
+    const parentCommentId = input?.parentCommentId ? parseInt(input.parentCommentId, 10) : null;
 
-    if (!postSlug || !text?.trim()) {
+    if (!postSlug) {
+      return { success: false, error: 'Post identifier is missing.' };
+    }
+    if (!text) {
       return { success: false, error: 'Comment text is required.' };
     }
 
     const db = getServiceClient();
+    if (!db) {
+      return { success: false, error: 'Database connection failed.' };
+    }
 
     const row = {
-      post_slug: postSlug,
-      user_name: (userName || 'Anonymous').trim().slice(0, 50),
-      text: text.trim().slice(0, 2000),
-      parent_comment_id: parentCommentId || null,
+      post_slug: String(postSlug).slice(0, 200),
+      user_name: userName.slice(0, 50),
+      text: text.slice(0, 2000),
+      parent_comment_id: parentCommentId,
       likes: 0,
       status: 'pending',
     };
@@ -659,13 +665,13 @@ export async function postCommentAction(input) {
 
     if (dbError) {
       console.error('postCommentAction DB error:', dbError.message, dbError.code, dbError.details);
-      return { success: false, error: String(dbError.message || 'Database error') };
+      return { success: false, error: dbError.message || 'Database error' };
     }
 
     return { success: true, pending: true };
   } catch (err) {
     console.error('postCommentAction crashed:', err);
-    return { success: false, error: String(err?.message || 'Failed to post comment.') };
+    return { success: false, error: String(err?.message || 'Internal server error') };
   }
 }
 
