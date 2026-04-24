@@ -67,7 +67,7 @@ export default function SidebarAuthorSpotlight({
             <img
               src={avatarUrl}
               alt={name}
-              className={`w-10 h-10 rounded-full object-contain p-0.5 shrink-0 ring-2 ${c.avatarRing} ${c.avatarImg}`}
+              className={`w-10 h-10 rounded-full object-cover shrink-0 ring-2 ${c.avatarRing} ${c.avatarImg}`}
               onError={(e) => { e.target.style.display = "none"; }}
             />
           ) : (
@@ -142,7 +142,7 @@ export default function SidebarAuthorSpotlight({
           <img
             src={avatarUrl}
             alt={name}
-            className={`w-12 h-12 rounded-full object-contain p-1 shrink-0 ring-2 ${s.avatarRing} ${s.avatarImg}`}
+            className={`w-12 h-12 rounded-full object-cover shrink-0 ring-2 ${s.avatarRing} ${s.avatarImg}`}
             onError={(e) => { e.target.style.display = "none"; }}
           />
         ) : (

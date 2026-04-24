@@ -72,7 +72,9 @@ export default function TiptapComments({ editor, outerRef, comments = [], onUpda
       if (!popoverRef.current || !e.target) return;
       
       // Ensure target supports closest before calling
-      const isAvatarClick = typeof e.target.closest === 'function' && e.target.closest('.tc-avatar-btn');
+      const isAvatarClick = (e.target && typeof e.target.closest === 'function') 
+        ? e.target.closest('.tc-avatar-btn') 
+        : null;
       
       if (!popoverRef.current.contains(e.target) && !isAvatarClick) {
         setActiveCommentId(null);

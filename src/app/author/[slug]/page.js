@@ -43,7 +43,7 @@ export default async function AuthorPage({ params }) {
               src={author.image}
               alt={author.name}
               fill
-              className="object-contain p-3"
+              className="object-cover"
               sizes="192px"
             />
           </div>

@@ -58,15 +58,15 @@ export default function PostCard({ post, bookmarked = false, onToggleBookmark, o
                 height={20}
                 loading="lazy"
                 decoding="async"
-                className="w-5 h-5 rounded-full object-contain bg-white"
+                className="w-5 h-5 rounded-full object-cover bg-white shrink-0"
                 onError={(e) => { e.target.style.display = "none"; }}
               />
             ) : (
-              <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-white font-bold text-[8px]">
+              <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-white font-bold text-[8px] shrink-0">
                 {post.author?.initials || "?"}
               </div>
             )}
-            <span className="text-xs text-on-surface-variant dark:text-[#c2c6d6]">
+            <span className="text-xs text-on-surface-variant dark:text-[#c2c6d6] truncate">
               {post.author?.name}
             </span>
           </div>

@@ -67,9 +67,10 @@ export default function Navbar({ activeCategory = "Data Science" }) {
               </span>
             </button>
 
-            {/* Desktop logo + divider + Blog link */}
-            <Link href="/blog" className="hidden md:flex items-center">
-              <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority style={{ objectFit: "contain" }} />
+            {/* Desktop logo */}
+            <Link href="https://www.analytixlabs.co.in/" className="hidden md:flex items-center">
+              <Image src="/logo.svg" alt="AnalytixLabs" width={140} height={32} priority className="object-contain dark:hidden" />
+              <Image src="/white.svg" alt="AnalytixLabs" width={140} height={32} priority className="object-contain hidden dark:block" />
             </Link>
             <div className="w-[1px] h-6 bg-slate-300 dark:bg-[#424754] hidden md:block" />
             <Link
@@ -83,11 +84,12 @@ export default function Navbar({ activeCategory = "Data Science" }) {
           {/* CENTER (mobile/tablet only) — logo centered via absolute positioning so
               the right controls stay flush right and balance is independent of left width */}
           <Link
-            href="/blog"
+            href="https://www.analytixlabs.co.in/"
             className="md:hidden absolute left-20 top-1/2 -translate-y-1/2 flex items-center"
-            aria-label="AnalytixLabs Blog"
+            aria-label="AnalytixLabs"
           >
-            <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={110} height={26} priority style={{ objectFit: "contain" }} />
+            <Image src="/logo.svg" alt="AnalytixLabs" width={110} height={26} priority className="object-contain dark:hidden" />
+            <Image src="/white.svg" alt="AnalytixLabs" width={110} height={26} priority className="object-contain hidden dark:block" />
           </Link>
 
           {/* Right Controls */}
@@ -145,9 +147,9 @@ export default function Navbar({ activeCategory = "Data Science" }) {
 
             {/* Home Icon */}
             <Link 
-              href="https://www.analytixlabs.co.in/" 
+              href="/blog" 
               className="p-2 hover:bg-slate-100/50 dark:hover:bg-[#2d3449]/50 rounded-lg transition-all"
-              title="Go to main website"
+              title="Go to blog homepage"
             >
               <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
                 home

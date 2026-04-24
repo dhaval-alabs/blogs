@@ -801,7 +801,7 @@ function PlusMenu({ editor, outerRef }) {
   useEffect(() => {
     if (!open) return;
     const handleOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+      if (menuRef.current && e.target && !menuRef.current.contains(e.target)) {
         setOpen(false);
       }
     };

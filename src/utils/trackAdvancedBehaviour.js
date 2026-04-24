@@ -80,9 +80,8 @@ export const initAdvancedTracking = () => {
       clickCount = 0;
     }
 
-    const target = e.target;
-    const tocLink = (target && typeof target.closest === "function") 
-      ? target.closest('a[href^="#"]') 
+    const tocLink = (e.target && typeof e.target.closest === "function") 
+      ? e.target.closest('a[href^="#"]') 
       : null;
 
     if (tocLink) {
