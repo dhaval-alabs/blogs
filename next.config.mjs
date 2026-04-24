@@ -53,6 +53,25 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    // Long-lived immutable caching for public static assets — addresses GTmetrix
+    // "Serve static assets with an efficient cache policy" audit.
+    const oneYearImmutable = "public, max-age=31536000, immutable";
+    return [
+      {
+        source: "/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf)",
+        headers: [{ key: "Cache-Control", value: oneYearImmutable }],
+      },
+      {
+        source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: oneYearImmutable }],
+      },
+      {
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: oneYearImmutable }],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

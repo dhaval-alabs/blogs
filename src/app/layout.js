@@ -9,18 +9,22 @@ const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-headline",
   weight: ["700", "800"],
+  display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "500", "600", "700", "800"],
+  // Trimmed from 5 → 3 weights. 500/800 collapse to adjacent weights via font-synthesis.
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-label",
   weight: ["500", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -55,7 +59,7 @@ export default function RootLayout({ children }) {
             once the sheet loads, which would otherwise trip React's hydration check. */}
         <link
           data-lazy-css="1"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..600,0..1,0&display=swap"
           rel="stylesheet"
           media="print"
           suppressHydrationWarning
@@ -71,7 +75,7 @@ export default function RootLayout({ children }) {
         />
         <noscript>
           <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..600,0..1,0&display=swap"
             rel="stylesheet"
           />
           <link
