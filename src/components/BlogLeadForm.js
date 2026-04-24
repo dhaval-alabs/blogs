@@ -1,5 +1,5 @@
 "use client";
-import { withBasePath, apiFetch } from "@/utils/basePath";
+import { apiFetch } from "@/utils/basePath";
 
 import { useState } from "react";
 import {
@@ -68,8 +68,11 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
       }
 
       const params = new URLSearchParams({ email, name });
-      const targetPath = withBasePath(`${THANK_YOU_PATH}/`);
-      window.location.href = `${targetPath}?${params.toString()}`;
+      // Derive the deploy prefix from the current URL so the redirect works
+      // whether the app is served at the root (dev) or under /blog/ (prod proxy).
+      const prefixMatch = window.location.pathname.match(/^\/blog(?=\/|$)/);
+      const prefix = prefixMatch ? prefixMatch[0] : "";
+      window.location.href = `${prefix}${THANK_YOU_PATH}/?${params.toString()}`;
     } catch (err) {
       setIsSubmitting(false);
       setErrorHeader("Connection error. Please check your internet.");
