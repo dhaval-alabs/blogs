@@ -146,17 +146,6 @@ export default function Navbar({ activeCategory = "Data Science" }) {
               </span>
             </button>
 
-            {/* Home Icon */}
-            <Link 
-              href="/blog" 
-              className="p-2 hover:bg-slate-100/50 dark:hover:bg-[#2d3449]/50 rounded-lg transition-all"
-              title="Go to blog homepage"
-            >
-              <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
-                home
-              </span>
-            </Link>
-
             {/* User avatar */}
             <button className="w-8 h-8 rounded-full bg-primary/10 dark:bg-[#adc6ff]/15 flex items-center justify-center border border-outline-variant/30 dark:border-[#424754] hover:bg-primary/20 dark:hover:bg-[#adc6ff]/25 transition-colors">
               <span className="material-symbols-outlined text-primary dark:text-[#adc6ff] text-lg">
