@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * Hero banner for the homepage and blog listing page.
@@ -15,20 +16,20 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
       className="mt-16 pt-12 pb-16 relative overflow-hidden min-h-[360px] sm:min-h-[420px]"
       style={{ background: "linear-gradient(135deg,#003369 57%,#001f4d 100%)" }}
     >
-      {/* Featured image as background */}
+      {/* Featured image as background — served via next/image for automatic AVIF/WebP,
+          responsive sizing, and long cache headers. This is the LCP element on the
+          blog listing, so we mark it priority + fetchPriority="high". */}
       {post.image && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={post.image}
           alt=""
           aria-hidden="true"
-          decoding="async"
+          fill
+          priority
           fetchPriority="high"
+          sizes="100vw"
+          quality={55}
           style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
             objectFit: "cover",
             objectPosition: "center center",
             opacity: 0.3,
@@ -71,6 +72,7 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
             <Link
               href={`/blog/${post.slug}`}
               className="glass-btn px-6 py-3 rounded-full font-bold text-sm"
+              aria-label={`Read the full article: ${post.title}`}
             >
               Read More
             </Link>

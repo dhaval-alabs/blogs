@@ -146,6 +146,8 @@ function BlogListingContent({
     <>
       <Navbar activeCategory="Blog" />
 
+      <main id="main-content">
+
       {/* ── Hero ── */}
       <HeroBanner
         post={featuredPost}
@@ -265,6 +267,9 @@ function BlogListingContent({
       </section>
 
       <CoursesGrid />
+
+      </main>
+
       <Footer />
       <MobileBottomNav activePage="home" />
     </>
