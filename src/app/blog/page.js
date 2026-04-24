@@ -1,27 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { ToastProvider, useToast } from "@/components/Toast";
 import { courses } from "@/lib/data";
 import { SUGGESTED_AI_QUERIES, AI_CONTEXT, FEATURED_AUTHOR_SLUG, NEWSLETTER } from "@/lib/config";
-import AskAI from "@/components/AskAI";
 import PostCard from "@/components/PostCard";
 import HeroBanner from "@/components/HeroBanner";
 import FilterBar from "@/components/FilterBar";
-import SidebarCourseCard from "@/components/SidebarCourseCard";
-import SidebarSalaryWidget from "@/components/SidebarSalaryWidget";
-import SidebarAuthorSpotlight from "@/components/SidebarAuthorSpotlight";
-import RecommendedPosts from "@/components/RecommendedPosts";
-import SidebarCategories from "@/components/SidebarCategories";
-import NewsletterBanner from "@/components/NewsletterBanner";
-import DiscussionSection from "@/components/DiscussionSection";
-import CoursesGrid from "@/components/CoursesGrid";
-import Pagination from "@/components/Pagination";
-import FeaturedSection from "@/components/FeaturedSection";
-import PostCarousel from "@/components/PostCarousel";
+
+// ── Below-the-fold / heavy components: code-split so they don't bloat the initial
+//    JS bundle of the blog listing route. Lightweight placeholders reserve space.
+const AskAI = dynamic(() => import("@/components/AskAI"), { ssr: false, loading: () => <div className="rounded-2xl min-h-[160px] bg-surface-container/30 animate-pulse" /> });
+const SidebarCourseCard = dynamic(() => import("@/components/SidebarCourseCard"), { ssr: false });
+const SidebarSalaryWidget = dynamic(() => import("@/components/SidebarSalaryWidget"), { ssr: false });
+const SidebarAuthorSpotlight = dynamic(() => import("@/components/SidebarAuthorSpotlight"), { ssr: false });
+const RecommendedPosts = dynamic(() => import("@/components/RecommendedPosts"), { ssr: false });
+const SidebarCategories = dynamic(() => import("@/components/SidebarCategories"), { ssr: false });
+const NewsletterBanner = dynamic(() => import("@/components/NewsletterBanner"), { ssr: false });
+const DiscussionSection = dynamic(() => import("@/components/DiscussionSection"), { ssr: false });
+const CoursesGrid = dynamic(() => import("@/components/CoursesGrid"), { ssr: false });
+const Pagination = dynamic(() => import("@/components/Pagination"), { ssr: false });
+const FeaturedSection = dynamic(() => import("@/components/FeaturedSection"), { ssr: false });
+const PostCarousel = dynamic(() => import("@/components/PostCarousel"), { ssr: false });
 
 const POSTS_PER_PAGE = 12;
 

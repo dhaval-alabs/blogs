@@ -22,6 +22,8 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
           src={post.image}
           alt=""
           aria-hidden="true"
+          decoding="async"
+          fetchPriority="high"
           style={{
             position: "absolute",
             inset: 0,

@@ -1,19 +1,19 @@
 import { execSync } from 'child_process';
 
 try {
-  console.log('Running git status...');
-  const status = execSync('git status', { encoding: 'utf8' });
-  console.log(status);
-
   console.log('Staging changes...');
   execSync('git add .');
 
   console.log('Committing changes...');
-  execSync('git commit -m "Hardened DOM event handlers and fixed like count synchronization"');
+  execSync('git commit -m "Finalized DOM hardening and like synchronization fixes"');
 
   console.log('Pushing to github...');
   execSync('git push origin main');
-  console.log('Done!');
+  console.log('Successfully pushed to GitHub!');
 } catch (err) {
-  console.error('Git Error:', err.stdout || err.message);
+  if (err.stdout && err.stdout.includes('nothing to commit')) {
+    console.log('Nothing to commit, working tree clean.');
+  } else {
+    console.error('Git Error:', err.stdout || err.message);
+  }
 }

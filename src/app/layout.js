@@ -46,15 +46,47 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
+        {/* Preconnect to font/CDN origins so the deferred stylesheet requests resolve faster */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
+        {/* Non-blocking stylesheets: load with media="print" then promote to "all" */}
+        {/* suppressHydrationWarning: the inline promoter below flips media="print"→"all"
+            once the sheet loads, which would otherwise trip React's hydration check. */}
         <link
+          data-lazy-css="1"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
+          media="print"
+          suppressHydrationWarning
         />
         <link
+          data-lazy-css="1"
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
+          media="print"
+          suppressHydrationWarning
+        />
+        <noscript>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+          />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+          />
+        </noscript>
+        {/* Promote deferred stylesheets to active once the browser has them parsed */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.querySelectorAll('link[data-lazy-css]').forEach(function(l){var a=function(){l.media='all'};if(l.sheet){a()}else{l.addEventListener('load',a,{once:true})}});",
+          }}
         />
         <meta name="generator" content="Elementor 3.35.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-internal, google_font-enabled, font_display-swap" />
       </head>

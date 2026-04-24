@@ -21,6 +21,9 @@ export default function PostCard({ post, bookmarked = false, onToggleBookmark, o
             alt={post.altText || post.title || ""}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
+            decoding="async"
+            width="800"
+            height="450"
             onError={(e) => { e.target.style.display = "none"; }}
           />
         ) : (
@@ -53,6 +56,8 @@ export default function PostCard({ post, bookmarked = false, onToggleBookmark, o
                 alt={post.author.name || ""}
                 width={20}
                 height={20}
+                loading="lazy"
+                decoding="async"
                 className="w-5 h-5 rounded-full object-contain bg-white"
                 onError={(e) => { e.target.style.display = "none"; }}
               />

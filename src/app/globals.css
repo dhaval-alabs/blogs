@@ -868,3 +868,51 @@ a[class*="btn"]:active {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ===== Global tactile button feedback =====
+   Gives every button and role="button" element a consistent "press" response
+   (mobile, tablet, and desktop) so users see that their tap/click registered.
+   - Replaces the default grey iOS tap-highlight with our brand-tinted one.
+   - On press, the element quickly scales down + dims slightly.
+   - Components that already define their own :active transform still win
+     because they use the same property and cascade order (later rules / inline
+     Tailwind classes override this base rule). */
+button,
+[role="button"],
+a[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-tap-highlight-color: rgba(0, 59, 147, 0.18);
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  button:not(:disabled):not([aria-disabled="true"]):hover,
+  [role="button"]:not([aria-disabled="true"]):hover {
+    filter: brightness(1.03);
+  }
+}
+
+button:not(:disabled):not([aria-disabled="true"]):active,
+[role="button"]:not([aria-disabled="true"]):active,
+a[role="button"]:not([aria-disabled="true"]):active,
+input[type="button"]:not(:disabled):active,
+input[type="submit"]:not(:disabled):active,
+input[type="reset"]:not(:disabled):active {
+  transform: scale(0.96);
+  filter: brightness(0.95);
+  transition: transform 80ms ease-out, filter 80ms ease-out;
+}
+
+/* Respect users who request reduced motion — skip the scale pulse */
+@media (prefers-reduced-motion: reduce) {
+  button:active,
+  [role="button"]:active,
+  a[role="button"]:active,
+  input[type="button"]:active,
+  input[type="submit"]:active,
+  input[type="reset"]:active {
+    transform: none;
+  }
+}

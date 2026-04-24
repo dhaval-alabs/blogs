@@ -141,32 +141,53 @@ export default function AskAI({
     setLoading(false);
   }
 
-  return (
-    <div className="rounded-3xl border p-6 border-white/10 shadow-xl"
-      style={{ background: "#003369" }}>
-      <h3 className="font-[family-name:var(--font-headline)] font-bold text-lg text-white mb-4 flex items-center gap-2">
-        <span className="material-symbols-outlined text-white/80">auto_awesome</span>
-        Ask the AI
-      </h3>
+  // Mobile/tablet overlay state — desktop (lg+) always shows the inline card.
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-      {/* Input row */}
-      <div className="relative mb-6">
-        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && ask()}
-          className="w-full pl-12 pr-12 py-3.5 rounded-2xl text-sm bg-white/10 text-white border border-white/10 backdrop-blur-md shadow-lg outline-none focus:ring-2 focus:ring-white/20 transition-all placeholder:text-white/40"
-        />
-        <button onClick={() => ask()} aria-label="Ask AI"
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 hover:scale-110 transition-transform">
-          <span className="material-symbols-outlined text-2xl"
-            style={{ color: loading ? "#9ca3af" : "#fbbf24", fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-        </button>
-      </div>
+  // Lock body scroll and hide the floating mobile bottom nav while the overlay is open
+  // so the Ask AI sheet can cover the full viewport without visual conflicts.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const nav = document.querySelector(".mobile-bottom-nav");
+    const prevNavDisplay = nav?.style.display ?? "";
+    if (nav) nav.style.display = "none";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      if (nav) nav.style.display = prevNavDisplay;
+    };
+  }, [mobileOpen]);
 
+  const headerBlock = (
+    <h3 className="font-[family-name:var(--font-headline)] font-bold text-lg text-white mb-4 flex items-center gap-2">
+      <span className="material-symbols-outlined text-white/80">auto_awesome</span>
+      Ask the AI
+    </h3>
+  );
+
+  const inputBlock = (
+    <div className="relative">
+      <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={e => e.key === "Enter" && ask()}
+        className="w-full pl-12 pr-12 py-3.5 rounded-2xl text-sm bg-white/10 text-white border border-white/10 backdrop-blur-md shadow-lg outline-none focus:ring-2 focus:ring-white/20 transition-all placeholder:text-white/40"
+      />
+      <button onClick={() => ask()} aria-label="Send question" disabled={loading || !query.trim()}
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#003369] shadow-md hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100">
+        <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+          {loading ? "more_horiz" : "arrow_upward"}
+        </span>
+      </button>
+    </div>
+  );
+
+  const bodyBlock = (
+    <>
       {/* Answer panel */}
       {asked && (
         <div className="mb-5 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
@@ -287,6 +308,88 @@ export default function AskAI({
           Ask another question
         </button>
       )}
+    </>
+  );
+
+  // Desktop card composition — matches the original look (header + input on top, body below)
+  const card = (
+    <div
+      className="rounded-3xl border p-6 border-white/10 shadow-xl h-full"
+      style={{ background: "#003369" }}
+    >
+      {headerBlock}
+      <div className="mb-6">{inputBlock}</div>
+      {bodyBlock}
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop / large screens: inline card in the sidebar */}
+      <div className="hidden lg:block">{card}</div>
+
+      {/* Mobile & tablet: floating action button (FAB) in the corner */}
+      <div className="lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Open Ask the AI"
+          className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white active:scale-95 transition-transform"
+          style={{ background: "#003369" }}
+        >
+          <span className="material-symbols-outlined text-2xl text-amber-300" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+          <span className="absolute -top-1 -right-1 bg-amber-300 text-[#003369] text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow">AI</span>
+        </button>
+
+        {mobileOpen && (
+          <div
+            className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Ask the AI"
+          >
+            {/* Backdrop — sits above the floating bottom nav (which is z-50) */}
+            <div
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Chat-style sheet: header at top, scrollable body in the middle,
+                input pinned at the bottom. On mobile the sheet fills the whole
+                viewport (no gap below); on sm+ it centers as a modal. */}
+            <div
+              className="relative w-full h-[100dvh] sm:h-auto sm:max-w-lg sm:mx-4 sm:max-h-[88vh] sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+              style={{ background: "#003369" }}
+            >
+              {/* Header */}
+              <div className="relative flex items-center justify-between px-6 pt-5 pb-3 border-b border-white/10">
+                {headerBlock}
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Close"
+                  className="w-9 h-9 -mt-2 shrink-0 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl">close</span>
+                </button>
+              </div>
+
+              {/* Scrollable body */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-5">
+                {bodyBlock}
+              </div>
+
+              {/* Input pinned to the bottom — safe-area aware for notched devices */}
+              <div
+                className="px-4 pt-3 border-t border-white/10 bg-[#003369]"
+                style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+              >
+                {inputBlock}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

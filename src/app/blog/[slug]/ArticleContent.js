@@ -1,23 +1,27 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { ToastProvider, useToast } from "@/components/Toast";
-import CoursesGrid from "@/components/CoursesGrid";
-import AskAI from "@/components/AskAI";
-import SidebarAuthorSpotlight from "@/components/SidebarAuthorSpotlight";
-import SidebarSalaryWidget from "@/components/SidebarSalaryWidget";
-import SidebarCourseCard from "@/components/SidebarCourseCard";
 import { likePostAction } from "@/app/actions";
-import DiscussionSection from "@/components/DiscussionSection";
 import "@/components/TiptapEditor.css";
 import parse from "html-react-parser";
-import FrontendKnowledgeCheck from "@/components/FrontendKnowledgeCheck";
-import BlogLeadForm from "@/components/BlogLeadForm";
+
+// ── Below-the-fold / heavy article components are code-split so the critical
+//    article markup renders first with minimum JS. All retain identical UX.
+const CoursesGrid = dynamic(() => import("@/components/CoursesGrid"), { ssr: false });
+const AskAI = dynamic(() => import("@/components/AskAI"), { ssr: false, loading: () => <div className="rounded-2xl min-h-[160px] bg-surface-container/30 animate-pulse" /> });
+const SidebarAuthorSpotlight = dynamic(() => import("@/components/SidebarAuthorSpotlight"), { ssr: false });
+const SidebarSalaryWidget = dynamic(() => import("@/components/SidebarSalaryWidget"), { ssr: false });
+const SidebarCourseCard = dynamic(() => import("@/components/SidebarCourseCard"), { ssr: false });
+const DiscussionSection = dynamic(() => import("@/components/DiscussionSection"), { ssr: false });
+const FrontendKnowledgeCheck = dynamic(() => import("@/components/FrontendKnowledgeCheck"), { ssr: false });
+const BlogLeadForm = dynamic(() => import("@/components/BlogLeadForm"), { ssr: false });
 
 // Generate contextual AI questions from post domain tags / FAQ headings
 function buildSuggestedQuestions(post) {

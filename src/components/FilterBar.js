@@ -52,8 +52,8 @@ export default function FilterBar({
           />
         </div>
 
-        {/* Topics dropdown */}
-        <div className="relative">
+        {/* Topics dropdown — mobile/tablet only (chips take over on lg+) */}
+        <div className="relative lg:hidden">
           <button
             onClick={onToggleTopics}
             className="glass-dropdown flex items-center gap-2 px-4 py-3 text-sm rounded-xl font-semibold"
@@ -115,8 +115,8 @@ export default function FilterBar({
         )}
       </div>
 
-      {/* Filter chips */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      {/* Filter chips — desktop only (mobile/tablet use the Topics dropdown instead) */}
+      <div className="hidden lg:flex flex-wrap gap-2 mb-8">
         {FILTER_CHIPS.map((chip) => (
           <button
             key={chip}

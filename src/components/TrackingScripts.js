@@ -30,17 +30,17 @@ export default function TrackingScripts() {
         })(window,document,'script','dataLayer','GTM-MN7KJTVN');
       `}</Script>
 
-      {/* ── jQuery (required by OwlCarousel) ── */}
+      {/* ── jQuery (required by OwlCarousel) — deferred to lazyOnload to avoid blocking critical path ── */}
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         crossOrigin="anonymous"
       />
 
-      {/* ── OwlCarousel ── */}
+      {/* ── OwlCarousel — deferred to lazyOnload (only used on legacy carousel blocks) ── */}
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         crossOrigin="anonymous"
       />
 

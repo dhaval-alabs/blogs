@@ -4,13 +4,19 @@ const nextConfig = {
   // SEO: canonicalize every URL with a trailing slash. Next.js will 308-redirect
   // /foo → /foo/ automatically, ensuring search engines index a single canonical form.
   trailingSlash: true,
+  compress: true,
+  productionBrowserSourceMaps: false,
   serverExternalPackages: ['sharp'],
   experimental: {
     serverActions: {
       allowedOrigins: ['www.analytixlabs.co.in', 'analytixlabs.co.in'],
     },
+    // Tree-shake large icon/parser libs — only used exports land in the bundle
+    optimizePackageImports: ['lucide-react', 'html-react-parser'],
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: "https",

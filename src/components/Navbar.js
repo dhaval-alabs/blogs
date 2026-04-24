@@ -53,23 +53,45 @@ export default function Navbar({ activeCategory = "Data Science" }) {
   return (
     <>
       <nav className={`fixed top-0 w-full z-50 glass-nav ${scrolled ? "glass-nav--scrolled shadow-md" : "shadow-sm"}`} id="main-nav">
-        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <Link href="/blog" className="flex items-center">
+        <div className="relative flex items-center max-w-7xl mx-auto px-6 h-16 gap-2">
+          {/* LEFT — hamburger on mobile/tablet, logo + "Blog" link on desktop */}
+          <div className="flex items-center gap-3 flex-1 md:flex-none">
+            {/* Mobile hamburger (left-aligned) */}
+            <button
+              className="md:hidden p-2 hover:bg-slate-100/50 dark:hover:bg-[#2d3449]/50 rounded-lg transition-all"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
+                {menuOpen ? "close" : "menu"}
+              </span>
+            </button>
+
+            {/* Desktop logo + divider + Blog link */}
+            <Link href="/blog" className="hidden md:flex items-center">
               <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority style={{ objectFit: "contain" }} />
             </Link>
             <div className="w-[1px] h-6 bg-slate-300 dark:bg-[#424754] hidden md:block" />
-            <Link 
-              href="/blog" 
-              className="font-[family-name:var(--font-headline)] font-bold text-sm text-slate-500 hover:text-[#003b93] dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
+            <Link
+              href="/blog"
+              className="hidden md:block font-[family-name:var(--font-headline)] font-bold text-sm text-slate-500 hover:text-[#003b93] dark:text-[#8c909f] dark:hover:text-[#adc6ff] transition-colors"
             >
               Blog
             </Link>
           </div>
 
+          {/* CENTER (mobile/tablet only) — logo centered via absolute positioning so
+              the right controls stay flush right and balance is independent of left width */}
+          <Link
+            href="/blog"
+            className="md:hidden absolute left-20 top-1/2 -translate-y-1/2 flex items-center"
+            aria-label="AnalytixLabs Blog"
+          >
+            <Image src={isDark ? "/white.svg" : "/logo.svg"} alt="AnalytixLabs" width={110} height={26} priority style={{ objectFit: "contain" }} />
+          </Link>
+
           {/* Right Controls */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 flex-1 md:flex-none justify-end md:ml-auto">
             {/* Desktop Nav — right-aligned as buttons */}
             <div className="hidden md:flex items-center gap-2 mr-2">
               {NAV_CATEGORIES.map((cat) => {
@@ -89,17 +111,6 @@ export default function Navbar({ activeCategory = "Data Science" }) {
                 );
               })}
             </div>
-
-            {/* Mobile hamburger */}
-            <button
-              className="md:hidden p-2 hover:bg-slate-100/50 dark:hover:bg-[#2d3449]/50 rounded-lg transition-all"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-            >
-              <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
-                {menuOpen ? "close" : "menu"}
-              </span>
-            </button>
 
             {/* Font scaling */}
             <div className="hidden md:flex items-center bg-surface-container-low dark:bg-[#131b2e] rounded-lg border border-outline-variant/30 dark:border-[#424754]">
