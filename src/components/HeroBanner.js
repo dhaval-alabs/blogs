@@ -12,7 +12,7 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
 
   return (
     <section
-      className="mt-16 pt-12 pb-16 relative overflow-hidden"
+      className="mt-16 pt-12 pb-16 relative overflow-hidden min-h-[360px] sm:min-h-[420px]"
       style={{ background: "linear-gradient(135deg,#003369 57%,#001f4d 100%)" }}
     >
       {/* Featured image as background */}
