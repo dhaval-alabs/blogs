@@ -8,7 +8,7 @@ import {
 } from "@/utils/trackAdvancedBehaviour";
 import { getStoredUtm } from "@/utils/captureUtm";
 
-const THANK_YOU_PATH = "/thank-you-org";
+const THANK_YOU_PATH = "/thank-you";
 
 const inputCls = `
   w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
@@ -68,7 +68,8 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
       }
 
       const params = new URLSearchParams({ email, name });
-      window.location.href = `${THANK_YOU_PATH}?${params.toString()}`;
+      const targetPath = withBasePath(`${THANK_YOU_PATH}/`);
+      window.location.href = `${targetPath}?${params.toString()}`;
     } catch (err) {
       setIsSubmitting(false);
       setErrorHeader("Connection error. Please check your internet.");
