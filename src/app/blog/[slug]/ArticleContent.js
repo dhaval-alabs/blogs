@@ -7,6 +7,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import BlogLeadForm from "@/components/BlogLeadForm";
 import { ToastProvider, useToast } from "@/components/Toast";
 import { likePostAction } from "@/app/actions";
 import "@/components/TiptapEditor.css";
@@ -21,7 +22,6 @@ const SidebarSalaryWidget = dynamic(() => import("@/components/SidebarSalaryWidg
 const SidebarCourseCard = dynamic(() => import("@/components/SidebarCourseCard"), { ssr: false });
 const DiscussionSection = dynamic(() => import("@/components/DiscussionSection"), { ssr: false });
 const FrontendKnowledgeCheck = dynamic(() => import("@/components/FrontendKnowledgeCheck"), { ssr: false });
-const BlogLeadForm = dynamic(() => import("@/components/BlogLeadForm"), { ssr: false });
 
 // Generate contextual AI questions from post domain tags / FAQ headings
 function buildSuggestedQuestions(post) {
