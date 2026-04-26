@@ -8,7 +8,7 @@ import {
 } from "@/utils/trackAdvancedBehaviour";
 import { getStoredUtm } from "@/utils/captureUtm";
 
-const THANK_YOU_PATH = "/thank-you";
+const THANK_YOU_PATH = "/blog/thank-you";
 
 const inputCls = `
   w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
@@ -68,11 +68,7 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
       }
 
       const params = new URLSearchParams({ email, name });
-      // Derive the deploy prefix from the current URL so the redirect works
-      // whether the app is served at the root (dev) or under /blog/ (prod proxy).
-      const prefixMatch = window.location.pathname.match(/^\/blog(?=\/|$)/);
-      const prefix = prefixMatch ? prefixMatch[0] : "";
-      window.location.href = `${prefix}${THANK_YOU_PATH}/?${params.toString()}`;
+      window.location.href = `${THANK_YOU_PATH}/?${params.toString()}`;
     } catch (err) {
       setIsSubmitting(false);
       setErrorHeader("Connection error. Please check your internet.");

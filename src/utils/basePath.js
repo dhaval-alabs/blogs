@@ -5,12 +5,7 @@ export function withBasePath(path) {
     return path;
   }
   
-  // Blog is served under /blog/ in production via an upstream proxy, so static
-  // assets and same-origin links must be prefixed. NEXT_PUBLIC_BASE_PATH
-  // overrides this if set (e.g. for staging on a different subpath).
-  const base =
-    process.env.NEXT_PUBLIC_BASE_PATH ||
-    (process.env.NODE_ENV === "production" ? "/blog" : "");
+  const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
   if (!base) return path;
 
   // Ensure path starts with a slash if we have a base path

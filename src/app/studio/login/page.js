@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { withBasePath } from "@/utils/basePath";
 import { Lock, Mail, Loader2, ArrowRight } from "lucide-react";
 
 export default function StudioLogin() {
@@ -46,8 +45,8 @@ export default function StudioLogin() {
         
         {/* Logo Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <img src={withBasePath("/logo.svg")} alt="Alabs" className="dark:hidden" style={{ height: 58, width: 'auto', marginBottom: 16, display: 'inline-block' }} />
-          <img src={withBasePath("/white.svg")} alt="Alabs" className="hidden dark:inline-block" style={{ height: 58, width: 'auto', marginBottom: 16 }} />
+          <img src={"/blog/logo.svg"} alt="Alabs" className="dark:hidden" style={{ height: 58, width: 'auto', marginBottom: 16, display: 'inline-block' }} />
+          <img src={"/blog/white.svg"} alt="Alabs" className="hidden dark:inline-block" style={{ height: 58, width: 'auto', marginBottom: 16 }} />
           <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.5px', marginTop: 8 }}>Studio Access</h1>
           <p style={{ marginTop: 6, fontSize: 15, color: 'var(--text3)' }}>Sign in to manage editorial content.</p>
         </div>

@@ -3,7 +3,6 @@
 import { I } from "./StudioIcons";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { withBasePath } from "@/utils/basePath";
 
 export default function StudioSidebar({
   viewMode,
@@ -27,7 +26,7 @@ export default function StudioSidebar({
     <nav className="sidebar">
       {/* Brand Logo */}
       <div className="sb-logo" onClick={onGoHome} title="Go to home">
-        <img src={withBasePath("/white.svg")} alt="AnalytixLabs Studio" />
+        <img src="/blog/white.svg" alt="AnalytixLabs Studio" />
       </div>
 
       {/* New Post Button */}

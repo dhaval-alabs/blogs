@@ -293,7 +293,7 @@ export default function AdminDashboard() {
             <ArrowLeft size={16} /> Back to Studio
           </button>
           
-          <img src="/white.svg" alt="Alabs" style={{ height: 32, width: 'auto' }} />
+          <img src="/blog/white.svg" alt="Alabs" style={{ height: 32, width: 'auto' }} />
         </div>
 
         {/* Dashboard Title Section */}

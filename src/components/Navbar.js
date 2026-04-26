@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { withBasePath } from "@/utils/basePath";
 import { NAV_CATEGORIES } from "@/lib/config";
 
 
@@ -70,8 +69,8 @@ export default function Navbar({ activeCategory = "Data Science" }) {
 
             {/* Desktop logo */}
             <Link href="https://www.analytixlabs.co.in/" className="hidden md:flex items-center">
-              <Image src={withBasePath("/logo.svg")} alt="AnalytixLabs" width={140} height={32} priority className="object-contain dark:hidden" />
-              <Image src={withBasePath("/white.svg")} alt="AnalytixLabs" width={140} height={32} priority className="object-contain hidden dark:block" />
+              <Image src={"/blog/logo.svg"} alt="AnalytixLabs" width={140} height={32} priority className="object-contain dark:hidden" />
+              <Image src={"/blog/white.svg"} alt="AnalytixLabs" width={140} height={32} priority className="object-contain hidden dark:block" />
             </Link>
             <div className="w-[1px] h-6 bg-slate-300 dark:bg-[#424754] hidden md:block" />
             <Link
@@ -89,8 +88,8 @@ export default function Navbar({ activeCategory = "Data Science" }) {
             className="md:hidden absolute left-20 top-1/2 -translate-y-1/2 flex items-center"
             aria-label="AnalytixLabs"
           >
-            <Image src={withBasePath("/logo.svg")} alt="AnalytixLabs" width={110} height={26} priority className="object-contain dark:hidden" />
-            <Image src={withBasePath("/white.svg")} alt="AnalytixLabs" width={110} height={26} priority className="object-contain hidden dark:block" />
+            <Image src={"/blog/logo.svg"} alt="AnalytixLabs" width={110} height={26} priority className="object-contain dark:hidden" />
+            <Image src={"/blog/white.svg"} alt="AnalytixLabs" width={110} height={26} priority className="object-contain hidden dark:block" />
           </Link>
 
           {/* Right Controls */}
