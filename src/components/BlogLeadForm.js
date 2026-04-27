@@ -14,9 +14,10 @@ const inputCls = `
   w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
   text-[#09263F] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500
   transition-all duration-200 disabled:opacity-60
+  dark:bg-[#131b2e] dark:border-[#424754] dark:text-[#dae2fd] dark:placeholder:text-[#8c909f]
 `.trim();
 
-const labelCls = "block text-xs font-bold text-[#09263F] mb-1.5 tracking-wide";
+const labelCls = "block text-xs font-bold text-[#09263F] mb-1.5 tracking-wide dark:text-[#dae2fd]";
 
 export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
   const [name, setName] = useState("");
@@ -76,16 +77,16 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
   }
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
+    <div className="p-6 bg-white rounded-2xl shadow-xl border border-gray-100 dark:bg-[#0b1326] dark:border-[#424754]">
       <div className="mb-6">
-        <h2 className="font-bold text-[#09263F] text-xl">Get Expert Guidance</h2>
-        <p className="text-gray-500 text-sm">
+        <h2 className="font-bold text-[#09263F] text-xl dark:text-[#dae2fd]">Get Expert Guidance</h2>
+        <p className="text-gray-500 text-sm dark:text-[#8c909f]">
           Fill in your details and our team will get back to you.
         </p>
       </div>
 
       {errorHeader && (
-        <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+        <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 dark:bg-red-500/10 dark:text-red-300 dark:border-red-500/30">
           {errorHeader}
         </div>
       )}
@@ -140,7 +141,7 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
         <div>
           <label className={labelCls}>Mobile Number</label>
           <div className="flex gap-2">
-            <span className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-500">
+            <span className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-500 dark:bg-[#131b2e] dark:border-[#424754] dark:text-[#8c909f]">
               +91
             </span>
             <input
@@ -166,7 +167,7 @@ export default function BlogLeadForm({ sourceName = "Blog Lead Form" }) {
           {isSubmitting ? "Sending..." : "Connect with Experts →"}
         </button>
 
-        <p className="text-[10px] text-gray-400 text-center">
+        <p className="text-[10px] text-gray-400 text-center dark:text-[#8c909f]">
           By submitting, you agree to our Privacy Policy and consent to be contacted.
         </p>
       </form>
