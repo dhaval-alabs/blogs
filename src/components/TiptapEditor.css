@@ -268,6 +268,15 @@
   color: #c2c6d6;
 }
 
+/* Explicit bold colors — without these, both the studio editor and the
+   public article fall through to Tailwind Typography's --tw-prose-bold,
+   which can be unset on these surfaces and render bold text near-invisible. */
+.tiptap-prose strong,
+.tiptap-prose b {
+  color: #0f172a;
+  font-weight: 700;
+}
+
 .dark .tiptap-prose strong,
 .dark .tiptap-prose b {
   color: #f1f5f9;
