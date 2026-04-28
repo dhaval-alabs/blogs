@@ -1,5 +1,5 @@
 "use client";
-import { withBasePath, apiFetch } from "@/utils/basePath";
+import { apiFetch } from "@/utils/basePath";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -161,7 +161,7 @@ export default function AskAI({
 
   const headerBlock = (
     <h3 className="font-[family-name:var(--font-headline)] font-bold text-lg text-white mb-4 flex items-center gap-2">
-      <img src={withBasePath("/AI X logo.png")} alt="" className="h-9 w-9 shrink-0" />
+      <img src="/blog/ai-x-logo.png" alt="" className="h-9 w-9 shrink-0" />
       Ask the AI
     </h3>
   );
@@ -335,7 +335,7 @@ export default function AskAI({
           aria-label="Open Ask the AI"
           className="fixed bottom-24 right-4 z-40 w-16 h-16 flex items-center justify-center active:scale-95 transition-transform"
         >
-          <img src={withBasePath("/AI X logo.png")} alt="" className="w-16 h-16 drop-shadow-2xl" />
+          <img src="/blog/ai-x-logo.png" alt="" className="w-16 h-16 drop-shadow-2xl" />
           <span className="absolute -top-1 -right-1 bg-amber-300 text-[#003369] text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow">AI</span>
         </button>
 
