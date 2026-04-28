@@ -161,7 +161,7 @@ export default function AskAI({
 
   const headerBlock = (
     <h3 className="font-[family-name:var(--font-headline)] font-bold text-lg text-white mb-4 flex items-center gap-2">
-      <span className="material-symbols-outlined text-white/80">auto_awesome</span>
+      <img src={withBasePath("/AI X logo.png")} alt="" className="h-9 w-9 shrink-0" />
       Ask the AI
     </h3>
   );
@@ -333,10 +333,9 @@ export default function AskAI({
           type="button"
           onClick={() => setMobileOpen(true)}
           aria-label="Open Ask the AI"
-          className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white active:scale-95 transition-transform"
-          style={{ background: "#003369" }}
+          className="fixed bottom-24 right-4 z-40 w-16 h-16 flex items-center justify-center active:scale-95 transition-transform"
         >
-          <span className="material-symbols-outlined text-2xl text-amber-300" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+          <img src={withBasePath("/AI X logo.png")} alt="" className="w-16 h-16 drop-shadow-2xl" />
           <span className="absolute -top-1 -right-1 bg-amber-300 text-[#003369] text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow">AI</span>
         </button>
 
