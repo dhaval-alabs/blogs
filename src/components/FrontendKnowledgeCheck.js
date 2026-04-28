@@ -33,8 +33,7 @@ export default function FrontendKnowledgeCheck({ question, options: optionsRaw, 
     <div className="my-10 rounded-2xl border border-outline-variant/20 dark:border-[#424754] overflow-hidden">
       {/* Header */}
       <div
-        className="px-6 py-3 flex items-center gap-2"
-        style={{ background: "rgba(0,59,147,0.06)" }}
+        className="px-6 py-3 flex items-center gap-2 bg-slate-50 dark:bg-[#131b2e] border-b border-outline-variant/20 dark:border-[#424754]"
       >
         <span
           className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest"
@@ -51,7 +50,7 @@ export default function FrontendKnowledgeCheck({ question, options: optionsRaw, 
       </div>
 
       {/* Body */}
-      <div className="p-6 bg-surface-container-lowest dark:bg-[#060e20]">
+      <div className="p-6 bg-white dark:bg-[#0b1326]">
         {/* Question */}
         <p className="text-on-surface dark:text-[#dae2fd] font-medium mb-5 leading-relaxed">
           {question || "No question provided."}

@@ -598,3 +598,24 @@
   background-color: #3b82f6;
   pointer-events: none;
 }
+
+/* ── Dark mode table overrides ── */
+.dark .tiptap-prose table {
+  border-color: #424754;
+}
+.dark .tiptap-prose table th {
+  background: #1e2640;
+  color: #dae2fd;
+  border-color: #424754;
+}
+.dark .tiptap-prose table td {
+  color: #c2c6d6;
+  border-color: #424754;
+}
+.dark .tiptap-prose table tr:nth-child(even) td {
+  background: #131b2e;
+}
+.dark .tiptap-prose table tr:nth-child(odd) td {
+  background: transparent;
+}
+

@@ -416,16 +416,15 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   const button   = attrs.ctaLabel || "Get Free PDF →";
 
                   return (
-                    <div key="newsletter-widget" className="my-10 rounded-2xl overflow-hidden border border-slate-200"
-                      style={{ background: "#f8fafc" }}>
+                    <div key="newsletter-widget" className="my-10 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#424754] bg-[#f8fafc] dark:bg-[#131b2e]">
                       <div className="p-7">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="material-symbols-outlined text-primary text-xl">download</span>
-                          <h4 className="font-[family-name:var(--font-headline)] font-bold text-lg text-slate-900">
+                          <h4 className="font-[family-name:var(--font-headline)] font-bold text-lg text-slate-900 dark:text-[#dae2fd]">
                             {headline}
                           </h4>
                         </div>
-                        <p className="text-slate-600 text-sm mb-5">
+                        <p className="text-slate-600 dark:text-[#c2c6d6] text-sm mb-5">
                           {subtext}
                         </p>
                         <form className="flex flex-col sm:flex-row gap-3" onSubmit={async (e) => {
@@ -440,9 +439,9 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                             else addToast(result.error || "Failed to subscribe", "error");
                           }}>
                           <input type="text" name="name" placeholder="Your name"
-                            className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 bg-white text-slate-900" />
+                            className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd]" />
                           <input type="email" name="email" placeholder="Enter your work email"
-                            className="flex-[2] px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 bg-white text-slate-900" />
+                            className="flex-[2] px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd]" />
                           <button type="submit"
                             className="bg-primary text-white hover:bg-primary/90 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap shadow-sm transition-all">
                             {button}
@@ -473,22 +472,21 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   }
 
                   return (
-                    <div key="nextsteps-widget" className="my-10 rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
-                      style={{ background: "#f8fafc" }}>
-                      <div className="px-6 py-4 border-b border-slate-200"
+                    <div key="nextsteps-widget" className="my-10 rounded-2xl border border-slate-200 dark:border-[#424754] overflow-hidden shadow-sm bg-[#f8fafc] dark:bg-[#131b2e]">
+                      <div className="px-6 py-4 border-b border-slate-200 dark:border-[#424754]"
                         style={{ background: "linear-gradient(90deg,rgba(0,59,147,0.03) 0%,transparent 100%)" }}>
-                        <h3 className="font-[family-name:var(--font-headline)] font-bold text-base flex items-center gap-2 text-slate-900">
+                        <h3 className="font-[family-name:var(--font-headline)] font-bold text-base flex items-center gap-2 text-slate-900 dark:text-[#dae2fd]">
                           <span className="text-amber-500">✦</span>
                           Next Steps for You
                         </h3>
-                        <p className="text-sm text-slate-600 mt-0.5">
+                        <p className="text-sm text-slate-600 dark:text-[#c2c6d6] mt-0.5">
                           Great progress on {post.domain_tags?.[0] || "this topic"}! Based on your reading, what would you like to do next?
                         </p>
                       </div>
                       <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {steps.map((step, i) => (
                           <a key={i} href={step.url || "#"}
-                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white border-slate-200 text-slate-700 hover:border-primary/30 hover:text-primary hover:-translate-y-0.5 shadow-sm">
+                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] text-slate-700 dark:text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:text-primary dark:hover:text-[#adc6ff] hover:-translate-y-0.5 shadow-sm">
                             <span className="material-symbols-outlined text-base text-slate-400">{step.icon || "arrow_forward"}</span>
                             <span className="leading-snug">{step.text}</span>
                           </a>
@@ -505,14 +503,13 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   const desc  = (attrs.courseName) ? "" : (courseMatch?.desc || ""); // Hide default desc if custom course
 
                   return (
-                    <div key="course-widget" className="my-10 rounded-2xl overflow-hidden flex flex-col md:flex-row border border-slate-200 shadow-sm"
-                      style={{ background: "#f8fafc" }}>
+                    <div key="course-widget" className="my-10 rounded-2xl overflow-hidden flex flex-col md:flex-row border border-slate-200 dark:border-[#424754] shadow-sm bg-[#f8fafc] dark:bg-[#131b2e]">
                       <div className="flex-1 p-7 flex flex-col gap-3">
                         <p className="text-primary text-xs font-bold uppercase tracking-wider">{head}</p>
-                        <h3 className="font-[family-name:var(--font-headline)] font-bold text-xl text-slate-900 leading-tight">
+                        <h3 className="font-[family-name:var(--font-headline)] font-bold text-xl text-slate-900 dark:text-[#dae2fd] leading-tight">
                           {title}
                         </h3>
-                        {desc && <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>}
+                        {desc && <p className="text-slate-600 dark:text-[#c2c6d6] text-sm leading-relaxed">{desc}</p>}
                         <a href={url} target="_blank" rel="noopener noreferrer"
                           className="inline-block bg-primary text-white hover:bg-primary/90 px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all mt-2 text-center md:self-start">
                           View Full Course Details →
@@ -694,6 +691,20 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
       <Footer />
       <MobileBottomNav activePage="none" />
+
+      {/* Global Mobile AI FAB — ensures the widget is accessible even when sidebar is hidden */}
+      <div className="lg:hidden">
+        {sidebarWidgets.filter(w => w.type === 'ask_ai' && w.enabled).map(widget => (
+          <AskAI
+            key={`mobile-${widget.id}`}
+            questions={suggestedQuestions}
+            context={`Title: ${post.title}\nExcerpt: ${post.excerpt || ""}\nTopics: ${(post.domain_tags || []).join(", ")}`}
+            tags={post.domain_tags || []}
+            slug={post.slug || ""}
+            placeholder="Ask anything about this article…"
+          />
+        ))}
+      </div>
     </>
   );
 }

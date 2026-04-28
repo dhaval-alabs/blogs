@@ -168,14 +168,13 @@ export default function AskAI({
 
   const inputBlock = (
     <div className="relative">
-      <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
       <input
         type="text"
         placeholder={placeholder}
         value={query}
         onChange={e => setQuery(e.target.value)}
         onKeyDown={e => e.key === "Enter" && ask()}
-        className="w-full pl-12 pr-12 py-3.5 rounded-2xl text-sm bg-white/10 text-white border border-white/10 backdrop-blur-md shadow-lg outline-none focus:ring-2 focus:ring-white/20 transition-all placeholder:text-white/40"
+        className="w-full pl-5 pr-[50px] py-3.5 rounded-2xl text-sm bg-white/10 text-white border border-white/10 backdrop-blur-md shadow-lg outline-none focus:ring-2 focus:ring-white/20 transition-all placeholder:text-white/40"
       />
       <button onClick={() => ask()} aria-label="Send question" disabled={loading || !query.trim()}
         className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white text-[#003369] shadow-md hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100">

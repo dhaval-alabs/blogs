@@ -9,14 +9,14 @@
 export const authors = {
   "al-editorial": {
     slug: "al-editorial",
-    name: "AL Labs Editorial",
+    name: "AnalytixLabs Editorial",
     initials: "AL",
     color: "bg-primary",
     bio: "The AnalytixLabs internal writing team, curating the best in data science education.",
     linkedin: "https://linkedin.com/company/analytixlabs",
     expertise: ["Data Science Education", "Career Advice"],
     experience: "12 Years",
-    image: "/authors/default.svg",
+    image: "/authorlogo.png",
   },
 };
 

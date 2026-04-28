@@ -9,6 +9,10 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import { ToastProvider, useToast } from "@/components/Toast";
+import dynamic from "next/dynamic";
+import { SUGGESTED_AI_QUERIES, AI_CONTEXT } from "@/lib/config";
+
+const AskAI = dynamic(() => import("@/components/AskAI"), { ssr: false, loading: () => <div className="rounded-2xl min-h-[160px] bg-surface-container/30 animate-pulse" /> });
 
 const POSTS_PER_PAGE = 12;
 
@@ -133,6 +137,15 @@ function CategoryContent({ categorySlug: rawSlug }) {
 
       <Footer />
       <MobileBottomNav activePage="home" />
+
+      {/* Global Mobile AI FAB — ensures the widget is accessible across categories */}
+      <div className="lg:hidden">
+        <AskAI
+          questions={SUGGESTED_AI_QUERIES}
+          context={`Category: ${categorySlug}\n${AI_CONTEXT}`}
+          placeholder={`Ask anything about ${categorySlug}…`}
+        />
+      </div>
     </>
   );
 }

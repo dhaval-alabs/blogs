@@ -51,7 +51,10 @@ function formatDate(dateStr) {
 // ── Column mapping: DB snake_case → app camelCase ─────────────────
 function mapPostRow(row) {
   if (!row) return null;
-  const author = row.author ?? staticAuthors[row.author_id] ?? null;
+  let author = row.author ?? staticAuthors[row.author_id] ?? null;
+  if (author && author.slug === "al-editorial") {
+    author = { ...author, ...staticAuthors["al-editorial"] };
+  }
   return {
     id:             row.id,
     title:          row.title,
@@ -84,7 +87,10 @@ function mapPostRow(row) {
 // Lightweight mapper for listing contexts — omits content + heavy JSONB blobs.
 function mapPostRowLite(row) {
   if (!row) return null;
-  const author = row.author ?? staticAuthors[row.author_id] ?? null;
+  let author = row.author ?? staticAuthors[row.author_id] ?? null;
+  if (author && author.slug === "al-editorial") {
+    author = { ...author, ...staticAuthors["al-editorial"] };
+  }
   return {
     id:          row.id,
     title:       row.title,
@@ -322,7 +328,18 @@ export const getAuthors = cache(async function getAuthors() {
   try {
     const { data, error } = await supabase.from('authors').select('*');
     if (error || !data?.length) return staticAuthors;
-    return Object.fromEntries(data.map(a => [a.slug, a]));
+    
+    const dbAuthors = Object.fromEntries(data.map(a => [a.slug, a]));
+    
+    // Ensure branding is consistent with our static config even if DB differs
+    if (dbAuthors["al-editorial"]) {
+      dbAuthors["al-editorial"] = {
+        ...dbAuthors["al-editorial"],
+        ...staticAuthors["al-editorial"],
+      };
+    }
+    
+    return dbAuthors;
   } catch {
     return staticAuthors;
   }

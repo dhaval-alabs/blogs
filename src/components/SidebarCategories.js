@@ -36,8 +36,8 @@ export default function SidebarCategories({ posts = [], config }) {
   if (categories.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border p-5 bg-white dark:bg-surface-container border-outline-variant/20 dark:border-outline-variant/30 ambient-shadow">
-      <h3 className="font-[family-name:var(--font-headline)] font-bold text-[16px] text-on-background dark:text-on-surface mb-4">
+    <div className="rounded-2xl border p-5 bg-white dark:bg-[#0b1326] border-outline-variant/20 dark:border-[#424754] ambient-shadow">
+      <h3 className="font-[family-name:var(--font-headline)] font-bold text-[16px] text-on-background dark:text-[#dae2fd] mb-4">
         {cfg.title}
       </h3>
       <ul className="flex flex-col gap-1">
@@ -45,7 +45,7 @@ export default function SidebarCategories({ posts = [], config }) {
           <li key={name}>
             <Link
               href={`/blog/${toSlug(name)}/`}
-              className="flex items-center justify-between p-2 rounded-xl text-[14px] text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all duration-200 group"
+              className="flex items-center justify-between p-2 rounded-xl text-[14px] text-on-surface-variant dark:text-[#c2c6d6] hover:text-primary dark:hover:text-[#adc6ff] hover:bg-surface-container-low dark:hover:bg-[#131b2e] transition-all duration-200 group"
             >
               <div className="flex items-center gap-2 overflow-hidden">
                 <span className="material-symbols-outlined text-[16px] opacity-0 -ml-6 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300">
@@ -53,7 +53,7 @@ export default function SidebarCategories({ posts = [], config }) {
                 </span>
                 <span className="truncate font-medium">{name}</span>
               </div>
-              <span className="shrink-0 inline-flex items-center justify-center min-w-[28px] h-6 px-2 rounded-full text-[12px] font-semibold bg-surface-container-highest dark:bg-[#131b2e] text-on-surface-variant dark:text-[#8c909f] group-hover:bg-primary-fixed group-hover:text-primary dark:group-hover:bg-[rgba(173,198,255,0.15)] dark:group-hover:text-[#adc6ff] transition-colors duration-200 border border-transparent group-hover:border-primary/10 dark:group-hover:border-[#adc6ff]/20">
+              <span className="shrink-0 inline-flex items-center justify-center min-w-[28px] h-6 px-2 rounded-full text-[12px] font-semibold bg-surface-container-highest dark:bg-[#131b2e] text-on-surface-variant dark:text-[#8c909f] group-hover:bg-primary-fixed group-hover:text-primary dark:group-hover:bg-[#adc6ff]/10 dark:group-hover:text-[#adc6ff] transition-colors duration-200 border border-transparent group-hover:border-primary/10 dark:group-hover:border-[#adc6ff]/20">
                 {count}
               </span>
             </Link>
