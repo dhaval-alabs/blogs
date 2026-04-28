@@ -12,6 +12,7 @@ import { ToastProvider, useToast } from "@/components/Toast";
 import { likePostAction } from "@/app/actions";
 import "@/components/TiptapEditor.css";
 import parse from "html-react-parser";
+import { stripInlineColors } from "@/utils/sanitizeContent";
 
 // ── Below-the-fold / heavy article components are code-split so the critical
 //    article markup renders first with minimum JS. All retain identical UX.
@@ -386,7 +387,12 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
           {/* ── Article Body ── */}
           <article className="prose max-w-none min-w-0 overflow-hidden" ref={articleRef}>
             {(() => {
-              const content = post.content || "";
+              // Authors using the editor's color picker bake `<span style="color: …">`
+              // into the saved HTML. Inline colors override our light/dark CSS, so
+              // dark-coloured text becomes invisible in dark mode (and vice versa).
+              // Strip color / background-color from inline styles before render so
+              // our theme rules in TiptapEditor.css can take over.
+              const content = stripInlineColors(post.content || "");
               if (!content.startsWith("<")) {
                 return <p className="text-xl font-medium text-on-surface dark:text-[#dae2fd] leading-relaxed mb-10">{post.excerpt}</p>;
               }

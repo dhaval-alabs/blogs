@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
+import { stripInlineColors } from '@/utils/sanitizeContent';
 import { Node, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -1021,7 +1022,10 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
       TableHeader,
       TableCell,
     ],
-    content: content || '<p></p>',
+    // Strip baked-in inline colours on load so legacy white-on-white text and
+    // mode-locked colours from earlier authoring don't leak into the editor or
+    // the published HTML. Authors can re-apply colours via the toolbar.
+    content: stripInlineColors(content) || '<p></p>',
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
     onUpdate:          ({ editor }) => { onChange && onChange(editor.getHTML()); syncToolbarState(editor); },
@@ -1043,8 +1047,12 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
 
   const applyHtml = useCallback(() => {
     if (!editor) return;
-    editor.commands.setContent(rawHtml, true);
-    onChange && onChange(rawHtml);
+    // Tiptap v3 changed setContent's signature: the second arg is now an
+    // options object (`{ emitUpdate, parseOptions, ... }`), not a boolean.
+    // Passing `true` here silently broke HTML-mode round-tripping.
+    const cleaned = stripInlineColors(rawHtml);
+    editor.commands.setContent(cleaned, { emitUpdate: true });
+    onChange && onChange(cleaned);
     setHtmlMode(false);
   }, [editor, rawHtml, onChange]);
 
