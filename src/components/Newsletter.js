@@ -32,12 +32,12 @@ export default function Newsletter() {
   }
 
   return (
-    <div className="bg-primary-container dark:bg-gradient-to-br dark:from-[#131b2e] dark:to-[#171f33] dark:border dark:border-[#424754]/30 p-8 rounded-xl text-white relative overflow-hidden group">
+    <div className="bg-primary-container dark:bg-gradient-to-br dark:from-[#131b2e] dark:to-[#171f33] dark:border dark:border-[#424754]/30 p-8 rounded-xl text-on-primary-container dark:text-white relative overflow-hidden group">
       <div className="relative z-10">
-        <h4 className="font-[family-name:var(--font-headline)] font-extrabold text-2xl mb-4 leading-tight">
+        <h4 className="font-[family-name:var(--font-headline)] font-extrabold text-2xl mb-4 leading-tight text-primary dark:text-white">
           Get started on something great
         </h4>
-        <p className="text-on-primary-container text-sm mb-6 leading-relaxed">
+        <p className="text-on-primary-container/80 dark:text-on-primary-container text-sm mb-6 leading-relaxed">
           Join 50,000+ data professionals. Weekly curated research and career
           insights delivered to your inbox.
         </p>

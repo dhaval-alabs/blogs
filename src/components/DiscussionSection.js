@@ -180,7 +180,7 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Your name"
-            className="w-36 px-3 py-2.5 rounded-xl text-sm outline-none bg-surface-container-low dark:bg-[#131b2e] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 placeholder:text-outline/60"
+            className="w-36 px-3 py-2.5 rounded-xl text-sm outline-none bg-surface-container-low dark:bg-[#131b2e] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 placeholder:text-outline/40"
           />
         </div>
         <div className="flex gap-3 flex-1 w-full">
@@ -190,12 +190,12 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
             onKeyDown={(e) => e.key === "Enter" && !loading && postComment()}
             placeholder="Ask a question or share your thoughts..."
             disabled={loading}
-            className="flex-1 px-4 py-3 rounded-xl text-sm outline-none bg-surface-container-low dark:bg-[#131b2e] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 placeholder:text-outline/60 disabled:opacity-60"
+            className="flex-1 px-4 py-3 rounded-xl text-sm outline-none bg-surface-container-low dark:bg-[#131b2e] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 placeholder:text-outline/40 disabled:opacity-60"
           />
           <button
             onClick={postComment}
             disabled={loading}
-            className="glass-chip active px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap self-center disabled:opacity-60"
+            className="bg-primary text-white dark:bg-[#adc6ff] dark:text-[#0b1326] active:scale-[0.98] px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap self-center disabled:opacity-60 transition-all"
           >
             {loading ? "…" : "Post"}
           </button>

@@ -14,6 +14,7 @@ const inputCls = `
   w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
   text-[#09263F] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500
   transition-all duration-200 disabled:opacity-60
+  placeholder:text-gray-400
   dark:bg-[#131b2e] dark:border-[#424754] dark:text-[#dae2fd] dark:placeholder:text-[#8c909f]
 `.trim();
 

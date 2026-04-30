@@ -424,7 +424,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                             {headline}
                           </h4>
                         </div>
-                        <p className="text-slate-600 dark:text-[#c2c6d6] text-sm mb-5">
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mb-5">
                           {subtext}
                         </p>
                         <form className="flex flex-col sm:flex-row gap-3" onSubmit={async (e) => {
@@ -439,9 +439,9 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                             else addToast(result.error || "Failed to subscribe", "error");
                           }}>
                           <input type="text" name="name" placeholder="Your name"
-                            className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd]" />
+                            className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd] placeholder:text-slate-400" />
                           <input type="email" name="email" placeholder="Enter your work email"
-                            className="flex-[2] px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd]" />
+                            className="flex-[2] px-4 py-2.5 rounded-xl text-sm outline-none border border-slate-200 dark:border-[#424754] bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd] placeholder:text-slate-400" />
                           <button type="submit"
                             className="bg-primary text-white hover:bg-primary/90 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap shadow-sm transition-all">
                             {button}
@@ -487,7 +487,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                         {steps.map((step, i) => (
                           <a key={i} href={step.url || "#"}
                             className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] text-slate-700 dark:text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:text-primary dark:hover:text-[#adc6ff] hover:-translate-y-0.5 shadow-sm">
-                            <span className="material-symbols-outlined text-base text-slate-400">{step.icon || "arrow_forward"}</span>
+                            <span className="material-symbols-outlined text-base text-slate-500">{step.icon || "arrow_forward"}</span>
                             <span className="leading-snug">{step.text}</span>
                           </a>
                         ))}
@@ -540,7 +540,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                 }
                 return (
                   <div key={idx} className="tiptap-prose">
-                    {parse(part, {
+                    {parse(stripInlineColors(part), {
                       replace(domNode) {
                         // Strip any embedded script tags (e.g. old schema or tracking code)
                         // to prevent duplication with our modern schema injection.
