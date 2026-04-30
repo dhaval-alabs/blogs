@@ -486,7 +486,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                       <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {steps.map((step, i) => (
                           <a key={i} href={step.url || "#"}
-                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] text-slate-700 dark:text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:text-primary dark:hover:text-[#adc6ff] hover:-translate-y-0.5 shadow-sm">
+                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] !text-slate-700 dark:!text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:!text-primary dark:hover:!text-[#adc6ff] hover:-translate-y-0.5 shadow-sm no-underline">
                             <span className="material-symbols-outlined text-base text-slate-500">{step.icon || "arrow_forward"}</span>
                             <span className="leading-snug">{step.text}</span>
                           </a>
@@ -511,7 +511,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                         </h3>
                         {desc && <p className="text-slate-600 dark:text-[#c2c6d6] text-sm leading-relaxed">{desc}</p>}
                         <a href={url} target="_blank" rel="noopener noreferrer"
-                          className="inline-block bg-primary text-white hover:bg-primary/90 px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all mt-2 text-center md:self-start">
+                          className="inline-block bg-primary !text-white hover:bg-primary/90 px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all mt-2 text-center md:self-start no-underline">
                           View Full Course Details →
                         </a>
                       </div>
