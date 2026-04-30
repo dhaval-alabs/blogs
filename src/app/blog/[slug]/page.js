@@ -6,6 +6,8 @@ import CategoryView from "@/components/CategoryView";
 import { SITE_NAME } from "@/lib/config";
 import { getMdxPostBySlug, mdxToHtml, mapMdxToPost } from "@/lib/mdx-posts";
 
+export const revalidate = 60; // fallback ISR if on-demand revalidation misses
+
 /** Generate dynamic SEO metadata for each article */
 export async function generateMetadata({ params }) {
   const { slug } = await params;

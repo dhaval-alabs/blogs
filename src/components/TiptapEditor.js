@@ -1064,7 +1064,7 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
     <div ref={outerRef} className="tiptap-outer" style={{ position: 'relative' }}>
       {/* HTML Source Mode toggle button */}
       <button
-        onMouseDown={(e) => { e.preventDefault(); htmlMode ? cancelHtml() : enterHtmlMode(); }}
+        onMouseDown={(e) => { e.preventDefault(); htmlMode ? applyHtml() : enterHtmlMode(); }}
         title={htmlMode ? "Exit HTML source mode" : "Edit raw HTML source"}
         style={{
           position: 'absolute', top: 16, right: 16, zIndex: 30,
@@ -1083,7 +1083,11 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
         <div style={{ paddingTop: 48 }}>
           <textarea
             value={rawHtml}
-            onChange={(e) => setRawHtml(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setRawHtml(val);
+              onChange && onChange(val);
+            }}
             spellCheck={false}
             style={{
               width: '100%', minHeight: 520, fontFamily: "'Courier New', monospace",

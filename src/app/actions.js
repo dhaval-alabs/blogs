@@ -13,6 +13,15 @@ function formatDate() {
   return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+// ── Revalidation helper ──────────────────────────────────────────
+// next.config.mjs has trailingSlash: true, which means routes are
+// registered as /blog/slug/ not /blog/slug. revalidatePath must use
+// the same trailing-slash form or the cache entry is never matched.
+function revalidateRoute(path) {
+  const normalized = path === '/' ? '/' : path.endsWith('/') ? path : `${path}/`;
+  revalidatePath(normalized);
+}
+
 // ── Widget content sanitizer ─────────────────────────────────────
 // Runs server-side before DB storage. Normalizes widget data-widget-attrs:
 //   - Migrates old string-array steps → {text,url}[] for nextsteps widgets
@@ -193,7 +202,7 @@ export async function saveDraftAction(payload, id = null) {
       const { error } = await db.from('posts').update(row).eq('id', id);
       if (error) throw error;
 
-      revalidatePath('/');
+      revalidateRoute('/');
       return { success: true, id, slug };
     } else {
       // New draft — INSERT with status="Draft"
@@ -214,7 +223,7 @@ export async function saveDraftAction(payload, id = null) {
       const { data, error } = await db.from('posts').insert(row).select('id, slug').single();
       if (error) throw error;
 
-      revalidatePath('/');
+      revalidateRoute('/');
       return { success: true, id: data.id, slug: data.slug };
     }
   } catch (error) {
@@ -258,9 +267,9 @@ export async function publishPostAction(payload) {
     const { data, error } = await db.from('posts').insert(row).select('slug').single();
     if (error) throw error;
 
-    revalidatePath('/');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${data.slug}`);
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    revalidateRoute(`/blog/${data.slug}`);
     return { success: true, slug: data.slug };
   } catch (error) {
     const msg = error?.message || error?.toString() || 'Unknown error';
@@ -317,10 +326,10 @@ export async function updatePostAction(id, payload) {
     const { error } = await db.from('posts').update(row).eq('id', id);
     if (error) throw error;
 
-    revalidatePath('/');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${slug}`);
-    if (original.slug !== slug) revalidatePath(`/blog/${original.slug}`);
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    revalidateRoute(`/blog/${slug}`);
+    if (original.slug !== slug) revalidateRoute(`/blog/${original.slug}`);
     return { success: true, slug };
   } catch (error) {
     console.error('updatePostAction failed:', error);
@@ -349,9 +358,9 @@ export async function deletePostAction(id) {
     const { error } = await db.from('posts').delete().eq('id', id);
     if (error) throw error;
 
-    revalidatePath('/');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${post.slug}`);
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    revalidateRoute(`/blog/${post.slug}`);
     return { success: true };
   } catch (error) {
     console.error('deletePostAction failed:', error);
@@ -389,9 +398,9 @@ export async function togglePostStatusAction(id) {
     const { error } = await db.from('posts').update(updates).eq('id', id);
     if (error) throw error;
 
-    revalidatePath('/');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${post.slug}`);
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    revalidateRoute(`/blog/${post.slug}`);
     return { success: true, newStatus };
   } catch (error) {
     console.error('togglePostStatusAction failed:', error);
@@ -438,8 +447,8 @@ export async function schedulePostAction(payload, scheduledDate) {
     const { error } = await db.from('posts').insert(row);
     if (error) throw error;
 
-    revalidatePath('/');
-    revalidatePath('/blog');
+    revalidateRoute('/');
+    revalidateRoute('/blog');
     return { success: true, slug };
   } catch (error) {
     const msg = error?.message || error?.toString() || 'Unknown error';
@@ -532,9 +541,9 @@ export async function restoreVersionAction(postId, versionId) {
       .eq('id', postId)
       .single();
 
-    revalidatePath('/');
-    revalidatePath('/blog');
-    if (updated) revalidatePath(`/blog/${updated.slug}`);
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    if (updated) revalidateRoute(`/blog/${updated.slug}`);
     return { success: true, restoredVersion: ver.version_number };
   } catch (error) {
     console.error('restoreVersionAction failed:', error);
@@ -702,7 +711,7 @@ export async function likeCommentAction(commentId, delta = 1) {
       return { success: false, error: String(updateErr.message) };
     }
 
-    revalidatePath('/');
+    revalidateRoute('/');
     return { success: true, likes: newLikes };
   } catch (err) {
     console.error('likeCommentAction crashed:', err);
@@ -1126,8 +1135,8 @@ export async function createCourseAction({ title, label, description, image, url
     }).select().single();
 
     if (error) throw error;
-    revalidatePath('/');
-    revalidatePath('/blog');
+    revalidateRoute('/');
+    revalidateRoute('/blog');
     return { success: true, course: data };
   } catch (error) {
     console.error('createCourseAction failed:', error);
@@ -1151,8 +1160,8 @@ export async function updateCourseAction(id, { title, label, description, image,
     }).eq('id', id);
 
     if (error) throw error;
-    revalidatePath('/');
-    revalidatePath('/blog');
+    revalidateRoute('/');
+    revalidateRoute('/blog');
     return { success: true };
   } catch (error) {
     console.error('updateCourseAction failed:', error);
@@ -1166,8 +1175,8 @@ export async function deleteCourseAction(id) {
     const db = await requireSuperAdmin();
     const { error } = await db.from('courses').delete().eq('id', id);
     if (error) throw error;
-    revalidatePath('/');
-    revalidatePath('/blog');
+    revalidateRoute('/');
+    revalidateRoute('/blog');
     return { success: true };
   } catch (error) {
     console.error('deleteCourseAction failed:', error);
@@ -1185,8 +1194,8 @@ export async function upsertTopicsAction(topics) {
       { onConflict: 'key' }
     );
     if (error) throw error;
-    revalidatePath('/');
-    revalidatePath('/blog');
+    revalidateRoute('/');
+    revalidateRoute('/blog');
     return { success: true };
   } catch (error) {
     console.error('upsertTopicsAction failed:', error);
@@ -1297,8 +1306,8 @@ export async function updateBlogPageConfigAction({ featuredSlugs = [], carousels
 
     if (upsertErr) return { success: false, error: upsertErr.message };
 
-    revalidatePath('/blog');
-    revalidatePath('/');
+    revalidateRoute('/blog');
+    revalidateRoute('/');
     return { success: true, config: newZones.blog_page };
   } catch (error) {
     return { success: false, error: error.message || 'Failed to update blog config.' };
@@ -1339,8 +1348,8 @@ export async function likePostAction(slug, delta) {
 
     console.log(`[likePostAction] Successfully updated ${slug}: ${currentLikes} -> ${newLikes}`);
 
-    revalidatePath(`/blog/${slug}`);
-    revalidatePath('/');
+    revalidateRoute(`/blog/${slug}`);
+    revalidateRoute('/');
     return { success: true, likes: newLikes };
   } catch (err) {
     console.error('[likePostAction] Crashed:', err);
