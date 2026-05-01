@@ -192,7 +192,11 @@ export async function saveDraftAction(payload, id = null) {
         .eq('slug', slug)
         .neq('id', id)
         .maybeSingle();
-      if (collision) slug = `${slug}-${id}`;
+      if (collision) {
+        // If we're updating a draft and the slug is taken, we can keep the ID suffix
+        // as a fallback, but let's be cleaner.
+        slug = `${slug}-${id}`;
+      }
 
       const row = {
         ...toRow({ ...payload, slug }),
@@ -310,11 +314,17 @@ export async function updatePostAction(id, payload) {
     let slug = payload.slug || toSlug(payload.title);
     const { data: collision } = await db
       .from('posts')
-      .select('id')
+      .select('id, title')
       .eq('slug', slug)
       .neq('id', id)
       .maybeSingle();
-    if (collision) slug = `${slug}-${id}`;
+    
+    if (collision) {
+      return { 
+        success: false, 
+        error: `URL Conflict: The slug "${slug}" is already used by "${collision.title}". Please change the URL slug to something unique.` 
+      };
+    }
 
     const row = {
       ...toRow({ ...payload, slug }),
