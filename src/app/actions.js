@@ -216,7 +216,7 @@ export async function saveDraftAction(payload, id = null) {
         .select('id')
         .eq('slug', slug)
         .maybeSingle();
-      if (existing) slug = `${slug}-${Date.now()}`;
+      if (existing) { if (payload.slug) return { success: false, error: `URL Conflict: The slug "${slug}" is already in use.` }; slug = `${slug}-${Date.now()}`; }
 
       const row = {
         ...toRow({ ...payload, slug }),
@@ -259,7 +259,7 @@ export async function publishPostAction(payload) {
       .select('id')
       .eq('slug', slug)
       .maybeSingle();
-    if (existing) slug = `${slug}-${Date.now()}`;
+    if (existing) { if (payload.slug) return { success: false, error: `URL Conflict: The slug "${slug}" is already in use.` }; slug = `${slug}-${Date.now()}`; }
 
     const row = {
       ...toRow({ ...payload, slug }),
@@ -438,7 +438,7 @@ export async function schedulePostAction(payload, scheduledDate) {
       .select('id')
       .eq('slug', slug)
       .maybeSingle();
-    if (existing) slug = `${slug}-${Date.now()}`;
+    if (existing) { if (payload.slug) return { success: false, error: `URL Conflict: The slug "${slug}" is already in use.` }; slug = `${slug}-${Date.now()}`; }
 
     // Validate and format the scheduled date
     const parsedDate = scheduledDate ? new Date(scheduledDate) : null;
