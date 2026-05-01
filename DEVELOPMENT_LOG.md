@@ -1,62 +1,107 @@
 # AnalytixLabs Blog: Development & Error Log
 
-This document tracks technical challenges, bugs, and architectural issues encountered during the development of the AnalytixLabs Blog, along with the implemented solutions. Refer to this log to avoid repeating past mistakes.
+This document tracks technical challenges, bugs, and architectural issues encountered during the development of the AnalytixLabs Blog, along with the implemented solutions.
 
 ---
 
-## 🚀 Recent Critical Fixes
+## 🚀 SEO & Search Engine Optimization
 
-### 1. Google Search Console "Soft 404" Errors
-- **Issue**: Category pages (e.g., `/blog/cyber-security/`) were returning a 200 OK status but flagged as "Soft 404" by Google.
-- **Cause**: **Client-side Rendering (CSR)**. The page initially sent a thin "Loading..." spinner. Googlebot often doesn't wait for async API calls to finish, seeing the page as empty.
-- **Fix**: Implemented **Server-Side Rendering (SSR)**.
-    - Modified `ArticlePage` and `CategoryPage` to fetch initial posts on the server.
-    - Updated `CategoryView` to accept `initialPosts` and bypass the loading state if data is present.
-- **Commit**: `4f0576c` (2026-05-01)
+### Google Search Console "Soft 404" Errors
+- **Issue**: Category pages (e.g., `/blog/cyber-security/`) returned 200 OK but were flagged as "Soft 404".
+- **Cause**: Client-side data fetching. Googlebot saw a "Loading..." spinner instead of content.
+- **Fix**: Implemented **Server-Side Rendering (SSR)** for category pages. Pre-fetch posts in `ArticlePage` and `CategoryPage`.
+- **Commit**: `4f0576c`
 
-### 2. Pathing & Asset Resolution (`/blog` subpath)
-- **Issue**: Assets (images, logos, scripts) and internal links were breaking in production due to the `/blog` base path.
-- **Cause**: Next.js absolute paths (e.g., `/logo.svg`) resolve to the domain root, not the subpath.
-- **Fix**: 
-    - Created a utility `withBasePath` to automatically prefix URLs.
-    - Relocated public assets into a `public/blog/` directory.
-    - Updated `next.config.mjs` with `trailingSlash: true` and appropriate redirects.
-- **Commits**: `18e4a22`, `2210255`, `9134729`
+### Duplicate FAQPage Schema
+- **Issue**: Multiple FAQ schemas on a single page caused Google search validation errors.
+- **Cause**: Embedded scripts in legacy content and multiple schema blocks without unique IDs.
+- **Fix**: Stripped embedded scripts from content and added unique `@id` (e.g., `#faq`) to the JSON-LD block.
+- **Commit**: `e268ac5`
 
-### 3. Light Mode Visibility & Legacy Content
-- **Issue**: In light mode, some text (especially in widgets or older articles) was invisible or hard to read.
-- **Cause**: Legacy WordPress content contained hardcoded inline styles (e.g., `style="color: #fff"`) that didn't adapt to themes.
-- **Fix**: 
-    - Implemented a "sanitization" step in the rendering pipeline to strip hardcoded `color` and `background-color` styles.
-    - Standardized colors using theme-aware Tailwind classes (e.g., `text-on-surface-variant`).
-- **Commits**: `df2b51a`, `c1194bf`
-
-### 4. Tiptap Editor & Blue Text Overrides
-- **Issue**: Links and widgets inside the Tiptap editor were inheriting unwanted blue colors or underlines in dark mode.
-- **Cause**: Global CSS specificity issues where default browser or Tailwind styles were overriding component-level styles.
-- **Fix**: 
-    - Added specific CSS overrides in `TiptapEditor.css` using `!important` or higher-specificity selectors.
-    - Explicitly defined colors for bold text and links in both light and dark modes.
-- **Commits**: `1dc23dd`, `08c76c6`
+### Indexing & Canonicalization
+- **Issue**: Site was not appearing in search results; potential redirect loops on subdomain.
+- **Fix**: Removed `noindex` tags. Added subdomain canonicalization redirects and handled loop prevention via `x-alabs-from-worker` header.
+- **Commits**: `dbd039d`, `4dc2836`
 
 ---
 
-## 🛠 Recurring Patterns & Best Practices
+## 📂 Infrastructure & Routing (`/blog` subpath)
 
-| Category | Problem | Best Practice / Fix |
-| :--- | :--- | :--- |
-| **SEO** | Soft 404s due to empty state | **Always** pre-fetch data on the server (SSR) for landing/category pages. |
-| **Assets** | Broken images in subpath | Use `withBasePath()` utility for all images in the `public` folder. |
-| **Styling** | Invisible text in themes | Avoid hardcoded HEX colors; use CSS variables or Tailwind theme colors. |
-| **UX** | Layout shift during loading | Define explicit heights for loading skeletons (e.g., AskAI widget). |
-| **Editor** | Content loss on save | Ensure `revalidatePath` or `revalidateTag` is called after CMS updates. |
+### Base Path Asset Failures
+- **Issue**: Images, logos, and scripts failed to load in production (`404 Not Found`).
+- **Cause**: Next.js absolute paths resolved to domain root, bypassing the `/blog` subpath.
+- **Fix**: 
+    - Relocated assets to `public/blog/`.
+    - Implemented `withBasePath` utility for all asset and API calls.
+    - Added `trailingSlash: true` in `next.config.mjs`.
+- **Commits**: `18e4a22`, `2210255`, `9134729`, `c026aa5`
+
+### Vercel Build Errors (Static Generation)
+- **Issue**: Build failed during static generation of 404 pages.
+- **Cause**: `useSearchParams()` or similar hooks were used without a `Suspense` boundary.
+- **Fix**: Wrapped `NavigationProgress` and other search-param-dependent components in `<Suspense>`.
+- **Commit**: `d9e04e5`, `1d040f9`
 
 ---
 
-## 📝 Ongoing To-Do / Monitoring
-- [ ] Monitor Search Console for "Soft 404" reduction after the 2026-05-01 fix.
-- [ ] Ensure all new images are placed in `public/blog/` instead of the root `public/`.
-- [ ] Audit new articles for hardcoded inline styles before publishing.
+## 🎨 UI, Theming & Legacy Content
+
+### Light Mode Visibility (Invisible Text)
+- **Issue**: Text was invisible in light mode due to legacy inline styles (`color: #fff`).
+- **Fix**: Implemented a sanitization pipeline to strip hardcoded `color` and `background-color` from post content.
+- **Commit**: `df2b51a`, `c1194bf`
+
+### Tiptap Editor Styling Overrides
+- **Issue**: Links/widgets inherited blue colors or underlines inconsistently.
+- **Fix**: Forced explicit bold colors and link styles in `TiptapEditor.css`. Fixed "setContent" runtime bug in Tiptap v3.
+- **Commits**: `1dc23dd`, `08c76c6`, `c1194bf`
+
+### Hero Image & Glassmorphism
+- **Issue**: UI felt "flat" or inconsistent on mobile.
+- **Fix**: Implemented hero image blur and refined glassmorphism (12px blur, 0.7 opacity) for mobile bottom nav.
+- **Commits**: `7fc5ca6`, `8aabddd`
+
+---
+
+## ⚙️ Backend & Database (Supabase / Actions)
+
+### Server Action "Error Masking"
+- **Issue**: Production errors in server actions were showing generic "An error occurred" messages.
+- **Cause**: Next.js masks errors thrown directly in server actions for security.
+- **Fix**: Replaced `throw` with structured JSON error responses and added try/catch blocks to surface real DB errors for debugging.
+- **Commits**: `3abd4d1`, `9db6851`, `61e0e86`
+
+### Like Count Synchronization
+- **Issue**: Like counts didn't persist or sync correctly across the UI.
+- **Fix**: Hardened DOM event handlers and ensured comment likes persist to DB with failure handling.
+- **Commits**: `8411ccb`, `60ae31a`, `de5c9d4`
+
+---
+
+## ⚡ Performance & Optimization
+
+### Listing Payload Size
+- **Issue**: Blog listing pages were slow to load.
+- **Cause**: API was returning full `content` (large HTML/MDX) for every post in the list.
+- **Fix**: Modified API to use a "Lite" projection that excludes the `content` column for listing payloads.
+- **Commit**: `4646a43`
+
+### Author Fetching Overhead
+- **Issue**: Multiple redundant calls to `/api/authors`.
+- **Fix**: Eliminated per-page API calls by embedding author data directly in the post query.
+- **Commit**: `4646a43`
+
+---
+
+## 🛠 Recurring Patterns (Checklist for Next Dev)
+
+| Scenario | Strategy |
+| :--- | :--- |
+| **New Asset** | Must go in `public/blog/` and use `withBasePath()`. |
+| **New Route** | Ensure it handles trailing slashes correctly. |
+| **Search Params** | Always wrap in `<Suspense>` for build stability. |
+| **Legacy HTML** | Run through `stripInlineStyles` before rendering. |
+| **API Listing** | Use `.select(POST_LIST_SELECT)` to avoid heavy payload. |
 
 ---
 *Last updated: 2026-05-01*
