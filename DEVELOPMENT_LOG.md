@@ -20,6 +20,14 @@ This document tracks technical challenges, bugs, and architectural issues encoun
 - **Benefit**: Admins now receive immediate feedback if a URL is taken, identifying the conflicting post so they can resolve it (either by changing the slug or deleting the duplicate).
 - **Commit**: `1f65dd6`, `5f234d9`
 
+### Studio UI: Custom Confirmation Modals
+- **Feature**: Replaced standard browser `window.confirm()` popups with a custom, branded Studio modal.
+- **Components**:
+    - **ConfirmDialog.js**: A generic, reusable modal component for confirmation actions.
+    - **State Management**: Integrated `confirmDialog` state into `useStudioDraft` to handle asynchronous confirmations.
+- **Usage**: Now applied to "New Post" (clear editor) and "Delete Post" actions.
+- **Commit**: `ef0bd48`
+
 ---
 
 ---
