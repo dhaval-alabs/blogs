@@ -20,12 +20,12 @@ function decodeCategory(slug) {
   return decodeURIComponent(slug || "").replace(/-/g, " ");
 }
 
-function CategoryContent({ categorySlug: rawSlug }) {
+function CategoryContent({ categorySlug: rawSlug, initialPosts = [] }) {
   const categorySlug = decodeCategory(rawSlug);
   const addToast = useToast();
 
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState(initialPosts);
+  const [loading, setLoading] = useState(initialPosts.length === 0);
   const [bookmarked, setBookmarked] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -35,7 +35,15 @@ function CategoryContent({ categorySlug: rawSlug }) {
 
   useEffect(() => {
     if (!categorySlug) return;
+    
+    // If we already have initial posts, we don't necessarily need to re-fetch immediately
+    // but we do it to ensure we have the latest data if the category changed client-side.
+    if (initialPosts.length > 0 && posts.length === initialPosts.length) {
+        setLoading(false);
+        return;
+    }
 
+    setLoading(true);
     Promise.all([
       apiFetch(`/api/posts?topic=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
       apiFetch(`/api/mdx-posts?category=${encodeURIComponent(categorySlug)}`).then((r) => r.json()).catch(() => []),
@@ -50,7 +58,7 @@ function CategoryContent({ categorySlug: rawSlug }) {
       setPosts(merged);
       setLoading(false);
     });
-  }, [categorySlug]);
+  }, [categorySlug, initialPosts]);
 
   const toggleBookmark = (slug) => {
     const next = new Set(bookmarked);
@@ -150,10 +158,10 @@ function CategoryContent({ categorySlug: rawSlug }) {
   );
 }
 
-export default function CategoryView({ categorySlug }) {
+export default function CategoryView({ categorySlug, initialPosts = [] }) {
   return (
     <ToastProvider>
-      <CategoryContent categorySlug={categorySlug} />
+      <CategoryContent categorySlug={categorySlug} initialPosts={initialPosts} />
     </ToastProvider>
   );
 }

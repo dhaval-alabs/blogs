@@ -1,4 +1,4 @@
-import { getPostBySlug, getRecommendations, getCourseMatch, getAuthorPostCount, isCategorySlug } from "@/lib/data.server";
+import { getPostBySlug, getRecommendations, getCourseMatch, getAuthorPostCount, isCategorySlug, getCategoryPosts } from "@/lib/data.server";
 import { getSiteConfig } from "@/lib/site-config.server";
 import { notFound } from "next/navigation";
 import ArticleContent from "./ArticleContent";
@@ -122,7 +122,8 @@ export default async function ArticlePage({ params }) {
 
   if (!post) {
     if (await isCategorySlug(slug)) {
-      return <CategoryView categorySlug={slug} />;
+      const initialPosts = await getCategoryPosts(slug);
+      return <CategoryView categorySlug={slug} initialPosts={initialPosts} />;
     }
     notFound();
   }
