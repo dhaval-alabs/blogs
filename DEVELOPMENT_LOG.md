@@ -14,6 +14,14 @@ This document tracks technical challenges, bugs, and architectural issues encoun
     - **Middleware**: Intercepts requests and applies redirects from the DB in real-time.
 - **Commit**: `600ed10`
 
+### Slug Collision Logic Improvement
+- **Issue**: Published URLs were getting unwanted numerical suffixes (e.g., `-1777...`) when a conflict was detected, without notifying the user.
+- **Fix**: Updated `publishPostAction` and `updatePostAction` to return a clear error message instead of silently appending a suffix.
+- **Benefit**: Admins now receive immediate feedback if a URL is taken, identifying the conflicting post so they can resolve it (either by changing the slug or deleting the duplicate).
+- **Commit**: `1f65dd6`, `5f234d9`
+
+---
+
 ---
 
 ## 🚀 SEO & Search Engine Optimization
