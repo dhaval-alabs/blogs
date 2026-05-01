@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   publishPostAction, schedulePostAction, updatePostAction, deletePostAction,
   togglePostStatusAction, fetchVersionsAction, restoreVersionAction, saveDraftAction,
+  fetchAllAuthorsAction,
 } from "@/app/actions";
 import TiptapEditor from "@/components/TiptapEditor";
 import { buildPublishPayload } from "@/hooks/useStudioDraft";
@@ -49,12 +50,23 @@ export default function AuthorStudio() {
   // ── Derived State ────────────────────────────────────────
   // authorProfile.slug is the FK used in posts.author_id — never use user.id (UUID)
   const authorSlug = dynamicAuthor?.slug || "al-editorial";
+  const isSuperAdmin = dynamicAuthor?.is_super_admin === true;
+
+  // Fetch all authors for selection if super admin
+  useEffect(() => {
+    if (isSuperAdmin) {
+      fetchAllAuthorsAction().then(res => {
+        if (res.success) set("allAuthors", res.authors);
+      });
+    }
+  }, [isSuperAdmin]);
 
   // ── Actions ──────────────────────────────────────────────
   const publishPost = async () => {
     if (!state.postTitle.trim()) return showToast("Please enter a title", "err");
     set("isPublishing", true);
-    const payload = buildPublishPayload(state, authorSlug);
+    const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
+    const payload = buildPublishPayload(state, finalAuthor);
     const res = await publishPostAction(payload);
     if (res.success) {
       clearDraftOnSuccess();
@@ -67,7 +79,8 @@ export default function AuthorStudio() {
   const schedulePost = async (date) => {
     if (!state.postTitle.trim()) return showToast("Please enter a title", "err");
     set("isPublishing", true);
-    const payload = buildPublishPayload(state, authorSlug);
+    const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
+    const payload = buildPublishPayload(state, finalAuthor);
     const res = await schedulePostAction(payload, date);
     if (res.success) {
       clearDraftOnSuccess();
@@ -79,7 +92,8 @@ export default function AuthorStudio() {
 
   const updatePost = async () => {
     set("isPublishing", true);
-    const payload = buildPublishPayload(state, authorSlug);
+    const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
+    const payload = buildPublishPayload(state, finalAuthor);
     const res = await updatePostAction(state.editingPostId, payload);
     if (res.success) {
       clearDraftOnSuccess();
@@ -92,7 +106,8 @@ export default function AuthorStudio() {
   const handleSaveDraft = async () => {
     if (!state.postTitle.trim()) return showToast("Please enter a title", "err");
     set("isPublishing", true);
-    const payload = buildPublishPayload(state, authorSlug);
+    const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
+    const payload = buildPublishPayload(state, finalAuthor);
     const res = await saveDraftAction(payload, state.editingPostId || null);
     if (res.success) {
       clearDraftOnSuccess();
@@ -361,7 +376,13 @@ export default function AuthorStudio() {
 
               <div className="pp-body">
                 {state.activeTab === "details" && (
-                  <DetailsPanel state={state} dispatch={dispatch} set={set} showToast={showToast} />
+                  <DetailsPanel 
+                    state={state} 
+                    dispatch={dispatch} 
+                    set={set} 
+                    showToast={showToast} 
+                    isSuperAdmin={isSuperAdmin}
+                  />
                 )}
                 {state.activeTab === "seo" && (
                   <SeoPanel state={state} set={set} showToast={showToast} />

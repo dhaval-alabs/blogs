@@ -171,10 +171,16 @@ export async function saveDraftAction(payload, id = null) {
   const validationError = validatePayload(payload);
   if (validationError) return { success: false, error: validationError };
   try {
-    const { slug: callerSlug } = await getCallerSlug();
+    const { slug: callerSlug, isSuperAdmin } = await getCallerSlug();
     const db = getServiceClient();
 
-    if (payload.authorId) payload = { ...payload, authorId: callerSlug || payload.authorId };
+    // Super Admins can override the authorId; others are forced to their own slug
+    if (payload.authorId) {
+      payload = { 
+        ...payload, 
+        authorId: (isSuperAdmin && payload.authorId) ? payload.authorId : (callerSlug || 'al-editorial') 
+      };
+    }
 
     if (id) {
       // Update existing post — preserve its current status
@@ -242,15 +248,20 @@ export async function publishPostAction(payload) {
   const validationError = validatePayload(payload);
   if (validationError) return { success: false, error: validationError };
   try {
-    const { slug: callerSlug } = await getCallerSlug();
+    const { slug: callerSlug, isSuperAdmin } = await getCallerSlug();
     const db = getServiceClient();
 
     // Validate alt text
     const altErr = validateAltText(payload.image, payload.alt_text);
     if (altErr) return { success: false, error: altErr };
 
-    // Ensure author_id is always a valid slug, never a UUID
-    if (payload.authorId) payload = { ...payload, authorId: callerSlug || payload.authorId };
+    // Super Admins can override the authorId; others are forced to their own slug
+    if (payload.authorId) {
+      payload = { 
+        ...payload, 
+        authorId: (isSuperAdmin && payload.authorId) ? payload.authorId : (callerSlug || 'al-editorial') 
+      };
+    }
 
     // Build and de-duplicate slug
     let slug = payload.slug || toSlug(payload.title);
@@ -1438,5 +1449,25 @@ export async function deleteRedirectAction(id) {
   } catch (error) {
     console.error('deleteRedirectAction failed:', error);
     return { success: false, error: error.message || 'Failed to delete redirect.' };
+  }
+}
+
+/** Fetches all authors. Restricted to super-admins. */
+export async function fetchAllAuthorsAction() {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { data, error } = await db
+      .from('authors')
+      .select('name, slug, email, image, initials')
+      .order('name');
+
+    if (error) throw error;
+    return { success: true, authors: data };
+  } catch (error) {
+    console.error('fetchAllAuthorsAction failed:', error);
+    return { success: false, error: error.message || 'Failed to fetch authors.' };
   }
 }

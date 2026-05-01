@@ -42,6 +42,8 @@ export const metadata = {
   },
 };
 
+import Script from "next/script";
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -50,11 +52,6 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function() { try { var t = localStorage.getItem('theme'); if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } } catch (e) {} })();`,
-          }}
-        />
         {/* Preconnect to font/CDN origins so the deferred stylesheet requests resolve faster */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -90,16 +87,24 @@ export default function RootLayout({ children }) {
             referrerPolicy="no-referrer"
           />
         </noscript>
-        {/* Promote deferred stylesheets to active once the browser has them parsed */}
-        <script
+        <meta name="generator" content="Elementor 3.35.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-internal, google_font-enabled, font_display-swap" />
+      </head>
+      <body className="min-h-screen antialiased">
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function() { try { var t = localStorage.getItem('theme'); if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } } catch (e) {} })();`,
+          }}
+        />
+        <Script
+          id="lazy-css-promoter"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html:
               "document.querySelectorAll('link[data-lazy-css]').forEach(function(l){var a=function(){l.media='all'};if(l.sheet){a()}else{l.addEventListener('load',a,{once:true})}});",
           }}
         />
-        <meta name="generator" content="Elementor 3.35.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-internal, google_font-enabled, font_display-swap" />
-      </head>
-      <body className="min-h-screen antialiased">
         {/* GTM noscript fallback */}
         <noscript>
           <iframe

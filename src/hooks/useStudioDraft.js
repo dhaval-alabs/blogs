@@ -100,6 +100,7 @@ const INITIAL_STATE = {
   openSections: {
     ai: false, author: false, discussion: false, advanced: false,
   },
+  allAuthors: [],
 };
 
 // ── Reducer ──────────────────────────────────────────────────

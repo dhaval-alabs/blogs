@@ -118,7 +118,7 @@ import {
   STUDIO_CATEGORIES,
 } from "@/lib/config";
 
-export default function DetailsPanel({ state, dispatch, set, showToast }) {
+export default function DetailsPanel({ state, dispatch, set, showToast, isSuperAdmin }) {
   const fileInputRef = useRef(null);
   const cardImageInputRef = useRef(null);
   const squareImageInputRef = useRef(null);
@@ -384,8 +384,23 @@ export default function DetailsPanel({ state, dispatch, set, showToast }) {
         </div>
       </Section>
 
-      {/* Author & Trust T3 */}
+      {/* Author & Trust Signals T3 */}
       <Section title="Author & Trust Signals" tier="T3" open={state.openSections.author} onToggle={() => dispatch({ type: "TOGGLE_SECTION", key: "author" })}>
+        {isSuperAdmin && (
+          <div style={{ marginBottom: 20 }}>
+            <div className="f-lbl" style={{ marginBottom: 6 }}>SELECT AUTHOR <span style={{ color: "var(--red)", fontSize: 11 }}>*</span></div>
+            <select 
+              value={state.authorId} 
+              onChange={(e) => set("authorId", e.target.value)}
+              style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)" }}
+            >
+              {state.allAuthors?.map((a) => (
+                <option key={a.slug} value={a.slug}>{a.name} ({a.email})</option>
+              ))}
+            </select>
+            <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 4 }}>Only Super Admins can change the publishing author.</div>
+          </div>
+        )}
         <div>
           <div className="f-lbl" style={{ marginBottom: 6 }}>Author bio
             <span style={{ fontSize: 9, color: "var(--text3)", background: "var(--bg3)", padding: "1px 5px", borderRadius: 3, border: "1px solid var(--border)", fontWeight: 400, letterSpacing: 0 }}>override</span>
