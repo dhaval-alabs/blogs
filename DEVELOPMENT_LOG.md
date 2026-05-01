@@ -4,6 +4,18 @@ This document tracks technical challenges, bugs, and architectural issues encoun
 
 ---
 
+## 🛠 New Features Implemented
+
+### Dynamic 301/302 Redirect Management
+- **Feature**: Admins can now manage URL redirects directly from the Studio.
+- **Components**:
+    - **Database**: `redirects` table (source, destination, type, active).
+    - **Studio UI**: New `/studio/redirects` page with a table and creation form.
+    - **Middleware**: Intercepts requests and applies redirects from the DB in real-time.
+- **Commit**: `600ed10`
+
+---
+
 ## 🚀 SEO & Search Engine Optimization
 
 ### Google Search Console "Soft 404" Errors
