@@ -81,6 +81,22 @@ export async function middleware(request) {
     url.pathname = '/studio/';
     return NextResponse.redirect(url);
   }
+  // ── Dynamic Redirects ───────────────────────────────────────────
+  // Check for custom 301/302 redirects managed in the Studio.
+  // We use the normalized 'pathname' (stripped of trailing slash).
+  const { data: dynamicRedirect } = await supabase
+    .from('redirects')
+    .select('destination, type')
+    .eq('source', pathname)
+    .eq('active', true)
+    .maybeSingle();
+
+  if (dynamicRedirect) {
+    const dest = dynamicRedirect.destination.startsWith('http') 
+      ? dynamicRedirect.destination 
+      : new URL(dynamicRedirect.destination, request.url).toString();
+    return NextResponse.redirect(dest, dynamicRedirect.type || 301);
+  }
 
   return supabaseResponse;
 }

@@ -1356,3 +1356,77 @@ export async function likePostAction(slug, delta) {
     return { success: false, error: String(err?.message || 'Failed to like article.') };
   }
 }
+
+// ── Redirect Management Actions (Studio) ──────────────────────────
+
+/** Fetch all configured redirects. Super-admin only. */
+export async function fetchRedirectsAction() {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { data, error } = await db
+      .from('redirects')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return { success: true, redirects: data || [] };
+  } catch (error) {
+    console.error('fetchRedirectsAction failed:', error);
+    return { success: false, error: error.message || 'Failed to fetch redirects.' };
+  }
+}
+
+/** Create or update a redirect entry. Super-admin only. */
+export async function saveRedirectAction(payload, id = null) {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    if (!payload.source || !payload.destination) {
+      return { success: false, error: 'Source and destination are required.' };
+    }
+
+    const db = getServiceClient();
+    const row = {
+      source:      payload.source.trim(),
+      destination: payload.destination.trim(),
+      type:        parseInt(payload.type || '301', 10),
+      active:      payload.active !== false,
+      updated_at:  new Date().toISOString(),
+    };
+
+    if (id) {
+      const { error } = await db.from('redirects').update(row).eq('id', id);
+      if (error) throw error;
+    } else {
+      const { error } = await db.from('redirects').insert(row);
+      if (error) throw error;
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('saveRedirectAction failed:', error);
+    if (error.code === '23505') return { success: false, error: 'A redirect for this source already exists.' };
+    return { success: false, error: error.message || 'Failed to save redirect.' };
+  }
+}
+
+/** Delete a redirect entry. Super-admin only. */
+export async function deleteRedirectAction(id) {
+  try {
+    const { isSuperAdmin } = await getCallerSlug();
+    if (!isSuperAdmin) return { success: false, error: 'Unauthorized' };
+
+    const db = getServiceClient();
+    const { error } = await db.from('redirects').delete().eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    console.error('deleteRedirectAction failed:', error);
+    return { success: false, error: error.message || 'Failed to delete redirect.' };
+  }
+}
