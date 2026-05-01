@@ -90,6 +90,7 @@ const INITIAL_STATE = {
   versions: [],
   versionPreview: null,
   statusConfirmPost: null,
+  confirmDialog: null, // { title, message, confirmText, onConfirm }
   toast: null,
 
   // Toolbar state (driven by editor)
@@ -431,9 +432,22 @@ export default function useStudioDraft() {
 
   // Clear editor (new post)
   const clearEditor = useCallback(() => {
-    if (state.postBody && !window.confirm("Start a new post? Unsaved changes will be lost.")) return;
-    localStorage.removeItem(STUDIO_DRAFT_KEY);
-    dispatch({ type: "RESET" });
+    const doClear = () => {
+      localStorage.removeItem(STUDIO_DRAFT_KEY);
+      dispatch({ type: "RESET" });
+      dispatch({ type: "SET", field: "confirmDialog", value: null });
+    };
+
+    if (state.postBody) {
+      dispatch({ type: "SET", field: "confirmDialog", value: {
+        title: "Start New Post?",
+        message: "Your current unsaved changes will be lost. Are you sure you want to start a new post?",
+        confirmText: "Start New Post",
+        onConfirm: doClear
+      }});
+    } else {
+      doClear();
+    }
   }, [state.postBody]);
 
   const clearDraftOnSuccess = useCallback(() => localStorage.removeItem(STUDIO_DRAFT_KEY), []);

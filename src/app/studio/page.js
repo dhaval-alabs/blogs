@@ -23,6 +23,7 @@ import PostsTable from "@/components/studio/PostsTable";
 import DetailsPanel from "@/components/studio/DetailsPanel";
 import SeoPanel from "@/components/studio/SeoPanel";
 import AdvancedPanel from "@/components/studio/AdvancedPanel";
+import ConfirmDialog from "@/components/studio/ConfirmDialog";
 import { I } from "@/components/studio/StudioIcons";
 
 export default function AuthorStudio() {
@@ -103,13 +104,21 @@ export default function AuthorStudio() {
   };
 
   const handleDeletePost = async (post) => {
-    if (!confirm(`Delete "${post.title || "Untitled"}"?`)) return;
-    const res = await deletePostAction(post.id);
-    if (res.success) {
-      showToast("Deleted.");
-      fetchAllPosts();
-      if (state.editingPostId === post.id) clearEditor();
-    } else showToast("Delete failed", "err");
+    set("confirmDialog", {
+      title: "Delete Post?",
+      message: `Are you sure you want to delete "${post.title || "Untitled"}"? This action cannot be undone.`,
+      confirmText: "Delete Permanently",
+      confirmType: "danger",
+      onConfirm: async () => {
+        set("confirmDialog", null);
+        const res = await deletePostAction(post.id);
+        if (res.success) {
+          showToast("Deleted.");
+          fetchAllPosts();
+          if (state.editingPostId === post.id) clearEditor();
+        } else showToast("Delete failed", "err");
+      }
+    });
   };
 
   const handleToggleStatusConfirm = async () => {
@@ -415,6 +424,10 @@ export default function AuthorStudio() {
 
           </div>
         </div>
+        <ConfirmDialog 
+          dialog={state.confirmDialog} 
+          onClose={() => set("confirmDialog", null)} 
+        />
     </>
   );
 }
