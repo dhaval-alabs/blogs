@@ -1,7 +1,7 @@
 "use client";
 import { withBasePath, apiFetch } from "@/utils/basePath";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { STUDIO_SCHEMA_TYPES } from "@/lib/config";
 import { I } from "./StudioIcons";
 
@@ -11,13 +11,56 @@ export default function SeoPanel({ state, set, showToast }) {
   const ogFileInputRef = useRef(null);
   const [isOverriding, setIsOverriding] = useState(false);
 
+  // ── SEO Logic ──────────────────────────────────────────────────
+  const internalLinkCount = useMemo(() => {
+    const html = state.postBody || "";
+    // Count <a> tags with internal destinations
+    const linkMatches = html.matchAll(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi);
+    let count = 0;
+    const internalDomains = ['analytixlabs.co.in', 'localhost'];
+    
+    for (const match of linkMatches) {
+      const href = match[1];
+      if (href.startsWith('/') || href.startsWith('#') || internalDomains.some(d => href.includes(d))) {
+        count++;
+      }
+    }
+    
+    // Count Course Match widgets which are inherently internal CTAs
+    const widgetMatches = html.matchAll(/data-widget=["']coursematch["']/gi);
+    for (const _ of widgetMatches) {
+      count++;
+    }
+    
+    return count;
+  }, [state.postBody]);
+
+  const keywordDensity = useMemo(() => {
+    if (!kw || !state.postBody || state.wordCount === 0) return 0;
+    const text = state.postBody.replace(/<[^>]+>/g, ' ').toLowerCase();
+    const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+    const matches = text.match(regex);
+    const count = matches ? matches.length : 0;
+    return ((count / state.wordCount) * 100).toFixed(1);
+  }, [kw, state.postBody, state.wordCount]);
+
   const seoChecks = [
     { label: "Focus keyword in title", pass: !!(kw && state.postTitle.toLowerCase().includes(kw)) },
     { label: "Meta description present", pass: effectiveDesc.length >= 50, warn: effectiveDesc.length > 0 && effectiveDesc.length < 50 },
-    { label: `Keyword density low (${kw ? "0.4%" : "—"})`, warn: true, pass: false },
+    { 
+      label: `Keyword density: ${keywordDensity}% ${keywordDensity < 0.5 ? "(Low)" : keywordDensity > 3 ? "(High)" : "(Good)"}`, 
+      pass: keywordDensity >= 0.5 && keywordDensity <= 3, 
+      warn: keywordDensity < 0.5 || keywordDensity > 3 
+    },
     { label: state.altText?.trim().length >= 5 ? "Alt text present ✓" : "Missing alt text on images", pass: state.altText?.trim().length >= 5, warn: !state.altText?.trim().length },
-    { label: "Internal links: 0 found", fail: true, pass: false },
+    { 
+      label: `Internal links: ${internalLinkCount} found`, 
+      pass: internalLinkCount >= 2, 
+      warn: internalLinkCount > 0 && internalLinkCount < 2,
+      fail: internalLinkCount === 0 
+    },
   ];
+
   const seoScore = Math.round((seoChecks.filter((c) => c.pass).length / seoChecks.length) * 100);
   const seoGrade = seoScore >= 80 ? "Excellent" : seoScore >= 40 ? "Good — room to improve" : "Needs work";
   const seoColor = seoScore >= 80 ? "#16a34a" : seoScore >= 40 ? "#f97316" : "#ef4444";
