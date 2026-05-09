@@ -105,7 +105,7 @@ export default function AuthorStudio() {
 
   const handleSaveDraft = async () => {
     if (!state.postTitle.trim()) return showToast("Please enter a title", "err");
-    set("isPublishing", true);
+    set("isSaving", true);
     const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
     const payload = buildPublishPayload(state, finalAuthor);
     const res = await saveDraftAction(payload, state.editingPostId || null);
@@ -113,9 +113,9 @@ export default function AuthorStudio() {
       clearDraftOnSuccess();
       showToast("Draft saved!");
       fetchAllPosts();
-      if (!state.editingPostId) setMany({ editingPostId: res.id, slug: res.slug, isPublishing: false });
-      else set("isPublishing", false);
-    } else { showToast(res.error || "Failed to save draft", "err"); set("isPublishing", false); }
+      if (!state.editingPostId) setMany({ editingPostId: res.id, slug: res.slug, isSaving: false });
+      else set("isSaving", false);
+    } else { showToast(res.error || "Failed to save draft", "err"); set("isSaving", false); }
   };
 
   const handleDeletePost = async (post) => {
@@ -404,8 +404,8 @@ export default function AuthorStudio() {
 
                 {state.editingPostId !== null ? (
                   <>
-                    <button className="pub-btn-main" onClick={updatePost} disabled={state.isPublishing}>
-                      {state.isPublishing ? "Saving…" : "• UPDATE POST"}
+                    <button className="pub-btn-main" onClick={updatePost} disabled={state.isPublishing || state.isSaving}>
+                      {state.isPublishing ? "Updating…" : "• UPDATE POST"}
                     </button>
                     <div className="pub-btn-row" style={{ gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
                       <button className="pub-schedule" onClick={() => { set("editingPostId", null); clearEditor(); }} disabled={state.isPublishing}>
@@ -419,22 +419,22 @@ export default function AuthorStudio() {
                       >
                         {I.trash} Delete
                       </button>
-                      <button className="pub-save" onClick={handleSaveDraft}>
-                        {I.save} Save
+                      <button className="pub-save" onClick={handleSaveDraft} disabled={state.isSaving || state.isPublishing}>
+                        {state.isSaving ? "Saving…" : <>{I.save} Save</>}
                       </button>
                     </div>
                   </>
                 ) : (
                   <>
-                    <button className="pub-btn-main" onClick={publishPost} disabled={state.isPublishing}>
+                    <button className="pub-btn-main" onClick={publishPost} disabled={state.isPublishing || state.isSaving}>
                       {state.isPublishing ? "Publishing…" : "• PUBLISH NOW"}
                     </button>
                     <div className="pub-btn-row">
-                      <button className="pub-schedule" onClick={() => set("showScheduleModal", true)} disabled={state.isPublishing}>
+                      <button className="pub-schedule" onClick={() => set("showScheduleModal", true)} disabled={state.isPublishing || state.isSaving}>
                         {I.clock} SCHEDULE
                       </button>
-                      <button className="pub-save" onClick={handleSaveDraft} disabled={state.isPublishing}>
-                        {I.save} SAVE DRAFT
+                      <button className="pub-save" onClick={handleSaveDraft} disabled={state.isSaving || state.isPublishing}>
+                        {state.isSaving ? "Saving…" : <>{I.save} SAVE DRAFT</>}
                       </button>
                     </div>
                   </>

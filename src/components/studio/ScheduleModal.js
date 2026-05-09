@@ -18,7 +18,6 @@ export default function ScheduleModal({ onConfirm, onClose, loading }) {
               className="sched-input"
               type="date"
               value={date}
-              min={new Date().toISOString().split("T")[0]}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>

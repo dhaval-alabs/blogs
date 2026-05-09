@@ -1,9 +1,113 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { I } from "./StudioIcons";
 
 const POSTS_PER_PAGE = 25;
+
+// ── CSV helpers ──────────────────────────────────────────────────
+function escapeCsv(value) {
+  if (value == null) return "";
+  const str = String(value);
+  if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function stripHtml(html) {
+  if (!html) return "";
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function countWords(html) {
+  const text = stripHtml(html);
+  return text ? text.split(/\s+/).filter(Boolean).length : 0;
+}
+
+function countInternalLinks(html) {
+  if (!html) return 0;
+  const linkMatches = html.matchAll(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi);
+  let count = 0;
+  const internalDomains = ["analytixlabs.co.in", "localhost"];
+  for (const match of linkMatches) {
+    const href = match[1];
+    if (href.startsWith("/") || href.startsWith("#") || internalDomains.some((d) => href.includes(d))) count++;
+  }
+  const widgetMatches = html.matchAll(/data-widget=["']coursematch["']/gi);
+  for (const _ of widgetMatches) count++;
+  return count;
+}
+
+function buildSeoCsv(posts) {
+  const SITE_BASE = "https://blog.analytixlabs.co.in";
+
+  const headers = [
+    "ID", "Title", "Slug", "URL", "Status", "Category",
+    "Meta Title", "Meta Description", "Focus Keyword",
+    "Alt Text", "Schema Type", "Canonical URL",
+    "Excerpt", "Word Count", "Read Time",
+    "Internal Links", "Domain Tags", "Skill Level",
+    "Author", "Published Date", "Updated Date",
+    "Has Featured Image", "Has OG Image",
+    "noIndex", "FAQ Schema",
+  ];
+
+  const rows = posts.map((p) => {
+    const seo = p.seo || {};
+    const discussion = p.discussion || {};
+    const wordCount = countWords(p.content);
+    const internalLinks = countInternalLinks(p.content);
+
+    return [
+      p.id,
+      p.title || "",
+      p.slug || "",
+      p.slug ? `${SITE_BASE}/blog/${p.slug}` : "",
+      p.status || "Draft",
+      p.category || "",
+      seo.metaTitle || p.title || "",
+      seo.metaDesc || p.excerpt || "",
+      seo.focusKeyword || "",
+      p.altText || p.alt_text || "",
+      seo.schemaType || "Article",
+      seo.canonicalUrl || "",
+      p.excerpt || "",
+      wordCount,
+      p.readTime || p.read_time || "",
+      internalLinks,
+      (p.domain_tags || []).join("; "),
+      p.skill_level || "",
+      p.authorId || p.author_id || "",
+      p.publishedAt || p.published_at || "",
+      p.updatedAt || p.updated_at || "",
+      p.image ? "Yes" : "No",
+      (seo.ogImage || p.image) ? "Yes" : "No",
+      seo.noIndex ? "Yes" : "No",
+      discussion.faqSchema ? "Yes" : "No",
+    ];
+  });
+
+  const csvContent = [
+    headers.map(escapeCsv).join(","),
+    ...rows.map((row) => row.map(escapeCsv).join(",")),
+  ].join("\n");
+
+  return csvContent;
+}
+
+function downloadCsv(csvContent, filename) {
+  const BOM = "\uFEFF";
+  const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 export default function PostsTable({ allPosts, clearEditor, loadPostForEdit, handleDeletePost, setPostsViewMode, onToggleStatus, onShowVersions }) {
   const [search, setSearch] = useState("");
@@ -62,6 +166,14 @@ export default function PostsTable({ allPosts, clearEditor, loadPostForEdit, han
     return counts;
   }, [allPosts]);
 
+  const handleExportCsv = useCallback(() => {
+    const data = filtered.length > 0 ? filtered : allPosts;
+    const csv = buildSeoCsv(data);
+    const dateSuffix = new Date().toISOString().slice(0, 10);
+    const filterLabel = statusFilter !== "All" ? `_${statusFilter.toLowerCase()}` : "";
+    downloadCsv(csv, `alabs_blog_seo${filterLabel}_${dateSuffix}.csv`);
+  }, [filtered, allPosts, statusFilter]);
+
   return (
     <div className="editor-pane">
       <div className="posts-view">
@@ -74,9 +186,34 @@ export default function PostsTable({ allPosts, clearEditor, loadPostForEdit, han
               </span>
             )}
           </span>
-          <button className="posts-new-btn" onClick={() => { clearEditor(); setPostsViewMode("editor"); }}>
-            + NEW POST
-          </button>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button
+              className="posts-export-btn"
+              onClick={handleExportCsv}
+              title={`Export ${filtered.length} post${filtered.length !== 1 ? "s" : ""} as CSV for SEO`}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "7px 14px",
+                background: "var(--bg)",
+                color: "var(--text2)", border: "1px solid var(--border2)",
+                borderRadius: "var(--radius)",
+                fontSize: 12, fontWeight: 600,
+                cursor: "pointer", fontFamily: "var(--font-body)",
+                transition: "all 0.15s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg3)"; e.currentTarget.style.borderColor = "var(--primary)"; e.currentTarget.style.color = "var(--primary)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg)"; e.currentTarget.style.borderColor = "var(--border2)"; e.currentTarget.style.color = "var(--text2)"; }}
+            >
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" width="14" height="14">
+                <path d="M8 2v9M4.5 7.5 8 11l3.5-3.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12v2h12v-2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              CSV Export
+            </button>
+            <button className="posts-new-btn" onClick={() => { clearEditor(); setPostsViewMode("editor"); }}>
+              + NEW POST
+            </button>
+          </div>
         </div>
 
         {/* Search + Status filters */}

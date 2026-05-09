@@ -26,12 +26,16 @@ export async function GET(request) {
       .order('id', { ascending: false });
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     // Map snake_case → camelCase for the client
+    const fmtDate = (d) => {
+      if (!d) return '';
+      try { const dt = new Date(d); return isNaN(dt.getTime()) ? d : dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch { return d; }
+    };
     const posts = (data || []).map(r => ({
       ...r,
       readTime: r.read_time,
       authorId: r.author_id,
-      publishedAt: r.published_at,
-      updatedAt: r.updated_at,
+      publishedAt: fmtDate(r.published_at),
+      updatedAt: fmtDate(r.updated_at),
       altText: r.alt_text,
     }));
     return NextResponse.json(posts);

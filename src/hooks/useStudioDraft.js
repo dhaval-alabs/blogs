@@ -73,6 +73,7 @@ const INITIAL_STATE = {
 
   // UI
   isPublishing: false,
+  isSaving: false,
   saveStatus: "Draft",
   isSaved: false,
   showDraftBanner: false,

@@ -10,7 +10,7 @@ function toSlug(title) {
 }
 
 function formatDate() {
-  return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return new Date().toISOString();
 }
 
 // ── Revalidation helper ──────────────────────────────────────────
@@ -227,7 +227,7 @@ export async function saveDraftAction(payload, id = null) {
       const row = {
         ...toRow({ ...payload, slug }),
         status:       'Draft',
-        published_at: '',
+        published_at: null,
         updated_at:   formatDate(),
       };
       const { data, error } = await db.from('posts').insert(row).select('id, slug').single();
@@ -453,10 +453,10 @@ export async function schedulePostAction(payload, scheduledDate) {
 
     // Validate and format the scheduled date
     const parsedDate = scheduledDate ? new Date(scheduledDate) : null;
-    const isValidDate = parsedDate && !isNaN(parsedDate.getTime()) && parsedDate > new Date();
+    const isValidDate = parsedDate && !isNaN(parsedDate.getTime());
     const publishedAt = isValidDate
-      ? parsedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : 'Scheduled';
+      ? parsedDate.toISOString()
+      : new Date().toISOString();
 
     const row = {
       ...toRow({ ...payload, slug }),
