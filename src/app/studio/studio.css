@@ -4,14 +4,14 @@
 
 .studio-wrapper {
   /* ── Sidebar ── */
-  --sb-bg-from: #09152b;
-  --sb-bg-to: #111f3c;
+  --sb-bg-from: #ffffff;
+  --sb-bg-to: #f8fafc;
   --sb-width: 220px;
-  --sb-text: #ffffff;
-  --sb-muted: rgba(255,255,255,0.6);
-  --sb-hover: rgba(255,255,255,0.06);
-  --sb-active: rgba(255,255,255,0.12);
-  --sb-border: rgba(255,255,255,0.08);
+  --sb-text: #0f172a;
+  --sb-muted: #64748b;
+  --sb-hover: #f1f5f9;
+  --sb-active: #e2e8f0;
+  --sb-border: #e2e8f0;
 
   /* ── Surfaces ── */
   --bg: #F8F9FB;
@@ -97,7 +97,6 @@
   height: 28px;
   width: auto;
   max-width: 100%;
-  filter: brightness(0) invert(1);
 }
 
 /* New Post button */
@@ -171,7 +170,7 @@
 .studio-wrapper .sb-user {
   margin: auto 10px 14px;
   padding: 10px 12px;
-  background: rgba(255,255,255,0.05);
+  background: #f8fafc;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -181,8 +180,8 @@
   cursor: pointer;
 }
 .studio-wrapper .sb-user:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.25);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .studio-wrapper .sb-avatar {
@@ -209,7 +208,7 @@
 .studio-wrapper .sb-user-name {
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

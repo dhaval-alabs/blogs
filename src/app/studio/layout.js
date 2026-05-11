@@ -40,6 +40,16 @@ export default function StudioLayout({ children }) {
   };
 
   useEffect(() => {
+    // Force light mode in studio regardless of system settings
+    document.documentElement.classList.remove("dark");
+    document.documentElement.style.colorScheme = "light";
+    
+    // Optional: if you want to restore dark mode when leaving studio, 
+    // you'd need to check localStorage/matchMedia here. 
+    // But usually, removing it is enough for the "remove dark theme" request.
+  }, []);
+
+  useEffect(() => {
     if (isLoginPage) return;
     fetchAllPosts();
   }, [fetchAllPosts, isLoginPage]);
@@ -75,14 +85,14 @@ export default function StudioLayout({ children }) {
   if (isLoginPage) {
     return (
       <StudioContext.Provider value={contextValue}>
-        <div className="studio-wrapper">{children}</div>
+        <div className="studio-wrapper light-theme">{children}</div>
       </StudioContext.Provider>
     );
   }
 
   return (
     <StudioContext.Provider value={contextValue}>
-      <div className="studio-wrapper">
+      <div className="studio-wrapper light-theme">
         <div className="app">
           <StudioSidebar
             viewMode={state.viewMode}

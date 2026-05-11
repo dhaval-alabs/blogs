@@ -145,8 +145,7 @@ export default function ContentSettings() {
           <button onClick={() => router.push("/studio")} style={{ background: "none", border: "none", color: "var(--text3)", display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 14, fontWeight: 500, padding: "8px 0" }}>
             <ArrowLeft size={16} /> Back to Studio
           </button>
-          <img src={"/blog/logo.svg"} alt="Alabs" className="dark:hidden" style={{ height: 32, width: "auto" }} />
-          <img src={"/blog/white.svg"} alt="Alabs" className="hidden dark:block" style={{ height: 32, width: "auto" }} />
+          <img src={"/blog/logo.svg"} alt="Alabs" style={{ height: 32, width: "auto" }} />
         </div>
 
         <div style={{ marginBottom: 40 }}>
