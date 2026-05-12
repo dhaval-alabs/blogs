@@ -463,6 +463,22 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
         </div>
       </Section>
 
+      {/* Publish Date (editable for published/scheduled posts) */}
+      {state.editingPostId && (
+        <div className="pp-field">
+          <div className="f-lbl" style={{ marginBottom: 6 }}>
+            PUBLISH DATE
+            <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400, marginLeft: 6 }}>past dates allowed</span>
+          </div>
+          <input
+            type="date"
+            value={state.publishDate || ""}
+            onChange={(e) => set("publishDate", e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </div>
+      )}
+
       {/* Danger Zone / Status Management */}
       {state.editingPostId && state.status === "Published" && (
         <div style={{ marginTop: 12, paddingTop: 16, borderTop: '1px solid var(--border)' }}>

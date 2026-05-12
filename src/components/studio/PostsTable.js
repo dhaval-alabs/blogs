@@ -25,6 +25,16 @@ function countWords(html) {
   return text ? text.split(/\s+/).filter(Boolean).length : 0;
 }
 
+function formatBlogDate(dateStr, style = "short") {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    if (style === "long") return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    return d.toISOString().slice(0, 10); // YYYY-MM-DD
+  } catch { return dateStr; }
+}
+
 function countInternalLinks(html) {
   if (!html) return 0;
   const linkMatches = html.matchAll(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi);
@@ -39,59 +49,99 @@ function countInternalLinks(html) {
   return count;
 }
 
-function buildSeoCsv(posts) {
-  const SITE_BASE = "https://blog.analytixlabs.co.in";
+function countExternalLinks(html) {
+  if (!html) return 0;
+  const internalDomains = ["analytixlabs.co.in", "localhost"];
+  const hrefMatches = [...html.matchAll(/\bhref=["']([^"']+)["']/gi)];
+  let count = 0;
+  for (const match of hrefMatches) {
+    const href = match[1];
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) continue;
+    if (href.startsWith("/") || internalDomains.some((d) => href.includes(d))) continue;
+    if (/^https?:\/\//i.test(href)) count++;
+  }
+  return count;
+}
 
+function computeKeywordDensity(html, focusKeyword) {
+  if (!focusKeyword || !html) return "";
+  const text = html.replace(/<[^>]+>/g, " ").toLowerCase();
+  const words = text.split(/\s+/).filter(Boolean).length;
+  if (words === 0) return "";
+  const escaped = focusKeyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const matches = text.match(new RegExp(`\\b${escaped}\\b`, "gi"));
+  return parseFloat((((matches ? matches.length : 0) / words) * 100).toFixed(1));
+}
+
+function computeSeoScore(p) {
+  const seo = p.seo || {};
+  const kw = (seo.focusKeyword || "").toLowerCase().trim();
+  const metaTitle = (seo.metaTitle || p.title || "").toLowerCase();
+  const metaDesc = seo.metaDesc || p.excerpt || "";
+  const wordCount = countWords(p.content);
+  const internalLinks = countInternalLinks(p.content);
+  const density = kw && wordCount > 0 ? parseFloat(computeKeywordDensity(p.content, kw)) : 0;
+  const checks = [
+    kw && metaTitle.includes(kw),
+    metaDesc.length >= 50,
+    density >= 0.5 && density <= 3,
+    (p.altText || p.alt_text || "").trim().length >= 5,
+    internalLinks >= 2,
+  ];
+  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+}
+
+function isoToDateOnly(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toISOString().slice(0, 10);
+  } catch { return dateStr; }
+}
+
+function buildSeoCsv(posts) {
   const headers = [
-    "ID", "Title", "Slug", "URL", "Status", "Category",
-    "Meta Title", "Meta Description", "Focus Keyword",
-    "Alt Text", "Schema Type", "Canonical URL",
-    "Excerpt", "Word Count", "Read Time",
-    "Internal Links", "Domain Tags", "Skill Level",
-    "Author", "Published Date", "Updated Date",
-    "Has Featured Image", "Has OG Image",
-    "noIndex", "FAQ Schema",
+    "id", "title", "slug", "status", "topic", "tags", "author",
+    "publishedAt", "updatedAt", "wordCount", "focusKeyword",
+    "metaTitle", "metaDescription", "urlSlug",
+    "internalLinksCount", "externalLinksCount", "keywordDensity", "seoScore",
   ];
 
   const rows = posts.map((p) => {
     const seo = p.seo || {};
-    const discussion = p.discussion || {};
     const wordCount = countWords(p.content);
     const internalLinks = countInternalLinks(p.content);
+    const externalLinks = countExternalLinks(p.content);
+    const density = computeKeywordDensity(p.content, seo.focusKeyword || "");
+    const score = computeSeoScore(p);
 
     return [
       p.id,
       p.title || "",
       p.slug || "",
-      p.slug ? `${SITE_BASE}/blog/${p.slug}` : "",
       p.status || "Draft",
       p.category || "",
+      (p.domain_tags || []).join("|"),
+      p.authorId || p.author_id || "",
+      isoToDateOnly(p.publishedAt || p.published_at || ""),
+      isoToDateOnly(p.updatedAt || p.updated_at || ""),
+      wordCount,
+      seo.focusKeyword || "",
       seo.metaTitle || p.title || "",
       seo.metaDesc || p.excerpt || "",
-      seo.focusKeyword || "",
-      p.altText || p.alt_text || "",
-      seo.schemaType || "Article",
-      seo.canonicalUrl || "",
-      p.excerpt || "",
-      wordCount,
-      p.readTime || p.read_time || "",
+      p.slug ? `/article/${p.slug}` : "",
       internalLinks,
-      (p.domain_tags || []).join("; "),
-      p.skill_level || "",
-      p.authorId || p.author_id || "",
-      p.publishedAt || p.published_at || "",
-      p.updatedAt || p.updated_at || "",
-      p.image ? "Yes" : "No",
-      (seo.ogImage || p.image) ? "Yes" : "No",
-      seo.noIndex ? "Yes" : "No",
-      discussion.faqSchema ? "Yes" : "No",
+      externalLinks,
+      density,
+      score,
     ];
   });
 
   const csvContent = [
     headers.map(escapeCsv).join(","),
     ...rows.map((row) => row.map(escapeCsv).join(",")),
-  ].join("\n");
+  ].join("\r\n");
 
   return csvContent;
 }
@@ -170,8 +220,7 @@ export default function PostsTable({ allPosts, clearEditor, loadPostForEdit, han
     const data = filtered.length > 0 ? filtered : allPosts;
     const csv = buildSeoCsv(data);
     const dateSuffix = new Date().toISOString().slice(0, 10);
-    const filterLabel = statusFilter !== "All" ? `_${statusFilter.toLowerCase()}` : "";
-    downloadCsv(csv, `alabs_blog_seo${filterLabel}_${dateSuffix}.csv`);
+    downloadCsv(csv, `analytixlabs-blog-export-${dateSuffix}.csv`);
   }, [filtered, allPosts, statusFilter]);
 
   return (
@@ -315,7 +364,7 @@ export default function PostsTable({ allPosts, clearEditor, loadPostForEdit, han
                         </td>
                         <td><span style={{ fontSize: 12, color: "var(--text3)" }}>{p.category}</span></td>
                         <td><span className={`status-badge ${statusCls}`}>{p.status || "Draft"}</span></td>
-                        <td><span className="post-date">{p.publishedAt || p.published_at || "—"}</span></td>
+                        <td><span className="post-date">{formatBlogDate(p.publishedAt || p.published_at) || "—"}</span></td>
                         <td style={{ textAlign: "center" }}>
                           <button
                             className={`post-status-toggle ${p.status === "Published" ? "is-pub" : "is-draft"}`}

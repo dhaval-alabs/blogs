@@ -810,6 +810,7 @@
 .studio-wrapper .ic-ok { background: #dcfce7; color: #16a34a; }
 .studio-wrapper .ic-wn { background: #fff7ed; color: var(--orange); }
 .studio-wrapper .ic-err { background: #fef2f2; color: var(--red); }
+.studio-wrapper .ic-nt { background: var(--bg3); color: var(--text3); }
 
 /* Quiz */
 .studio-wrapper .quiz-card {

@@ -83,6 +83,8 @@ const INITIAL_STATE = {
   editorKey: 0,
   editorInitContent: "<h1></h1><p></p>",
   editingPostId: null,
+  status: "",
+  publishDate: "",
   allPosts: [],
   activeTab: "details",    // "details" | "seo" | "advanced"
   showScheduleModal: false,
@@ -240,9 +242,17 @@ function studioReducer(state, action) {
 
     case "LOAD_POST": {
       const p = action.post;
+      // Normalise publishedAt to YYYY-MM-DD for the date picker
+      const rawDate = p.publishedAt || p.published_at || "";
+      let publishDate = "";
+      if (rawDate) {
+        try { const d = new Date(rawDate); if (!isNaN(d.getTime())) publishDate = d.toISOString().slice(0, 10); } catch {}
+      }
       return {
         ...state,
         editingPostId: p.id,
+        status: p.status || "Draft",
+        publishDate,
         postBody: p.content || "",
         postTitle: p.title || "",
         slug: p.slug || "",
@@ -343,6 +353,7 @@ export function buildPublishPayload(s, userId) {
     trust: { authorBio: s.authorBio, factChecker: s.factChecker, lastReviewedDate: s.lastReviewedDate },
     discussion: { qa: s.qaEnabled, faqSchema: s.faqSchemaEnabled, moderation: s.moderationMode, editorComments: s.editorComments || [] },
     advanced: { semanticIndex: s.semanticIndexEnabled, salaryHub: s.salaryHubEnabled, darkModeCompat: s.darkModeCompat, progressBarColor: s.progressBarColor, cardImage: s.cardImage, squareImage: s.squareImage, widgets: s.widgets, showLeadGen: s.showLeadGen, showNextSteps: s.showNextSteps, showCourseCta: s.showCourseCta, showRightSidebar: s.showRightSidebar },
+    publishDate: s.publishDate || "",
   };
 }
 

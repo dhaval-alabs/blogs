@@ -12,53 +12,73 @@ export default function SeoPanel({ state, set, showToast }) {
   const [isOverriding, setIsOverriding] = useState(false);
 
   // ── SEO Logic ──────────────────────────────────────────────────
-  const internalLinkCount = useMemo(() => {
+  const siteDomain = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+  const internalDomains = ["analytixlabs.co.in", "localhost", ...(siteDomain ? [siteDomain] : [])];
+
+  const { internalLinkCount } = useMemo(() => {
     const html = state.postBody || "";
-    // Count <a> tags with internal destinations
-    const linkMatches = html.matchAll(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi);
-    let count = 0;
-    const internalDomains = ['analytixlabs.co.in', 'localhost'];
-    
-    for (const match of linkMatches) {
+    const hrefMatches = [...html.matchAll(/\bhref=["']([^"']+)["']/gi)];
+    let internal = 0;
+    let external = 0;
+    for (const match of hrefMatches) {
       const href = match[1];
-      if (href.startsWith('/') || href.startsWith('#') || internalDomains.some(d => href.includes(d))) {
-        count++;
+      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) continue;
+      if (href.startsWith("/") || internalDomains.some((d) => href.includes(d))) {
+        internal++;
+      } else if (/^https?:\/\//i.test(href)) {
+        external++;
       }
     }
-    
-    // Count Course Match widgets which are inherently internal CTAs
-    const widgetMatches = html.matchAll(/data-widget=["']coursematch["']/gi);
-    for (const _ of widgetMatches) {
-      count++;
-    }
-    
-    return count;
+    // Course Match widgets are inherently internal CTAs
+    const widgetMatches = [...html.matchAll(/data-widget=["']coursematch["']/gi)];
+    internal += widgetMatches.length;
+    return { internalLinkCount: internal };
   }, [state.postBody]);
 
   const keywordDensity = useMemo(() => {
-    if (!kw || !state.postBody || state.wordCount === 0) return 0;
-    const text = state.postBody.replace(/<[^>]+>/g, ' ').toLowerCase();
-    const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+    if (!kw || !state.postBody || state.wordCount === 0) return null;
+    const text = state.postBody.replace(/<[^>]+>/g, " ").toLowerCase();
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`\\b${escaped}\\b`, "gi");
     const matches = text.match(regex);
     const count = matches ? matches.length : 0;
-    return ((count / state.wordCount) * 100).toFixed(1);
+    return parseFloat(((count / state.wordCount) * 100).toFixed(1));
   }, [kw, state.postBody, state.wordCount]);
 
+  // Task 5: check metaTitle (falling back to postTitle) for focus keyword
+  const titleToCheck = (state.metaTitle || state.postTitle || "").toLowerCase();
+  const kwInTitlePass = !!(kw && titleToCheck.includes(kw));
+  const kwInTitleLabel = !kw
+    ? "Focus keyword in title — set a focus keyword first"
+    : !state.metaTitle
+    ? kwInTitlePass
+      ? "Focus keyword in title ✓ (article title)"
+      : "Focus keyword in title — add a meta title"
+    : kwInTitlePass
+    ? "Focus keyword in title ✓"
+    : "Focus keyword missing from meta title";
+  const kwInTitleNeutral = !kw || (!state.metaTitle && !state.postTitle);
+
+  // Task 4: keyword density label + status using rubric
+  const kwDensityLabel = (() => {
+    if (keywordDensity === null) return "Keyword density — set a focus keyword first";
+    const n = keywordDensity.toFixed(1);
+    if (keywordDensity < 1.0) return `Keyword density low (${n}%) — aim for 1–2%`;
+    if (keywordDensity <= 2.5) return `Keyword density good (${n}%) ✓`;
+    if (keywordDensity <= 3.5) return `Keyword density slightly high (${n}%) — keep under 2.5%`;
+    return `Keyword density too high (${n}%) — risk of keyword stuffing`;
+  })();
+  const kwDensityPass = keywordDensity !== null && keywordDensity >= 1.0 && keywordDensity <= 2.5;
+  const kwDensityWarn = keywordDensity !== null && (keywordDensity < 1.0 || (keywordDensity > 2.5 && keywordDensity <= 3.5));
+  const kwDensityErr = keywordDensity !== null && keywordDensity > 3.5;
+  const kwDensityNeutral = keywordDensity === null;
+
   const seoChecks = [
-    { label: "Focus keyword in title", pass: !!(kw && state.postTitle.toLowerCase().includes(kw)) },
+    { label: kwInTitleLabel, pass: kwInTitlePass && !kwInTitleNeutral, warn: !kwInTitlePass && !kwInTitleNeutral && !!kw, neutral: kwInTitleNeutral },
     { label: "Meta description present", pass: effectiveDesc.length >= 50, warn: effectiveDesc.length > 0 && effectiveDesc.length < 50 },
-    { 
-      label: `Keyword density: ${keywordDensity}% ${keywordDensity < 0.5 ? "(Low)" : keywordDensity > 3 ? "(High)" : "(Good)"}`, 
-      pass: keywordDensity >= 0.5 && keywordDensity <= 3, 
-      warn: keywordDensity < 0.5 || keywordDensity > 3 
-    },
+    { label: kwDensityLabel, pass: kwDensityPass, warn: kwDensityWarn, err: kwDensityErr, neutral: kwDensityNeutral },
     { label: state.altText?.trim().length >= 5 ? "Alt text present ✓" : "Missing alt text on images", pass: state.altText?.trim().length >= 5, warn: !state.altText?.trim().length },
-    { 
-      label: `Internal links: ${internalLinkCount} found`, 
-      pass: internalLinkCount >= 2, 
-      warn: internalLinkCount > 0 && internalLinkCount < 2,
-      fail: internalLinkCount === 0 
-    },
+    { label: `Internal links: ${internalLinkCount} found`, pass: internalLinkCount >= 2, warn: internalLinkCount > 0 && internalLinkCount < 2, fail: internalLinkCount === 0 },
   ];
 
   const seoScore = Math.round((seoChecks.filter((c) => c.pass).length / seoChecks.length) * 100);
@@ -104,14 +124,16 @@ export default function SeoPanel({ state, set, showToast }) {
           </div>
         </div>
         <div className="seo-checks" style={{ marginTop: 12 }}>
-          {seoChecks.map((c, i) => (
-            <div key={i} className="seo-check">
-              <div className={`seo-ic ${c.pass ? "ic-ok" : c.warn ? "ic-wn" : "ic-err"}`}>
-                {c.pass ? "✓" : c.warn ? "!" : "✕"}
+          {seoChecks.map((c, i) => {
+            const cls = c.pass ? "ic-ok" : c.warn ? "ic-wn" : c.neutral ? "ic-nt" : "ic-err";
+            const icon = c.pass ? "✓" : c.warn ? "!" : c.neutral ? "–" : "✕";
+            return (
+              <div key={i} className="seo-check">
+                <div className={`seo-ic ${cls}`}>{icon}</div>
+                {c.label}
               </div>
-              {c.label}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

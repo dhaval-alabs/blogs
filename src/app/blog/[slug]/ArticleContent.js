@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,6 +24,15 @@ const DiscussionSection = dynamic(() => import("@/components/DiscussionSection")
 const FrontendKnowledgeCheck = dynamic(() => import("@/components/FrontendKnowledgeCheck"), { ssr: false });
 
 // Generate contextual AI questions from post domain tags / FAQ headings
+function formatBlogDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  } catch { return dateStr; }
+}
+
 function buildSuggestedQuestions(post) {
   // Extract question-headings from post HTML
   const re = /<h[2-4][^>]*>([^<]*\?[^<]*)<\/h[2-4]>/gi;
@@ -327,9 +335,9 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
             {/* Meta row */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-on-surface-variant dark:text-[#8c909f] mb-6">
-              {post.publishedAt && <span>Published {post.publishedAt}</span>}
+              {post.publishedAt && <span>Published {formatBlogDate(post.publishedAt)}</span>}
               {post.updatedAt && post.updatedAt !== post.publishedAt && (
-                <><span className="opacity-30">·</span><span>Updated {post.updatedAt}</span></>
+                <><span className="opacity-30">·</span><span>Updated {formatBlogDate(post.updatedAt)}</span></>
               )}
               {post.readTime && <><span className="opacity-30">·</span><span>{post.readTime}</span></>}
               {post.skill_level && <><span className="opacity-30">·</span><span>{post.skill_level}</span></>}
@@ -498,28 +506,27 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
                 if (type === "coursematch") {
                   const title = attrs.courseName || courseMatch?.title || "Advanced AI Curriculum";
-                  const head  = attrs.ctaHeadline || "Ready to go deeper? Enroll now →";
+                  const desc  = attrs.ctaHeadline || (!attrs.courseName ? (courseMatch?.desc || "") : "");
                   const url   = attrs.courseUrl || "https://www.analytixlabs.co.in/courses";
-                  const desc  = (attrs.courseName) ? "" : (courseMatch?.desc || ""); // Hide default desc if custom course
 
                   return (
-                    <div key="course-widget" className="my-10 rounded-2xl overflow-hidden flex flex-col md:flex-row border border-slate-200 dark:border-[#424754] shadow-sm bg-[#f8fafc] dark:bg-[#131b2e]">
-                      <div className="flex-1 p-7 flex flex-col gap-3">
-                        <p className="text-primary text-xs font-bold uppercase tracking-wider">{head}</p>
-                        <h3 className="font-[family-name:var(--font-headline)] font-bold text-xl text-slate-900 dark:text-[#dae2fd] leading-tight">
-                          {title}
-                        </h3>
-                        {desc && <p className="text-slate-600 dark:text-[#c2c6d6] text-sm leading-relaxed">{desc}</p>}
-                        <a href={url} target="_blank" rel="noopener noreferrer"
-                          className="inline-block bg-primary !text-white hover:bg-primary/90 px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all mt-2 text-center md:self-start no-underline">
-                          View Full Course Details →
-                        </a>
-                      </div>
-                      {(courseMatch?.image && !attrs.courseName) && (
-                        <div className="w-full md:w-48 aspect-video md:aspect-auto relative overflow-hidden">
-                          <Image src={courseMatch.image} alt={title} fill className="object-cover opacity-70" />
+                    <div key="course-widget" style={{ background: "#eef2ff", border: "1px solid #a5b4fc", borderRadius: 12, padding: "20px 24px", margin: "2.5rem 0" }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+                        <div style={{ width: 48, height: 48, background: "linear-gradient(135deg,#4f46e5,#7c3aed)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                          </svg>
                         </div>
-                      )}
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: "#4f46e5", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Recommended Course</div>
+                          <div style={{ fontSize: 16, fontWeight: 800, color: "#1e1b4b", marginBottom: desc ? 6 : 10, lineHeight: 1.3 }}>{title}</div>
+                          {desc && <div style={{ fontSize: 13, color: "#6366f1", marginBottom: 12, lineHeight: 1.5 }}>{desc}</div>}
+                          <a href={url} target="_blank" rel="noopener noreferrer"
+                            style={{ display: "inline-block", background: "#4f46e5", color: "#fff", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
+                            Enroll Now →
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   );
                 }

@@ -337,10 +337,19 @@ export async function updatePostAction(id, payload) {
       };
     }
 
+    // Honour a custom publishDate (backdating / rescheduling)
+    let publishedAt = original.published_at;
+    if (payload.publishDate) {
+      try {
+        const d = new Date(payload.publishDate);
+        if (!isNaN(d.getTime())) publishedAt = d.toISOString();
+      } catch {}
+    }
+
     const row = {
       ...toRow({ ...payload, slug }),
       status:       original.status || 'Published',
-      published_at: original.published_at,
+      published_at: publishedAt,
       updated_at:   formatDate(),
     };
 
@@ -355,6 +364,72 @@ export async function updatePostAction(id, payload) {
   } catch (error) {
     console.error('updatePostAction failed:', error);
     return { success: false, error: 'Failed to update post. Please try again.' };
+  }
+}
+
+// ── publishExistingDraftAction ────────────────────────────────────
+// Publishes an existing draft/scheduled post: saves latest content + sets status=Published.
+export async function publishExistingDraftAction(id, payload) {
+  const validationError = validatePayload(payload);
+  if (validationError) return { success: false, error: validationError };
+  try {
+    const { slug: callerSlug, isSuperAdmin } = await getCallerSlug();
+    const db = getServiceClient();
+
+    const altErr = validateAltText(payload.image, payload.alt_text);
+    if (altErr) return { success: false, error: altErr };
+
+    const { data: original, error: fetchErr } = await db
+      .from('posts')
+      .select('slug, published_at, status, author_id')
+      .eq('id', id)
+      .single();
+    if (fetchErr) throw fetchErr;
+
+    if (!isSuperAdmin && original.author_id !== callerSlug) {
+      return { success: false, error: 'Forbidden: you do not own this post.' };
+    }
+
+    await snapshotVersion(db, id);
+
+    let slug = payload.slug || toSlug(payload.title);
+    const { data: collision } = await db
+      .from('posts')
+      .select('id, title')
+      .eq('slug', slug)
+      .neq('id', id)
+      .maybeSingle();
+    if (collision) {
+      return { success: false, error: `URL Conflict: The slug "${slug}" is already used by "${collision.title}". Please change the URL slug to something unique.` };
+    }
+
+    // Use a custom publishDate if provided; fall back to existing or now
+    let publishedAt = original.published_at || formatDate();
+    if (payload.publishDate) {
+      try {
+        const d = new Date(payload.publishDate);
+        if (!isNaN(d.getTime())) publishedAt = d.toISOString();
+      } catch {}
+    }
+
+    const row = {
+      ...toRow({ ...payload, slug }),
+      status:       'Published',
+      published_at: publishedAt,
+      updated_at:   formatDate(),
+    };
+
+    const { error } = await db.from('posts').update(row).eq('id', id);
+    if (error) throw error;
+
+    revalidateRoute('/');
+    revalidateRoute('/blog');
+    revalidateRoute(`/blog/${slug}`);
+    if (original.slug !== slug) revalidateRoute(`/blog/${original.slug}`);
+    return { success: true, slug };
+  } catch (error) {
+    console.error('publishExistingDraftAction failed:', error);
+    return { success: false, error: 'Failed to publish post. Please try again.' };
   }
 }
 

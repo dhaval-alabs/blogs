@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   publishPostAction, schedulePostAction, updatePostAction, deletePostAction,
   togglePostStatusAction, fetchVersionsAction, restoreVersionAction, saveDraftAction,
-  fetchAllAuthorsAction,
+  fetchAllAuthorsAction, publishExistingDraftAction,
 } from "@/app/actions";
 import TiptapEditor from "@/components/TiptapEditor";
 import { buildPublishPayload } from "@/hooks/useStudioDraft";
@@ -101,6 +101,20 @@ export default function AuthorStudio() {
       fetchAllPosts();
       set("isPublishing", false);
     } else { showToast(res.error || "Update failed", "err"); set("isPublishing", false); }
+  };
+
+  const publishExistingDraft = async () => {
+    if (!state.postTitle.trim()) return showToast("Please enter a title", "err");
+    set("isPublishing", true);
+    const finalAuthor = (isSuperAdmin && state.authorId) ? state.authorId : authorSlug;
+    const payload = buildPublishPayload(state, finalAuthor);
+    const res = await publishExistingDraftAction(state.editingPostId, payload);
+    if (res.success) {
+      clearDraftOnSuccess();
+      showToast("Post published!");
+      fetchAllPosts();
+      setMany({ postsViewMode: "posts", isPublishing: false, status: "Published" });
+    } else { showToast(res.error || "Failed to publish", "err"); set("isPublishing", false); }
   };
 
   const handleSaveDraft = async () => {
@@ -363,7 +377,7 @@ export default function AuthorStudio() {
             )}
 
             {/* ═══════ RIGHT PANEL ═══════ */}
-            <aside className="publish-panel">
+            {state.postsViewMode === "editor" && <aside className="publish-panel">
 
               {/* Tabs */}
               <div className="pp-tabs">
@@ -404,7 +418,12 @@ export default function AuthorStudio() {
 
                 {state.editingPostId !== null ? (
                   <>
-                    <button className="pub-btn-main" onClick={updatePost} disabled={state.isPublishing || state.isSaving}>
+                    {state.status !== "Published" && (
+                      <button className="pub-btn-main" onClick={publishExistingDraft} disabled={state.isPublishing || state.isSaving} style={{ marginBottom: 6 }}>
+                        {state.isPublishing ? "Publishing…" : "• PUBLISH NOW"}
+                      </button>
+                    )}
+                    <button className="pub-btn-main" onClick={updatePost} disabled={state.isPublishing || state.isSaving} style={{ background: "var(--bg3)", color: "var(--text)", border: "1px solid var(--border2)" }}>
                       {state.isPublishing ? "Updating…" : "• UPDATE POST"}
                     </button>
                     <div className="pub-btn-row" style={{ gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
@@ -441,7 +460,7 @@ export default function AuthorStudio() {
                 )}
               </div>
 
-            </aside>
+            </aside>}
 
           </div>
         </div>
