@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS posts (
   image           TEXT    DEFAULT '',
   alt_text        TEXT    DEFAULT '',
   status          TEXT    DEFAULT 'Published',
-  published_at    TEXT    DEFAULT '',
-  updated_at      TEXT    DEFAULT '',
+  published_at    TIMESTAMPTZ,
+  updated_at      TIMESTAMPTZ DEFAULT NOW(),
   -- Structured metadata stored as JSONB for flexibility
   seo             JSONB   DEFAULT '{}',
   course_mappings TEXT[]  DEFAULT '{}',

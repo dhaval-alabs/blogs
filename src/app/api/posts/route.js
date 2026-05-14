@@ -11,19 +11,38 @@ export async function GET(request) {
   const all    = searchParams.get('all')    === 'true'; // studio: return all statuses
 
   if (all) {
-    // Studio-only: requires an authenticated session
+    // Studio-only: authenticated session required.
     const supabase = await createClient();
     const { data: { user }, error: authErr } = await supabase.auth.getUser();
     if (authErr || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // return every post regardless of status, newest first
+    // Look up the caller's author row so we can scope the query by role.
+    // Super admins see every post; regular authors see only their own.
+    // Previously this endpoint returned every post to any logged-in user,
+    // which leaked draft content from other authors.
     const db = getServiceClient();
-    const { data, error } = await db
+    const { data: caller } = await db
+      .from('authors')
+      .select('slug, is_super_admin')
+      .ilike('email', user.email)
+      .maybeSingle();
+
+    if (!caller) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    let query = db
       .from('posts')
       .select('id,title,slug,status,category,image,alt_text,published_at,updated_at,read_time,author_id,domain_tags,skill_level,excerpt,content,seo,course_mappings,course_cta,newsletter,quiz,ai_hints,trust,discussion,advanced')
       .order('id', { ascending: false });
+
+    if (!caller.is_super_admin) {
+      query = query.eq('author_id', caller.slug);
+    }
+
+    const { data, error } = await query;
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     // Map snake_case → camelCase for the client
     const fmtDate = (d) => {

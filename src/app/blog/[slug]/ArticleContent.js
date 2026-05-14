@@ -417,14 +417,14 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
               const parts = content.split(/(\[\[newsletter\]\]|\[\[nextsteps\]\]|\[\[coursematch\]\])/gi);
 
               // Helper to render specific widget
-              const renderWidget = (type, attrs = {}) => {
+              const renderWidget = (type, attrs = {}, widgetKey = type) => {
                 if (type === "newsletter") {
                   const headline = attrs.headline || `Free Resource: ${post.domain_tags?.[0] || "Data Science"} Career Roadmap PDF`;
                   const subtext  = attrs.subtext  || "Get our 2026 edition — covering top roles, skills, salaries, and learning paths. Trusted by 80,000+ learners.";
                   const button   = attrs.ctaLabel || "Get Free PDF →";
 
                   return (
-                    <div key="newsletter-widget" className="my-10 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#424754] bg-[#f8fafc] dark:bg-[#131b2e]">
+                    <div key={widgetKey} className="my-10 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#424754] bg-[#f8fafc] dark:bg-[#131b2e]">
                       <div className="p-7">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="material-symbols-outlined text-primary text-xl">download</span>
@@ -480,7 +480,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   }
 
                   return (
-                    <div key="nextsteps-widget" className="my-10 rounded-2xl border border-slate-200 dark:border-[#424754] overflow-hidden shadow-sm bg-[#f8fafc] dark:bg-[#131b2e]">
+                    <div key={widgetKey} className="my-10 rounded-2xl border border-slate-200 dark:border-[#424754] overflow-hidden shadow-sm bg-[#f8fafc] dark:bg-[#131b2e]">
                       <div className="px-6 py-4 border-b border-slate-200 dark:border-[#424754]"
                         style={{ background: "linear-gradient(90deg,rgba(0,59,147,0.03) 0%,transparent 100%)" }}>
                         <h3 className="font-[family-name:var(--font-headline)] font-bold text-base flex items-center gap-2 text-slate-900 dark:text-[#dae2fd]">
@@ -510,7 +510,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   const url   = attrs.courseUrl || "https://www.analytixlabs.co.in/courses";
 
                   return (
-                    <div key="course-widget" style={{ background: "#eef2ff", border: "1px solid #a5b4fc", borderRadius: 12, padding: "20px 24px", margin: "2.5rem 0" }}>
+                    <div key={widgetKey} style={{ background: "#eef2ff", border: "1px solid #a5b4fc", borderRadius: 12, padding: "20px 24px", margin: "2.5rem 0" }}>
                       <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                         <div style={{ width: 48, height: 48, background: "linear-gradient(135deg,#4f46e5,#7c3aed)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
@@ -534,6 +534,18 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                 return null;
               };
 
+              // Track which singleton widget types have already rendered so that
+              // articles with both [[shortcode]] text and <div data-widget> nodes
+              // (legacy + Tiptap dual encoding) don't duplicate the same widget.
+              const renderedWidgetTypes = new Set();
+              let widgetSeq = 0;
+
+              const renderWidgetOnce = (type, attrs, key) => {
+                if (renderedWidgetTypes.has(type)) return <></>;
+                renderedWidgetTypes.add(type);
+                return renderWidget(type, attrs, key);
+              };
+
               const renderedElements = parts.map((part, idx) => {
                 const lowerPart = part.toLowerCase();
                 if (WIDGETS[lowerPart]) {
@@ -543,7 +555,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   if (wType === "newsletter"  && !layout.showLeadGen)   return null;
                   if (wType === "nextsteps"   && !layout.showNextSteps)  return null;
                   if (wType === "coursematch" && !layout.showCourseCta)  return null;
-                  return renderWidget(wType);
+                  return renderWidgetOnce(wType, {}, `${wType}-${widgetSeq++}`);
                 }
                 return (
                   <div key={idx} className="tiptap-prose">
@@ -579,7 +591,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
 
                           // Handle other inline widgets correctly with custom attributes
                           if (["newsletter", "nextsteps", "coursematch"].includes(widgetType)) {
-                            return renderWidget(widgetType, attrs);
+                            return renderWidgetOnce(widgetType, attrs, `${widgetType}-${widgetSeq++}`);
                           }
 
                           // other widget types can be mapped here as they are built

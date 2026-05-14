@@ -1,7 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
+import { lookupRedirect } from '@/lib/infrastructure/redirects';
 
-export async function middleware(request) {
+export async function proxy(request) {
   // Subdomain canonicalization: 301 direct hits on blog.analytixlabs.co.in
   // to www.analytixlabs.co.in so Google only sees one canonical URL.
   //
@@ -82,18 +83,12 @@ export async function middleware(request) {
     return NextResponse.redirect(url);
   }
   // ── Dynamic Redirects ───────────────────────────────────────────
-  // Check for custom 301/302 redirects managed in the Studio.
-  // We use the normalized 'pathname' (stripped of trailing slash).
-  const { data: dynamicRedirect } = await supabase
-    .from('redirects')
-    .select('destination, type')
-    .eq('source', pathname)
-    .eq('active', true)
-    .maybeSingle();
-
+  // Reads from Vercel Edge Config (<1ms at the edge) with a Supabase
+  // fallback for local dev. See src/lib/infrastructure/redirects.js.
+  const dynamicRedirect = await lookupRedirect(pathname);
   if (dynamicRedirect) {
-    const dest = dynamicRedirect.destination.startsWith('http') 
-      ? dynamicRedirect.destination 
+    const dest = dynamicRedirect.destination.startsWith('http')
+      ? dynamicRedirect.destination
       : new URL(dynamicRedirect.destination, request.url).toString();
     return NextResponse.redirect(dest, dynamicRedirect.type || 301);
   }

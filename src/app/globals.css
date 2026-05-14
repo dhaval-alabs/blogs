@@ -2,6 +2,12 @@
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Exclude non-source directories from Tailwind class scanning */
+@source not "../../claude-skills/**";
+@source not "../../graphify-out/**";
+@source not "../../content/**";
+@source not "../../wp-to-nextjs/**";
+
 /* ===== Tailwind v4 Custom Theme ===== */
 @theme inline {
   /* --- Fonts --- */

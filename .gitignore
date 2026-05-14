@@ -48,3 +48,7 @@ next-env.d.ts
 # graphify
 .graphify_venv/
 graphify-out/
+
+# Excluded from Tailwind oxide scanning (untracked non-source dirs
+# that contain Python/YAML patterns that look like Tailwind classes)
+claude-skills/

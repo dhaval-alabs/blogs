@@ -264,9 +264,24 @@ export default function AdminDashboard() {
 
   const generatePassword = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    let pass = "";
-    for (let i=0; i<12; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    setPassword(pass);
+    // crypto.getRandomValues is cryptographically secure, unlike Math.random().
+    // Rejection sampling avoids the modulo bias that would otherwise skew the
+    // distribution toward the early chars in the alphabet.
+    const len = 12;
+    const out = new Array(len);
+    const max = Math.floor(256 / chars.length) * chars.length;
+    let i = 0;
+    while (i < len) {
+      const buf = new Uint8Array(len - i);
+      crypto.getRandomValues(buf);
+      for (const byte of buf) {
+        if (byte < max) {
+          out[i++] = chars[byte % chars.length];
+          if (i === len) break;
+        }
+      }
+    }
+    setPassword(out.join(""));
   };
 
   if (authLoading || fetching) {

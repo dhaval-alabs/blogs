@@ -1,161 +1,48 @@
 "use client";
-import { withBasePath, apiFetch } from "@/utils/basePath";
+import { apiFetch } from "@/utils/basePath";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { Toggle, Section, I } from "./StudioIcons";
+import { getWidgetEntry } from "./widgetForms/registry";
+import { STUDIO_CATEGORIES } from "@/lib/config";
 
-// ── Per-widget config forms ───────────────────────────────────
-function QuizWidgetForm({ widget, update }) {
-  const opts = widget.options || ["", "", "", ""];
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Question</div>
-        <textarea value={widget.question || ""} onChange={(e) => update({ question: e.target.value })} placeholder="Enter your quiz question…" style={{ minHeight: 52, resize: "vertical" }} />
-      </div>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Options <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400 }}>click ✓ to mark correct</span></div>
-        {opts.map((opt, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
-            <button
-              onClick={() => update({ correctIndex: i })}
-              style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${widget.correctIndex === i ? "#16a34a" : "var(--border)"}`, background: widget.correctIndex === i ? "#16a34a" : "var(--bg)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 11, flexShrink: 0, fontWeight: 700 }}
-            >{widget.correctIndex === i ? "✓" : ""}</button>
-            <input type="text" value={opt} onChange={(e) => { const next = [...opts]; next[i] = e.target.value; update({ options: next }); }} placeholder={`Option ${i + 1}`} style={{ flex: 1 }} />
-          </div>
-        ))}
-      </div>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Explanation <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400 }}>shown after answering</span></div>
-        <textarea value={widget.explanation || ""} onChange={(e) => update({ explanation: e.target.value })} placeholder="Brief explanation of the correct answer…" style={{ minHeight: 44, resize: "vertical" }} />
-      </div>
-    </div>
-  );
-}
-
-function NewsletterWidgetForm({ widget, update }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Headline</div>
-        <input type="text" value={widget.headline || ""} onChange={(e) => update({ headline: e.target.value })} placeholder="Get the Data Science Career Guide" />
-      </div>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Subtext</div>
-        <textarea value={widget.subtext || ""} onChange={(e) => update({ subtext: e.target.value })} placeholder="Join 40,000+ learners…" style={{ minHeight: 44, resize: "vertical" }} />
-      </div>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Button label</div>
-        <input type="text" value={widget.ctaLabel || ""} onChange={(e) => update({ ctaLabel: e.target.value })} placeholder="Subscribe →" />
-      </div>
-    </div>
-  );
-}
-
-function CourseMatchWidgetForm({ widget, update, studioCourses }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>Course</div>
-        <select value={widget.courseId || ""} onChange={(e) => update({ courseId: e.target.value || null })}>
-          <option value="">— Auto-match by domain tags —</option>
-          {studioCourses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
-      </div>
-      <div>
-        <div className="f-lbl" style={{ marginBottom: 5 }}>CTA headline</div>
-        <input type="text" value={widget.ctaHeadline || ""} onChange={(e) => update({ ctaHeadline: e.target.value })} placeholder="Ready to go deeper? Enroll now →" />
-      </div>
-    </div>
-  );
-}
-
-function NextStepsWidgetForm({ widget, update }) {
-  const steps = widget.steps || ["", "", ""];
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <div className="f-lbl" style={{ marginBottom: 2 }}>Steps</div>
-      {steps.map((step, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text3)", width: 16, flexShrink: 0, textAlign: "right" }}>{i + 1}.</span>
-          <input type="text" value={step} onChange={(e) => { const next = [...steps]; next[i] = e.target.value; update({ steps: next }); }} placeholder={`Step ${i + 1}…`} style={{ flex: 1 }} />
-          {steps.length > 1 && (
-            <button onClick={() => update({ steps: steps.filter((_, j) => j !== i) })} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text4)", fontSize: 16, lineHeight: 1, padding: "0 2px" }}>×</button>
-          )}
-        </div>
-      ))}
-      {steps.length < 6 && (
-        <button onClick={() => update({ steps: [...steps, ""] })} style={{ fontSize: 12, color: "var(--text3)", background: "none", border: "1px dashed var(--border)", borderRadius: 6, padding: "5px 10px", cursor: "pointer", marginTop: 2 }}>+ Add step</button>
-      )}
-    </div>
-  );
-}
-
-function WidgetConfigPanel({ widgetId, widget, dispatch, studioCourses }) {
+// Registry-driven widget configurator.
+// To add a new widget type, edit ./widgetForms/registry.js — no edits here.
+function WidgetConfigPanel({ widgetId, widget, dispatch, context }) {
   const update = (data) => dispatch({ type: "UPDATE_WIDGET", id: widgetId, data });
-  const typeLabels = { quiz: "Knowledge Check", newsletter: "Newsletter CTA", coursematch: "Course CTA", nextsteps: "AI Next Steps" };
-  const typeColors = { quiz: "#16a34a", newsletter: "#003b93", coursematch: "#4f46e5", nextsteps: "#b45309" };
-  const color = typeColors[widget.type] || "#888";
+  const entry = getWidgetEntry(widget.type);
+  if (!entry) return null;
+  const { Form, label, color } = entry;
+
   return (
     <div style={{ background: "var(--bg2)", border: `2px solid ${color}`, borderRadius: 12, padding: 14, marginBottom: 0 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
           <span style={{ fontSize: 11, fontWeight: 700, color, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-            {typeLabels[widget.type] || widget.type} Widget
+            {label} Widget
           </span>
         </div>
-        <button onClick={() => dispatch({ type: "SET_ACTIVE_WIDGET", id: null })} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 16, lineHeight: 1, padding: 0 }}>×</button>
+        <button
+          onClick={() => dispatch({ type: "SET_ACTIVE_WIDGET", id: null })}
+          style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 16, lineHeight: 1, padding: 0 }}
+        >×</button>
       </div>
-      {widget.type === "quiz"        && <QuizWidgetForm       widget={widget} update={update} />}
-      {widget.type === "newsletter"  && <NewsletterWidgetForm  widget={widget} update={update} />}
-      {widget.type === "coursematch" && <CourseMatchWidgetForm widget={widget} update={update} studioCourses={studioCourses} />}
-      {widget.type === "nextsteps"   && <NextStepsWidgetForm   widget={widget} update={update} />}
+      <Form widget={widget} update={update} context={context} />
     </div>
   );
 }
-import {
-  STUDIO_CATEGORIES,
-} from "@/lib/config";
 
 export default function DetailsPanel({ state, dispatch, set, showToast, isSuperAdmin }) {
   const fileInputRef = useRef(null);
   const cardImageInputRef = useRef(null);
   const squareImageInputRef = useRef(null);
-  const [categories, setCategories] = useState(STUDIO_CATEGORIES);
-  const [studioCourses, setStudioCourses] = useState([]);
 
-  // Fetch topics from DB (admin-managed) and merge with config defaults
-  useEffect(() => {
-    apiFetch("/api/topics")
-      .then((r) => r.ok ? r.json() : [])
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setCategories(data);
-        } else {
-          // fallback: merge from published post categories
-          apiFetch("/api/categories")
-            .then((r) => r.ok ? r.json() : [])
-            .then((cats) => {
-              if (Array.isArray(cats) && cats.length > 0) {
-                setCategories(Array.from(new Set([...STUDIO_CATEGORIES, ...cats])));
-              }
-            })
-            .catch(() => {});
-        }
-      })
-      .catch(() => {});
-
-    // Fetch courses from DB
-    apiFetch("/api/courses")
-      .then((r) => r.ok ? r.json() : [])
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setStudioCourses(data.map((c) => ({ id: c.id, name: c.title })));
-        }
-      })
-      .catch(() => {});
-  }, []);
+  // Topics + courses are fetched once by useStudioDraft on mount; this panel
+  // just reads from session state. Previously each tab switch unmounted the
+  // panel and re-fired both fetches.
+  const categories = state.studioTopics?.length ? state.studioTopics : STUDIO_CATEGORIES;
+  const studioCourses = state.studioCourses || [];
 
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -223,7 +110,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
             widgetId={state.activeWidgetId}
             widget={state.widgets[state.activeWidgetId]}
             dispatch={dispatch}
-            studioCourses={studioCourses}
+            context={{ studioCourses }}
           />
         </div>
       )}
@@ -389,8 +276,8 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
         {isSuperAdmin && (
           <div style={{ marginBottom: 20 }}>
             <div className="f-lbl" style={{ marginBottom: 6 }}>SELECT AUTHOR <span style={{ color: "var(--red)", fontSize: 11 }}>*</span></div>
-            <select 
-              value={state.authorId} 
+            <select
+              value={state.authorId}
               onChange={(e) => set("authorId", e.target.value)}
               style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)" }}
             >
@@ -482,7 +369,7 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
       {/* Danger Zone / Status Management */}
       {state.editingPostId && state.status === "Published" && (
         <div style={{ marginTop: 12, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-          <button 
+          <button
             className="revert-draft-btn"
             onClick={() => {
               const post = state.allPosts.find(p => p.id === state.editingPostId);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import useStudioDraft from "@/hooks/useStudioDraft";
@@ -29,21 +29,23 @@ export default function StudioLayout({ children }) {
     clearDraftOnSuccess,
   } = useStudioDraft();
 
-  const authorSlug = authorProfile?.slug || "al-editorial";
-  const dynamicAuthor = {
-    slug: authorSlug,
+  // Memoized so StudioContext.Provider doesn't see a new value on every render
+  // of this layout — which would force every child consumer (sidebar, editor,
+  // every Studio page) to re-render and re-run effects (incl. data fetches).
+  const dynamicAuthor = useMemo(() => ({
+    slug: authorProfile?.slug || "al-editorial",
     name: authorProfile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Author",
     image: authorProfile?.image || user?.user_metadata?.avatar_url || "/authors/default.svg",
     initials: authorProfile?.initials || user?.user_metadata?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || "U",
     is_super_admin: authorProfile?.is_super_admin || false,
     email: user?.email,
-  };
+  }), [authorProfile, user]);
 
   useEffect(() => {
     // Force light mode in studio regardless of system settings
     document.documentElement.classList.remove("dark");
     document.documentElement.style.colorScheme = "light";
-    
+
     // Optional: if you want to restore dark mode when leaving studio, 
     // you'd need to check localStorage/matchMedia here. 
     // But usually, removing it is enough for the "remove dark theme" request.
@@ -64,7 +66,10 @@ export default function StudioLayout({ children }) {
     if (normalizedPath !== '/studio') router.push('/studio');
   };
 
-  const contextValue = {
+  // Same reasoning as dynamicAuthor — fresh object literal would invalidate
+  // the context on every render. All function members are useCallback'd
+  // inside useStudioDraft, so referential stability here is what we expect.
+  const contextValue = useMemo(() => ({
     state,
     set,
     setMany,
@@ -80,7 +85,11 @@ export default function StudioLayout({ children }) {
     signOut,
     user,
     authorProfile,
-  };
+  }), [
+    state, set, setMany, dispatch, showToast,
+    fetchAllPosts, clearEditor, loadPostForEdit, restoreDraft, discardDraft, clearDraftOnSuccess,
+    dynamicAuthor, signOut, user, authorProfile,
+  ]);
 
   if (isLoginPage) {
     return (

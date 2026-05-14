@@ -2,6 +2,7 @@
  * Server-only utility for fetching the global site configuration.
  * Import only in Server Components or API routes — never in "use client" files.
  */
+import { cache } from 'react';
 import { getServiceClient } from './supabase';
 import { SALARY_PREVIEW_ROWS } from './config';
 
@@ -102,8 +103,13 @@ export const DEFAULT_ZONES = {
  * Fetch the global site config from Supabase.
  * Returns a `zones` dict keyed by zone name.
  * Falls back to DEFAULT_ZONES if the table is empty or unavailable.
+ *
+ * Wrapped in React's `cache()` so that during a single server render, all
+ * callers (layout, page, generateMetadata, server components) share one
+ * Supabase round-trip instead of each issuing their own. The cache is
+ * per-request — it does not persist across requests.
  */
-export async function getSiteConfig() {
+export const getSiteConfig = cache(async function getSiteConfig() {
   try {
     const db = getServiceClient();
     const { data, error } = await db
@@ -115,28 +121,28 @@ export async function getSiteConfig() {
     if (error) throw error;
 
     const rawZones = data?.zones;
-    const homepageRaw = (rawZones && Array.isArray(rawZones.homepage) && rawZones.homepage.length > 0) 
-        ? rawZones.homepage 
-        : DEFAULT_HOMEPAGE_WIDGETS;
+    const homepageRaw = (rawZones && Array.isArray(rawZones.homepage) && rawZones.homepage.length > 0)
+      ? rawZones.homepage
+      : DEFAULT_HOMEPAGE_WIDGETS;
 
     const rawBlog = rawZones?.blog_page;
     const zones = {
-        article_sidebar: (rawZones && Array.isArray(rawZones.article_sidebar) && rawZones.article_sidebar.length > 0) ? rawZones.article_sidebar : DEFAULT_ARTICLE_SIDEBAR,
-        homepage:        homepageRaw,
-        course_page:     (rawZones && Array.isArray(rawZones.course_page)) ? rawZones.course_page : [],
-        global_footer:   (rawZones && Array.isArray(rawZones.global_footer)) ? rawZones.global_footer : [],
-        blog_page: {
-          featured_slugs: Array.isArray(rawBlog?.featured_slugs) ? rawBlog.featured_slugs : [],
-          carousels:      Array.isArray(rawBlog?.carousels) ? rawBlog.carousels : [],
-        },
+      article_sidebar: (rawZones && Array.isArray(rawZones.article_sidebar) && rawZones.article_sidebar.length > 0) ? rawZones.article_sidebar : DEFAULT_ARTICLE_SIDEBAR,
+      homepage: homepageRaw,
+      course_page: (rawZones && Array.isArray(rawZones.course_page)) ? rawZones.course_page : [],
+      global_footer: (rawZones && Array.isArray(rawZones.global_footer)) ? rawZones.global_footer : [],
+      blog_page: {
+        featured_slugs: Array.isArray(rawBlog?.featured_slugs) ? rawBlog.featured_slugs : [],
+        carousels: Array.isArray(rawBlog?.carousels) ? rawBlog.carousels : [],
+      },
     };
 
     // Safety Net: Ensure 'homepage' ALWAYS contains a 'posts_grid' widget
     if (!zones.homepage.some(w => w.type === 'posts_grid')) {
-        zones.homepage = [
-            { id: 'safety-posts', type: 'posts_grid', enabled: true, config: { title: 'Recent Blog Posts' } },
-            ...zones.homepage
-        ];
+      zones.homepage = [
+        { id: 'safety-posts', type: 'posts_grid', enabled: true, config: { title: 'Recent Blog Posts' } },
+        ...zones.homepage
+      ];
     }
 
     return {
@@ -151,4 +157,4 @@ export async function getSiteConfig() {
       updatedBy: '',
     };
   }
-}
+});

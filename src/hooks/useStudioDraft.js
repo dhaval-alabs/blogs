@@ -104,6 +104,13 @@ const INITIAL_STATE = {
     ai: false, author: false, discussion: false, advanced: false,
   },
   allAuthors: [],
+
+  // Session-scoped catalog data, fetched once by the hook on mount and
+  // shared across every panel. Previously DetailsPanel fetched these
+  // inside its own useEffect, which fired on every tab switch because
+  // the panel unmounts when activeTab changes.
+  studioTopics: [],
+  studioCourses: [],
 };
 
 // ── Reducer ──────────────────────────────────────────────────
@@ -150,10 +157,10 @@ function studioReducer(state, action) {
 
     case "ADD_WIDGET": {
       const widgetDefaults = {
-        quiz:        { question: "", options: ["", "", "", ""], correctIndex: 0, explanation: "" },
-        newsletter:  { headline: "", subtext: "", ctaLabel: "Subscribe →" },
+        quiz: { question: "", options: ["", "", "", ""], correctIndex: 0, explanation: "" },
+        newsletter: { headline: "", subtext: "", ctaLabel: "Subscribe →" },
         coursematch: { courseId: null, ctaHeadline: "" },
-        nextsteps:   { steps: ["", "", ""] },
+        nextsteps: { steps: ["", "", ""] },
       };
       return {
         ...state,
@@ -246,7 +253,7 @@ function studioReducer(state, action) {
       const rawDate = p.publishedAt || p.published_at || "";
       let publishDate = "";
       if (rawDate) {
-        try { const d = new Date(rawDate); if (!isNaN(d.getTime())) publishDate = d.toISOString().slice(0, 10); } catch {}
+        try { const d = new Date(rawDate); if (!isNaN(d.getTime())) publishDate = d.toISOString().slice(0, 10); } catch { }
       }
       return {
         ...state,
@@ -325,6 +332,7 @@ function buildDraftPayload(s) {
     featuredImage: s.featuredImage, cardImage: s.cardImage, squareImage: s.squareImage,
     altText: s.altText, focusKeyword: s.focusKeyword, metaTitle: s.metaTitle,
     metaDesc: s.metaDesc, ogImage: s.ogImage, schemaType: s.schemaType, canonicalUrl: s.canonicalUrl,
+    noIndex: s.noIndex,
     entityTags: s.entityTags,
     relatedPostIds: s.relatedPostIds, aiInclusionEnabled: s.aiInclusionEnabled,
     authorBio: s.authorBio, factChecker: s.factChecker, lastReviewedDate: s.lastReviewedDate,
@@ -371,6 +379,37 @@ export default function useStudioDraft() {
     dispatch({ type: "SET", field: "toast", value: { msg, type, id: Date.now() } });
   }, []);
 
+  // Fetch session-scoped catalog data (topics + courses) once on mount.
+  // These are consumed by DetailsPanel and CourseMatchForm; lifting the
+  // fetch out of the panel prevents a re-fetch on every Details/SEO/Advanced
+  // tab switch (the panel unmounts/remounts on tab change).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [topicsRes, coursesRes] = await Promise.all([
+          fetch('/api/topics'),
+          fetch('/api/courses'),
+        ]);
+        const topics = topicsRes.ok ? await topicsRes.json() : [];
+        const courses = coursesRes.ok ? await coursesRes.json() : [];
+        if (cancelled) return;
+        dispatch({
+          type: 'SET_MANY',
+          payload: {
+            studioTopics: Array.isArray(topics) ? topics : [],
+            studioCourses: Array.isArray(courses)
+              ? courses.map((c) => ({ id: c.id, name: c.title }))
+              : [],
+          },
+        });
+      } catch (err) {
+        console.error('useStudioDraft catalog fetch failed:', err);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // Check for saved draft on mount
   useEffect(() => {
     const saved = localStorage.getItem(STUDIO_DRAFT_KEY);
@@ -380,7 +419,7 @@ export default function useStudioDraft() {
         if (draft.postBody) {
           dispatch({ type: "SET_MANY", payload: { draftData: draft, showDraftBanner: true } });
         }
-      } catch {}
+      } catch { }
     }
   }, []);
 
@@ -412,7 +451,7 @@ export default function useStudioDraft() {
     state.postBody, state.postTitle, state.slug, state.excerpt, state.category,
     state.authorId, state.skill, state.tags, state.featuredImage, state.cardImage, state.squareImage, state.widgets,
     state.focusKeyword, state.metaTitle, state.metaDesc, state.ogImage,
-    state.schemaType, state.canonicalUrl, 
+    state.schemaType, state.canonicalUrl,
     state.entityTags,
     state.relatedPostIds, state.aiInclusionEnabled, state.authorBio,
     state.factChecker, state.lastReviewedDate, state.qaEnabled,
@@ -452,12 +491,14 @@ export default function useStudioDraft() {
     };
 
     if (state.postBody) {
-      dispatch({ type: "SET", field: "confirmDialog", value: {
-        title: "Start New Post?",
-        message: "Your current unsaved changes will be lost. Are you sure you want to start a new post?",
-        confirmText: "Start New Post",
-        onConfirm: doClear
-      }});
+      dispatch({
+        type: "SET", field: "confirmDialog", value: {
+          title: "Start New Post?",
+          message: "Your current unsaved changes will be lost. Are you sure you want to start a new post?",
+          confirmText: "Start New Post",
+          onConfirm: doClear
+        }
+      });
     } else {
       doClear();
     }
