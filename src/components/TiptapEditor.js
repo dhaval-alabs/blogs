@@ -14,7 +14,7 @@ import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { common, createLowlight } from 'lowlight';
 import './TiptapEditor.css';
-import { ImageIcon, Video, Code, Plus, MessageSquare, HelpCircle, Mail, LayoutGrid, GraduationCap, Table2 } from 'lucide-react';
+import { ImageIcon, Video, Code, Plus, MessageSquare, HelpCircle, Mail, LayoutGrid, GraduationCap, Table2, FileText } from 'lucide-react';
 import { CommentMark } from './studio/CommentMark';
 import TiptapComments from './studio/TiptapComments';
 
@@ -319,6 +319,87 @@ function CourseMatchWidget({ node, updateAttributes, deleteNode }) {
   );
 }
 
+// ── Report CTA Widget ─────────────────────────────────────────
+// Tints a hex accent color with a lowercase 2-char alpha suffix.
+// 8 ≈ 5% (tint background), 33 ≈ 20% (border), kept as constants so the
+// editor preview and the public renderer agree.
+const TINT_BG_ALPHA = "14";     // ~8%
+const TINT_BORDER_ALPHA = "55"; // ~33%
+const tint = (hex, alpha) => `${hex}${alpha}`;
+
+function ReportCtaWidget({ node, updateAttributes, deleteNode }) {
+  const {
+    reportEyebrow = "New Report",
+    reportTitle = "",
+    reportTagline = "",
+    reportUrl = "/free-resources",
+    reportCtaLabel = "Download Report",
+    reportAccent = "#7c3aed",
+  } = node.attrs;
+  const isEmpty = !reportTitle.trim() && !reportTagline.trim();
+  const [isEditing, setIsEditing] = useState(isEmpty);
+
+  const bgTint = tint(reportAccent, TINT_BG_ALPHA);
+  const borderTint = tint(reportAccent, TINT_BORDER_ALPHA);
+
+  return (
+    <WidgetShell color={reportAccent} isEmpty={isEmpty} isEditing={isEditing} onEdit={() => setIsEditing(true)} onDone={() => setIsEditing(false)} onDelete={deleteNode}>
+      {isEditing ? (
+        <div style={{ background: bgTint, border: `2px dashed ${borderTint}`, borderRadius: 12, padding: "20px 24px" }} onKeyDown={stopKey} onKeyUp={stopKey}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <FileText size={15} color={reportAccent} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: reportAccent, textTransform: "uppercase", letterSpacing: "0.06em" }}>Report CTA</span>
+          </div>
+          {[
+            { key: "reportEyebrow",  label: "Eyebrow badge", placeholder: "New Report" },
+            { key: "reportTitle",    label: "Report title",  placeholder: "Agentic AI in India's Growth 2026" },
+            { key: "reportTagline",  label: "Tagline",       placeholder: "Download the report" },
+            { key: "reportCtaLabel", label: "Button label",  placeholder: "Download Report" },
+            { key: "reportUrl",      label: "Report link",   placeholder: "/free-resources" },
+          ].map(({ key, label, placeholder }) => (
+            <div key={key} style={{ marginBottom: 12 }}>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#374151", marginBottom: 5, textTransform: "uppercase" }}>{label}</label>
+              <input type="text" value={node.attrs[key] ?? ""} onChange={(e) => updateAttributes({ [key]: e.target.value })} onKeyDown={stopKey} onKeyUp={stopKey} placeholder={placeholder} style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: `1px solid ${borderTint}`, fontSize: 13, background: "#fff", outline: "none", boxSizing: "border-box" }} />
+            </div>
+          ))}
+          <div style={{ marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#374151", marginBottom: 5, textTransform: "uppercase" }}>Accent color</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="color" value={reportAccent} onChange={(e) => updateAttributes({ reportAccent: e.target.value })} onKeyDown={stopKey} onKeyUp={stopKey} style={{ width: 40, height: 32, padding: 0, border: `1px solid ${borderTint}`, borderRadius: 6, cursor: "pointer", background: "transparent" }} />
+              <input type="text" value={reportAccent} onChange={(e) => updateAttributes({ reportAccent: e.target.value })} onKeyDown={stopKey} onKeyUp={stopKey} placeholder="#7c3aed" style={{ flex: 1, padding: "8px 10px", borderRadius: 8, border: `1px solid ${borderTint}`, fontSize: 13, background: "#fff", outline: "none", boxSizing: "border-box", fontFamily: "monospace" }} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ background: bgTint, border: `1px solid ${borderTint}`, borderRadius: 12, padding: "20px 24px", userSelect: "none" }}>
+          {isEmpty ? (
+            <div className="widget-empty-state" style={{ background: bgTint, border: `2px dashed ${borderTint}` }}>
+              <div className="widget-empty-state-icon"><FileText size={26} color={borderTint} /></div>
+              <div className="widget-empty-state-text" style={{ color: reportAccent }}>📑 Report CTA — click Edit to configure</div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+              <div style={{ width: 48, height: 48, background: reportAccent, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <FileText size={22} color="#fff" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: reportAccent, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{reportEyebrow || "New Report"}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#1a1a2e", marginBottom: 6, lineHeight: 1.3 }}>{reportTitle || "Your report title"}</div>
+                {reportTagline.trim() && <div style={{ fontSize: 13, color: reportAccent, marginBottom: 12, lineHeight: 1.5 }}>{reportTagline}</div>}
+                {reportUrl ? (
+                  <a href={reportUrl} target="_blank" rel="noopener noreferrer" style={{ background: reportAccent, color: "#fff", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 700, display: "inline-block", marginTop: reportTagline.trim() ? 0 : 8, textDecoration: "none" }}>{reportCtaLabel || "Download Report"} →</a>
+                ) : (
+                  <div style={{ background: reportAccent, color: "#fff", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 700, display: "inline-block", marginTop: reportTagline.trim() ? 0 : 8 }}>{reportCtaLabel || "Download Report"} →</div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </WidgetShell>
+  );
+}
+
 // ── Next Steps Widget ─────────────────────────────────────────
 function NextStepsWidget({ node, updateAttributes, deleteNode }) {
   const rawSteps = node.attrs.steps || "[]";
@@ -442,6 +523,7 @@ function WidgetView(props) {
       case 'quiz':        return <QuizWidget        {...props} />;
       case 'newsletter':  return <NewsletterWidget  {...props} />;
       case 'coursematch': return <CourseMatchWidget {...props} />;
+      case 'reportcta':   return <ReportCtaWidget   {...props} />;
       case 'nextsteps':   return <NextStepsWidget   {...props} />;
       default: return (
         <NodeViewWrapper>
@@ -478,6 +560,13 @@ const WidgetNode = Node.create({
       courseName:   { default: '' },
       ctaHeadline:  { default: '' },
       courseUrl:    { default: '' },
+      // Report CTA
+      reportEyebrow:  { default: 'New Report' },
+      reportTitle:    { default: '' },
+      reportTagline:  { default: '' },
+      reportUrl:      { default: '/free-resources' },
+      reportCtaLabel: { default: 'Download Report' },
+      reportAccent:   { default: '#7c3aed' },
       // Next steps (array of {text, url} objects)
       steps:        { default: '[{"text":"","url":""},{"text":"","url":""},{"text":"","url":""}]' },
     };
@@ -501,6 +590,7 @@ const WidgetNode = Node.create({
           if (text === '[[quiz]]')        return { type: 'quiz' };
           if (text === '[[newsletter]]')  return { type: 'newsletter' };
           if (text === '[[coursematch]]') return { type: 'coursematch' };
+          if (text === '[[reportcta]]')   return { type: 'reportcta' };
           if (text === '[[nextsteps]]')   return { type: 'nextsteps' };
           return false;
         },
@@ -954,6 +1044,7 @@ function PlusMenu({ editor, outerRef }) {
             { wtype: 'quiz',        label: 'Insert Quiz',       icon: <HelpCircle  size={15} strokeWidth={1.5} className="text-green-500"  /> },
             { wtype: 'newsletter',  label: 'Insert Newsletter',  icon: <Mail        size={15} strokeWidth={1.5} className="text-blue-500"   /> },
             { wtype: 'coursematch', label: 'Insert Course CTA',  icon: <GraduationCap size={15} strokeWidth={1.5} className="text-indigo-500" /> },
+            { wtype: 'reportcta',   label: 'Insert Report CTA',  icon: <FileText    size={15} strokeWidth={1.5} className="text-violet-500" /> },
             { wtype: 'nextsteps',   label: 'Insert Next Steps',  icon: <LayoutGrid  size={15} strokeWidth={1.5} className="text-amber-500"  /> },
           ].map(({ wtype, label, icon }) => (
             <button

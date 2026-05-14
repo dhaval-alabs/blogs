@@ -160,6 +160,7 @@ function studioReducer(state, action) {
         quiz: { question: "", options: ["", "", "", ""], correctIndex: 0, explanation: "" },
         newsletter: { headline: "", subtext: "", ctaLabel: "Subscribe →" },
         coursematch: { courseId: null, ctaHeadline: "" },
+        reportcta: { reportEyebrow: "New Report", reportTitle: "", reportTagline: "", reportUrl: "/free-resources", reportCtaLabel: "Download Report", reportAccent: "#7c3aed" },
         nextsteps: { steps: ["", "", ""] },
       };
       return {

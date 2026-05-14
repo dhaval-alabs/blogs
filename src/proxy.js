@@ -37,52 +37,53 @@ export async function proxy(request) {
     return NextResponse.redirect(url.toString(), 301);
   }
 
-  let supabaseResponse = NextResponse.next({ request });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // Validate the user's session
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   // Normalize pathname so trailing-slash canonicalization (next.config.mjs
   // `trailingSlash: true`) doesn't desync these checks and cause a redirect loop.
   const pathname = request.nextUrl.pathname.replace(/\/$/, '') || '/';
+  const isStudioPath = pathname.startsWith('/studio');
 
-  // If there's no user, and they are trying to access /studio pages (but not /studio/login)
-  if (!user && pathname.startsWith('/studio') && pathname !== '/studio/login') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/studio/login/';
-    return NextResponse.redirect(url);
+  // Auth check is ONLY needed for /studio/* routes. Running it on every
+  // public page hit (blog, homepage, bot crawls, prefetches) burned a
+  // Supabase auth round-trip per request — the single biggest fixed cost
+  // in the proxy. Skipped for public paths.
+  if (isStudioPath) {
+    let supabaseResponse = NextResponse.next({ request });
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll(); },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user && pathname !== '/studio/login') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/studio/login/';
+      return NextResponse.redirect(url);
+    }
+    if (user && pathname === '/studio/login') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/studio/';
+      return NextResponse.redirect(url);
+    }
+
+    return supabaseResponse;
   }
 
-  // If there IS a user, and they are trying to view the login page, redirect to studio
-  if (user && pathname === '/studio/login') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/studio/';
-    return NextResponse.redirect(url);
-  }
-  // ── Dynamic Redirects ───────────────────────────────────────────
+  // ── Dynamic Redirects (public paths only) ───────────────────────
   // Reads from Vercel Edge Config (<1ms at the edge) with a Supabase
   // fallback for local dev. See src/lib/infrastructure/redirects.js.
   const dynamicRedirect = await lookupRedirect(pathname);
@@ -93,18 +94,25 @@ export async function proxy(request) {
     return NextResponse.redirect(dest, dynamicRedirect.type || 301);
   }
 
-  return supabaseResponse;
+  return NextResponse.next({ request });
 }
 
 export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico
+     * - api                — internal API routes
+     * - _next/static       — static assets
+     * - _next/image        — image optimization
+     * - _next/data         — RSC data fetches (proxy fires anyway, but skip explicit ones)
+     * - favicon.ico, robots.txt, sitemap.xml, manifest.* — metadata files
+     * - rss, feed          — RSS feeds, hit by aggregators every few minutes
+     * - .well-known/*      — security.txt, etc.
+     * - any path with a static-asset file extension
+     *
+     * Excluding these saves a proxy invocation entirely — that's a redirect
+     * lookup + cold-start cost avoided per match, on top of any DB calls.
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|robots\\.txt|sitemap\\.xml|manifest\\.|rss|feed|\\.well-known|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|woff2?|ttf|otf|txt|xml|json)$).*)',
   ],
 };

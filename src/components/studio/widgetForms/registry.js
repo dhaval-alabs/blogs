@@ -14,11 +14,13 @@ import QuizForm from "./QuizForm";
 import NewsletterForm from "./NewsletterForm";
 import CourseMatchForm from "./CourseMatchForm";
 import NextStepsForm from "./NextStepsForm";
+import ReportCtaForm from "./ReportCtaForm";
 
 export const WIDGET_REGISTRY = {
   quiz:        { Form: QuizForm,        label: "Knowledge Check", color: "#16a34a" },
   newsletter:  { Form: NewsletterForm,  label: "Newsletter CTA",   color: "#003b93" },
   coursematch: { Form: CourseMatchForm, label: "Course CTA",       color: "#4f46e5" },
+  reportcta:   { Form: ReportCtaForm,   label: "Report CTA",       color: "#7c3aed" },
   nextsteps:   { Form: NextStepsForm,   label: "AI Next Steps",    color: "#b45309" },
 };
 

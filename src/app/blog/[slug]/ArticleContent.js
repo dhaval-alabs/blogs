@@ -412,9 +412,10 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                 "[[newsletter]]":  "newsletter",
                 "[[nextsteps]]":   "nextsteps",
                 "[[coursematch]]": "coursematch",
+                "[[reportcta]]":   "reportcta",
               };
 
-              const parts = content.split(/(\[\[newsletter\]\]|\[\[nextsteps\]\]|\[\[coursematch\]\])/gi);
+              const parts = content.split(/(\[\[newsletter\]\]|\[\[nextsteps\]\]|\[\[coursematch\]\]|\[\[reportcta\]\])/gi);
 
               // Helper to render specific widget
               const renderWidget = (type, attrs = {}, widgetKey = type) => {
@@ -499,6 +500,44 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                             <span className="leading-snug">{step.text}</span>
                           </a>
                         ))}
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (type === "reportcta") {
+                  const reportEyebrow  = attrs.reportEyebrow  || "New Report";
+                  const reportTitle    = attrs.reportTitle    || "New Report";
+                  const reportTagline  = attrs.reportTagline  || "";
+                  const reportUrl      = attrs.reportUrl      || "/free-resources";
+                  const reportCtaLabel = attrs.reportCtaLabel || "Download Report";
+                  const accent         = attrs.reportAccent   || "#7c3aed";
+                  // Tint constants must match TiptapEditor.js so the editor preview
+                  // and the rendered page look identical.
+                  const bgTint     = `${accent}14`;
+                  const borderTint = `${accent}55`;
+
+                  return (
+                    <div key={widgetKey} style={{ background: bgTint, border: `1px solid ${borderTint}`, borderRadius: 12, padding: "20px 24px", margin: "2.5rem 0" }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+                        <div style={{ width: 48, height: 48, background: accent, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                          </svg>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: accent, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{reportEyebrow}</div>
+                          <div style={{ fontSize: 16, fontWeight: 800, color: "#1a1a2e", marginBottom: reportTagline ? 6 : 10, lineHeight: 1.3 }}>{reportTitle}</div>
+                          {reportTagline && <div style={{ fontSize: 13, color: accent, marginBottom: 12, lineHeight: 1.5 }}>{reportTagline}</div>}
+                          <a href={reportUrl}
+                            style={{ display: "inline-block", background: accent, color: "#fff", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
+                            {reportCtaLabel} →
+                          </a>
+                        </div>
                       </div>
                     </div>
                   );
@@ -590,7 +629,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                           }
 
                           // Handle other inline widgets correctly with custom attributes
-                          if (["newsletter", "nextsteps", "coursematch"].includes(widgetType)) {
+                          if (["newsletter", "nextsteps", "coursematch", "reportcta"].includes(widgetType)) {
                             return renderWidgetOnce(widgetType, attrs, `${widgetType}-${widgetSeq++}`);
                           }
 

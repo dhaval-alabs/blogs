@@ -144,27 +144,60 @@ export const getPostBySlug = cache(async function getPostBySlug(slug) {
 });
 
 /** Check whether a URL slug resolves to a known post category.
- *  `categorySlug` is the URL-safe form (e.g. "data-analytics"). */
-export const isCategorySlug = cache(async function isCategorySlug(categorySlug) {
-  if (!categorySlug) return false;
-  const target = categorySlug.toLowerCase();
+ *  `categorySlug` is the URL-safe form (e.g. "data-analytics").
+ *
+ *  Cached at module scope for 5 minutes — categories change only when an
+ *  admin renames or adds one, so a stale read for a few minutes is fine.
+ *  Previously this ran on every /blog/<slug> render and pulled 500 rows
+ *  each time; it was the single biggest contributor to DB request volume.
+ *
+ *  In serverless each function instance warms its own cache; that's fine —
+ *  the goal is to eliminate per-request scans, not achieve global coherence.
+ */
+const CATEGORY_TTL_MS = 5 * 60 * 1000;
+let _categorySetCache = { set: null, expiresAt: 0, inflight: null };
 
-  // Fetch distinct categories only once per request; reuse in memory.
+async function loadCategorySet() {
   const { data, error } = await supabase
     .from('posts')
     .select('category')
     .not('category', 'is', null)
     .neq('category', '')
     .limit(500);
-  if (error) return false;
-
+  if (error) return new Set();
   const seen = new Set();
   for (const r of data || []) {
     const s = (r.category || '').toLowerCase().trim().replace(/\s+/g, '-');
-    if (s && !seen.has(s)) seen.add(s);
+    if (s) seen.add(s);
   }
-  return seen.has(target);
-});
+  return seen;
+}
+
+export async function isCategorySlug(categorySlug) {
+  if (!categorySlug) return false;
+  const target = categorySlug.toLowerCase();
+  const now = Date.now();
+
+  if (!_categorySetCache.set || now > _categorySetCache.expiresAt) {
+    // Single-flight: if multiple concurrent calls find the cache stale,
+    // only one of them issues the query; the rest await the same promise.
+    if (!_categorySetCache.inflight) {
+      _categorySetCache.inflight = loadCategorySet().then((set) => {
+        _categorySetCache = { set, expiresAt: Date.now() + CATEGORY_TTL_MS, inflight: null };
+        return set;
+      }).catch((err) => {
+        _categorySetCache.inflight = null;
+        throw err;
+      });
+    }
+    try {
+      await _categorySetCache.inflight;
+    } catch {
+      return false;
+    }
+  }
+  return _categorySetCache.set?.has(target) ?? false;
+}
 
 /** Fetch posts for a specific category, merging Supabase and MDX sources.
  *  Handles slugs like "cyber-security" by converting them to labels. */

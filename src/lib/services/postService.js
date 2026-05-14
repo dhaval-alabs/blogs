@@ -183,8 +183,9 @@ export async function updatePost(id, payload) {
     if (original.slug !== slug) revalidateRoute(`/blog/${original.slug}`);
     return { success: true, slug };
   } catch (error) {
-    console.error('updatePost failed:', error);
-    return { success: false, error: 'Failed to update post. Please try again.' };
+    const msg = error?.message || error?.toString() || 'Unknown error';
+    console.error('updatePost failed:', msg, error?.code, error?.details, error?.hint);
+    return { success: false, error: msg };
   }
 }
 
