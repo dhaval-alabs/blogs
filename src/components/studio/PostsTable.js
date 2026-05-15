@@ -22,16 +22,6 @@ function escapeCsv(value) {
   return str;
 }
 
-function stripHtml(html) {
-  if (!html) return "";
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function countWords(html) {
-  const text = stripHtml(html);
-  return text ? text.split(/\s+/).filter(Boolean).length : 0;
-}
-
 function formatBlogDate(dateStr, style = "short") {
   if (!dateStr) return "";
   try {
@@ -40,62 +30,6 @@ function formatBlogDate(dateStr, style = "short") {
     if (style === "long") return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     return d.toISOString().slice(0, 10); // YYYY-MM-DD
   } catch { return dateStr; }
-}
-
-function countInternalLinks(html) {
-  if (!html) return 0;
-  const linkMatches = html.matchAll(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi);
-  let count = 0;
-  const internalDomains = ["analytixlabs.co.in", "localhost"];
-  for (const match of linkMatches) {
-    const href = match[1];
-    if (href.startsWith("/") || href.startsWith("#") || internalDomains.some((d) => href.includes(d))) count++;
-  }
-  const widgetMatches = html.matchAll(/data-widget=["']coursematch["']/gi);
-  for (const _ of widgetMatches) count++;
-  return count;
-}
-
-function countExternalLinks(html) {
-  if (!html) return 0;
-  const internalDomains = ["analytixlabs.co.in", "localhost"];
-  const hrefMatches = [...html.matchAll(/\bhref=["']([^"']+)["']/gi)];
-  let count = 0;
-  for (const match of hrefMatches) {
-    const href = match[1];
-    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) continue;
-    if (href.startsWith("/") || internalDomains.some((d) => href.includes(d))) continue;
-    if (/^https?:\/\//i.test(href)) count++;
-  }
-  return count;
-}
-
-function computeKeywordDensity(html, focusKeyword) {
-  if (!focusKeyword || !html) return "";
-  const text = html.replace(/<[^>]+>/g, " ").toLowerCase();
-  const words = text.split(/\s+/).filter(Boolean).length;
-  if (words === 0) return "";
-  const escaped = focusKeyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const matches = text.match(new RegExp(`\\b${escaped}\\b`, "gi"));
-  return parseFloat((((matches ? matches.length : 0) / words) * 100).toFixed(1));
-}
-
-function computeSeoScore(p) {
-  const seo = p.seo || {};
-  const kw = (seo.focusKeyword || "").toLowerCase().trim();
-  const metaTitle = (seo.metaTitle || p.title || "").toLowerCase();
-  const metaDesc = seo.metaDesc || p.excerpt || "";
-  const wordCount = countWords(p.content);
-  const internalLinks = countInternalLinks(p.content);
-  const density = kw && wordCount > 0 ? parseFloat(computeKeywordDensity(p.content, kw)) : 0;
-  const checks = [
-    kw && metaTitle.includes(kw),
-    metaDesc.length >= 50,
-    density >= 0.5 && density <= 3,
-    (p.altText || p.alt_text || "").trim().length >= 5,
-    internalLinks >= 2,
-  ];
-  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
 
 function isoToDateOnly(dateStr) {
