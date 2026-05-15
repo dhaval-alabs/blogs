@@ -493,13 +493,19 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                         </p>
                       </div>
                       <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {steps.map((step, i) => (
-                          <a key={i} href={step.url || "#"}
-                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] !text-slate-700 dark:!text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:!text-primary dark:hover:!text-[#adc6ff] hover:-translate-y-0.5 shadow-sm no-underline">
-                            <span className="material-symbols-outlined text-base text-slate-500">{step.icon || "arrow_forward"}</span>
-                            <span className="leading-snug">{step.text}</span>
-                          </a>
-                        ))}
+                        {steps.map((step, i) => {
+                          const url = step.url || "#";
+                          const isHash = url.startsWith("#");
+                          return (
+                            <a key={i} href={url}
+                              target={isHash ? undefined : "_blank"}
+                              rel={isHash ? undefined : "noopener noreferrer"}
+                              className="flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium transition-all bg-white dark:bg-[#0b1326] border-slate-200 dark:border-[#424754] !text-slate-700 dark:!text-[#c2c6d6] hover:border-primary/30 dark:hover:border-primary/60 hover:!text-primary dark:hover:!text-[#adc6ff] hover:-translate-y-0.5 shadow-sm no-underline">
+                              <span className="material-symbols-outlined text-base text-slate-500">{step.icon || "arrow_forward"}</span>
+                              <span className="leading-snug">{step.text}</span>
+                            </a>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -533,7 +539,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                           <div style={{ fontSize: 11, fontWeight: 700, color: accent, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{reportEyebrow}</div>
                           <div style={{ fontSize: 16, fontWeight: 800, color: "#1a1a2e", marginBottom: reportTagline ? 6 : 10, lineHeight: 1.3 }}>{reportTitle}</div>
                           {reportTagline && <div style={{ fontSize: 13, color: accent, marginBottom: 12, lineHeight: 1.5 }}>{reportTagline}</div>}
-                          <a href={reportUrl}
+                          <a href={reportUrl} target="_blank" rel="noopener noreferrer"
                             style={{ display: "inline-block", background: accent, color: "#fff", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
                             {reportCtaLabel} →
                           </a>
@@ -604,6 +610,18 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                         // to prevent duplication with our modern schema injection.
                         if (domNode.type === "script" || domNode.name === "script") {
                           return <></>;
+                        }
+
+                        // Force every body anchor to open in a new tab — except
+                        // in-page hash links (TOC / footnotes). Mutating attribs
+                        // is sufficient; returning undefined lets html-react-parser
+                        // continue with the modified node.
+                        if (domNode.type === "tag" && domNode.name === "a" && domNode.attribs) {
+                          const href = domNode.attribs.href || "";
+                          if (href && !href.startsWith("#")) {
+                            domNode.attribs.target = "_blank";
+                            domNode.attribs.rel = "noopener noreferrer";
+                          }
                         }
 
                         if (

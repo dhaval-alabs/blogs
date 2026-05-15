@@ -44,7 +44,13 @@ export default function HeroBanner({ post, bookmarked = false, onToggleBookmark 
             Featured Analysis
           </span>
           <h1 className="font-[family-name:var(--font-headline)] font-extrabold text-4xl md:text-5xl text-white leading-tight mb-4">
-            {post.title}
+            <Link
+              href={`/blog/${post.slug}`}
+              className="!text-white hover:opacity-90 transition-opacity"
+              aria-label={post.title}
+            >
+              {post.title}
+            </Link>
           </h1>
           {post.excerpt && (
             <p className="text-blue-100 text-base leading-relaxed mb-6 max-w-xl line-clamp-2">
