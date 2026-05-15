@@ -2,6 +2,13 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { I } from "./StudioIcons";
+import {
+  countWords,
+  countInternalLinks,
+  countExternalLinks,
+  computeKeywordDensity,
+  computeSeoScore,
+} from "@/lib/domain/posts/seo-utils";
 
 const POSTS_PER_PAGE = 25;
 
