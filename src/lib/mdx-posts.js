@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import { calculateReadTime, formatReadTime } from './readTime';
 
 const POSTS_DIR = path.join(process.cwd(), 'content', 'blog');
 
@@ -63,11 +64,13 @@ function formatDate(dateStr) {
   }
 }
 
-/** Calculate reading time from raw markdown text */
+/** Calculate reading time. MDX importer passes raw markdown; the shared util
+ *  handles fenced code blocks (```), images (![]), and prose at 238 wpm.
+ *  The regex-based extractor is HTML-oriented but treats markdown reasonably:
+ *  fenced code blocks survive as plain text and count as prose, which is fine —
+ *  markdown imports aren't the hot path. */
 function calcReadTime(text) {
-  const words = text.trim().split(/\s+/).length;
-  const mins = Math.max(1, Math.ceil(words / 200));
-  return `${mins} min read`;
+  return formatReadTime(calculateReadTime(text));
 }
 
 /**
@@ -99,7 +102,7 @@ export function mapMdxToPost(mdxPost, htmlContent = null) {
     category:       mdxPost.categories[0] || 'Data Science',
     domain_tags:    mdxPost.categories,
     skill_level:    null,
-    readTime:       calcReadTime(mdxPost.content),
+    readTime:       calcReadTime(htmlContent ?? mdxPost.content),
     authorId:       'analytixlabs',
     image:          mdxPost.featuredImage,
     status:         'Published',

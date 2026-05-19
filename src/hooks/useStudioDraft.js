@@ -2,6 +2,7 @@
 
 import { useReducer, useEffect, useRef, useCallback } from "react";
 import { STUDIO_DRAFT_KEY } from "@/lib/config";
+import { calculateReadTime } from "@/lib/readTime";
 
 // ── Initial state ────────────────────────────────────────────
 const INITIAL_STATE = {
@@ -354,7 +355,7 @@ export function buildPublishPayload(s, userId) {
     slug: s.slug || s.postTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, ""),
     excerpt: s.excerpt, content: s.postBody, category: s.category,
     domain_tags: s.tags, skill_level: s.skill,
-    readTime: `${s.readTime} min read`, authorId: userId || s.authorId,
+    readTime: `${Math.max(1, Number(s.readTime) || calculateReadTime(s.postBody))} min read`, authorId: userId || s.authorId,
     image: s.featuredImage,
     alt_text: s.altText,
     seo: { focusKeyword: s.focusKeyword, metaTitle: s.metaTitle || s.postTitle, metaDesc: s.metaDesc || s.excerpt, ogImage: s.ogImage || s.featuredImage, schemaType: s.schemaType, canonicalUrl: s.canonicalUrl, noIndex: s.noIndex },
@@ -430,10 +431,9 @@ export default function useStudioDraft() {
       dispatch({ type: "SET_MANY", payload: { wordCount: 0, readTime: 0 } });
       return;
     }
-    // Strip HTML tags to count only text words
     const text = state.postBody.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     const words = text ? text.split(' ').filter(Boolean).length : 0;
-    const minutes = Math.max(1, Math.ceil(words / 200));
+    const minutes = calculateReadTime(state.postBody);
     dispatch({ type: "SET_MANY", payload: { wordCount: words, readTime: minutes } });
   }, [state.postBody]);
 

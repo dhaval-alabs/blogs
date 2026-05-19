@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { parseReadTime } from "@/lib/readTime";
 
 export default function FeaturedSection({ posts = [] }) {
   if (posts.length === 0) return null;
@@ -14,7 +15,7 @@ export default function FeaturedSection({ posts = [] }) {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="font-[family-name:var(--font-headline)] font-black text-2xl md:text-3xl tracking-tight text-on-background dark:text-[#dae2fd] uppercase">
-            Today's Pick
+            Today&apos;s Pick
           </h2>
           <div className="h-1 w-12 bg-primary dark:bg-[#adc6ff] mt-2 rounded-full" />
         </div>
@@ -62,12 +63,14 @@ export default function FeaturedSection({ posts = [] }) {
                 </p>
               )}
 
-              <div className="mt-auto pt-6 border-t border-outline-variant/10 dark:border-[#424754] flex items-center gap-2 text-on-surface-variant dark:text-[#8c909f]">
-                <span className="material-symbols-outlined text-lg">schedule</span>
-                <span className="text-xs font-bold uppercase tracking-widest">
-                  {post.readTime || "5 min read"}
-                </span>
-              </div>
+              {parseReadTime(post.readTime) > 0 && (
+                <div className="mt-auto pt-6 border-t border-outline-variant/10 dark:border-[#424754] flex items-center gap-2 text-on-surface-variant dark:text-[#8c909f]">
+                  <span className="material-symbols-outlined text-lg">schedule</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">
+                    {parseReadTime(post.readTime)} min read
+                  </span>
+                </div>
+              )}
             </div>
           </Link>
         ))}

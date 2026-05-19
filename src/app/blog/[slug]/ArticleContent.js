@@ -12,6 +12,7 @@ import { likePostAction } from "@/app/actions";
 import "@/components/TiptapEditor.css";
 import parse from "html-react-parser";
 import { stripInlineColors } from "@/utils/sanitizeContent";
+import { resolveReadTime } from "@/lib/readTime";
 
 // ── Below-the-fold / heavy article components are code-split so the critical
 //    article markup renders first with minimum JS. All retain identical UX.
@@ -339,7 +340,10 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
               {post.updatedAt && post.updatedAt !== post.publishedAt && (
                 <><span className="opacity-30">·</span><span>Updated {formatBlogDate(post.updatedAt)}</span></>
               )}
-              {post.readTime && <><span className="opacity-30">·</span><span>{post.readTime}</span></>}
+              {(() => {
+                const mins = resolveReadTime(post.readTime, post.content);
+                return mins > 0 ? <><span className="opacity-30">·</span><span>{mins} min read</span></> : null;
+              })()}
               {post.skill_level && <><span className="opacity-30">·</span><span>{post.skill_level}</span></>}
             </div>
 

@@ -71,9 +71,34 @@ function formatDate(dateStr) {
   }
 }
 
-function calcReadTime(text) {
-  const words = text.trim().split(/\s+/).length;
-  return `${Math.max(1, Math.ceil(words / 200))} min read`;
+// Mirror of src/lib/readTime.js. Inlined here because this script runs
+// outside Next's module resolution (plain node ESM, no @/ alias). If you
+// change the model, change both.
+function calcReadTimeMinutes(html) {
+  if (!html || typeof html !== 'string') return 0;
+  let s = html;
+  const codeBlocks = (s.match(/<pre[\s>][\s\S]*?<\/pre>/gi) || []).length;
+  s = s.replace(/<pre[\s>][\s\S]*?<\/pre>/gi, ' ');
+  s = s.replace(/<code[\s>][\s\S]*?<\/code>/gi, ' ');
+  const images = (s.match(/<img\b[^>]*>/gi) || []).length;
+  const iframes = (s.match(/<iframe\b[\s\S]*?<\/iframe>/gi) || []).length;
+  s = s.replace(/<img\b[^>]*>/gi, ' ');
+  s = s.replace(/<iframe\b[\s\S]*?<\/iframe>/gi, ' ');
+  s = s.replace(/<figure\b[\s\S]*?<\/figure>/gi, ' ');
+  s = s.replace(/<script\b[\s\S]*?<\/script>/gi, ' ');
+  s = s.replace(/<style\b[\s\S]*?<\/style>/gi, ' ');
+  const text = s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const words = text ? text.split(' ').filter(Boolean).length : 0;
+  let imgSecs = 0;
+  for (let i = 0; i < images; i++) imgSecs += Math.max(3, 12 - i);
+  const totalMin = words / 238 + (codeBlocks * 30 + iframes * 30 + imgSecs) / 60;
+  if (totalMin <= 0) return 0;
+  return Math.max(1, Math.round(totalMin));
+}
+
+function calcReadTime(html) {
+  const n = calcReadTimeMinutes(html);
+  return n > 0 ? `${n} min read` : '';
 }
 
 async function markdownToHtml(md) {
@@ -112,7 +137,7 @@ async function mdxToRow({ data, content }) {
     category: categories[0] || "Data Science",
     domain_tags: categories,
     skill_level: "Beginner",
-    read_time: calcReadTime(content),
+    read_time: calcReadTime(htmlContent),
     author_id: "al-editorial",
     image: data.featuredImage || "",
     alt_text: data.title ? data.title.slice(0, 150) : "",

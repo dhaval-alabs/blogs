@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { parseReadTime } from "@/lib/readTime";
 
 /**
  * "Recommended for you" sidebar list.
@@ -36,9 +37,11 @@ export default function RecommendedPosts({ posts = [] }) {
               <h4 className="text-[13px] font-semibold leading-snug line-clamp-2 text-on-background dark:text-[#dae2fd] group-hover:text-primary dark:group-hover:text-[#adc6ff] transition-colors mb-1">
                 {post.title}
               </h4>
-              <span className="text-[11px] text-on-surface-variant dark:text-[#8c909f]">
-                {post.readTime || "5 min read"}
-              </span>
+              {parseReadTime(post.readTime) > 0 && (
+                <span className="text-[11px] text-on-surface-variant dark:text-[#8c909f]">
+                  {parseReadTime(post.readTime)} min read
+                </span>
+              )}
             </div>
           </Link>
         ))}
