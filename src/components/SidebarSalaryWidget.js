@@ -1,19 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SALARY_PREVIEW_ROWS } from "@/lib/config";
 
 /**
  * Sidebar salary teaser widget.
  *
- * @param {{ config?: { title?: string, rows?: Array, cta_label?: string, cta_url?: string } }} props
- * When `config` is omitted the component falls back to the static SALARY_PREVIEW_ROWS from lib/config.
+ * Behavior:
+ *   - Fetches /api/salary/preview on mount → 4 rows that rotate weekly,
+ *     backed by the Gemini-grounded salary_estimates cache.
+ *   - Falls back to the static SALARY_PREVIEW_ROWS in lib/config if the
+ *     endpoint fails or hasn't responded yet on first paint.
+ *   - Accepts a `config` prop to override title / cta / rows entirely (used
+ *     by the studio preview pane).
  */
 export default function SidebarSalaryWidget({ config }) {
   const title    = config?.title    || `India DS Salaries ${new Date().getFullYear()}`;
-  const rows     = config?.rows?.length ? config.rows : SALARY_PREVIEW_ROWS;
   const ctaLabel = config?.cta_label || "Full Salary Report + Calculator →";
   const ctaUrl   = config?.cta_url   || "/salary-hub";
+
+  const overrideRows = config?.rows?.length ? config.rows : null;
+
+  const [rows, setRows] = useState(overrideRows || SALARY_PREVIEW_ROWS);
+  const [loading, setLoading] = useState(!overrideRows);
+
+  useEffect(() => {
+    if (overrideRows) return; // studio override path — no fetch.
+    let cancelled = false;
+
+    fetch("/api/salary/preview")
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.ok && Array.isArray(data.rows) && data.rows.length > 0) {
+          setRows(data.rows);
+        }
+      })
+      .catch(() => { /* keep fallback rows */ })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [overrideRows]);
 
   return (
     <div className="rounded-2xl border p-5 bg-white dark:bg-[#0b1326] border-outline-variant/10 dark:border-[#424754] shadow-sm">
@@ -22,7 +50,7 @@ export default function SidebarSalaryWidget({ config }) {
       </span>
       <div className="flex flex-col divide-y divide-outline-variant/10 dark:divide-[#424754]/40">
         {rows.map(({ role, range, meta, badge }) => (
-          <div key={role} className="flex items-center justify-between py-3">
+          <div key={`${role}-${meta}`} className="flex items-center justify-between py-3">
             <div>
               <div className="text-[13px] font-bold text-on-background dark:text-[#dae2fd] flex items-center gap-2">
                 {role}
@@ -39,7 +67,7 @@ export default function SidebarSalaryWidget({ config }) {
                 {meta}
               </div>
             </div>
-            <span className="text-[13px] font-bold" style={{ color: "#16a34a" }}>
+            <span className={`text-[13px] font-bold ${loading ? "opacity-60" : ""}`} style={{ color: "#16a34a" }}>
               {range}
             </span>
           </div>

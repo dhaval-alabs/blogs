@@ -89,11 +89,36 @@ export const TOPIC_OPTIONS = [
 ];
 
 // ── Sidebar Salary Widget ─────────────────────────────────────────
+// Offline fallback rows. Used only when /api/salary/preview is unreachable.
 export const SALARY_PREVIEW_ROWS = [
   { role: "Data Scientist", range: "₹18–28 LPA", meta: "Bangalore · 3-5 yrs", badge: null },
   { role: "ML Engineer",    range: "₹18–28 LPA", meta: "Mumbai · 2-4 yrs",    badge: null },
   { role: "Data Analyst",   range: "₹10–20 LPA", meta: "Delhi NCR · 0-3 yrs", badge: null },
   { role: "AI Researcher",  range: "₹18–28 LPA", meta: "Pan India · 6+ yrs",  badge: "New" },
+];
+
+// Pool the sidebar widget rotates through. Each ISO week, 4 contiguous
+// entries (mod length) are selected — pool of 16 means a full cycle every
+// 4 weeks. `role/location/experience` must match the canonical ROLES,
+// LOCATIONS, EXPERIENCES lists in lib/data.js. `display` is the short
+// label shown in the card.
+export const SALARY_PREVIEW_POOL = [
+  { role: "Data Scientist",                location: "Bangalore",  experience: "3-5",  display: "Data Scientist" },
+  { role: "Data Engineer",                 location: "Bangalore",  experience: "3-5",  display: "Data Engineer" },
+  { role: "AI Engineer / ML Engineer",     location: "Bangalore",  experience: "3-5",  display: "ML Engineer" },
+  { role: "Generative AI / LLM Engineer",  location: "Bangalore",  experience: "3-5",  display: "GenAI Engineer" },
+  { role: "Data Analyst",                  location: "Delhi NCR",  experience: "0-2",  display: "Data Analyst" },
+  { role: "Business Analyst",              location: "Mumbai",     experience: "3-5",  display: "Business Analyst" },
+  { role: "MLOps Engineer",                location: "Bangalore",  experience: "3-5",  display: "MLOps Engineer" },
+  { role: "AI Research Scientist",         location: "Bangalore",  experience: "6-10", display: "AI Researcher" },
+  { role: "Computer Vision Engineer",      location: "Hyderabad",  experience: "3-5",  display: "CV Engineer" },
+  { role: "NLP Engineer",                  location: "Pune",       experience: "3-5",  display: "NLP Engineer" },
+  { role: "BI Analyst",                    location: "Chennai",    experience: "0-2",  display: "BI Analyst" },
+  { role: "Analytics Manager",             location: "Bangalore",  experience: "10+",  display: "Analytics Manager" },
+  { role: "Data Scientist",                location: "Hyderabad",  experience: "6-10", display: "Senior Data Scientist" },
+  { role: "AI Engineer / ML Engineer",     location: "Delhi NCR",  experience: "6-10", display: "Senior ML Engineer" },
+  { role: "Generative AI / LLM Engineer",  location: "Mumbai",     experience: "6-10", display: "Senior GenAI Engineer" },
+  { role: "Data Engineer",                 location: "Pune",       experience: "3-5",  display: "Data Engineer" },
 ];
 
 // ── AI Assistant ──────────────────────────────────────────────────
