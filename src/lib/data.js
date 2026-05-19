@@ -55,31 +55,91 @@ export const courses = [
 ];
 
 // ── Salary Data ───────────────────────────────────────────────────
-export const salaryData = {
-  "Data Scientist": {
-    base: { Bangalore: 12, "Delhi NCR": 10, Mumbai: 11, Hyderabad: 10 },
-    multiplier: { "0-2": 1.0, "3-5": 1.5, "6-10": 2.2, "10+": 3.5 },
-  },
-  "Data Engineer": {
-    base: { Bangalore: 11, "Delhi NCR": 9, Mumbai: 10, Hyderabad: 9.5 },
-    multiplier: { "0-2": 1.0, "3-5": 1.4, "6-10": 2.0, "10+": 3.0 },
-  },
-  "AI Engineer / ML Engineer": {
-    base: { Bangalore: 14, "Delhi NCR": 12, Mumbai: 13, Hyderabad: 12.5 },
-    multiplier: { "0-2": 1.0, "3-5": 1.6, "6-10": 2.5, "10+": 4.0 },
-  },
+// Fallback table used only when the Gemini-backed `/api/salary` endpoint
+// is unavailable. The canonical numbers come from the salary_estimates
+// table, refreshed weekly via Gemini with Google Search grounding.
+
+// Canonical option lists — keep these in sync with isValidParams() in
+// salary-estimator.server.js.
+export const ROLES = [
+  "Data Scientist",
+  "Data Engineer",
+  "AI Engineer / ML Engineer",
+  "Data Analyst",
+  "Business Analyst",
+  "BI Analyst",
+  "MLOps Engineer",
+  "AI Research Scientist",
+  "Computer Vision Engineer",
+  "NLP Engineer",
+  "Generative AI / LLM Engineer",
+  "Analytics Manager",
+];
+
+export const LOCATIONS = [
+  "Bangalore",
+  "Delhi NCR",
+  "Mumbai",
+  "Hyderabad",
+  "Pune",
+  "Chennai",
+  "Remote",
+];
+
+export const EXPERIENCES = ["0-2", "3-5", "6-10", "10+"];
+
+// Base medians (LPA) per role at the Bangalore baseline, with location
+// multipliers and experience multipliers applied on top. Used only as
+// a fallback when Gemini is unreachable.
+const BASE_LPA = {
+  "Data Scientist":              12,
+  "Data Engineer":               11,
+  "AI Engineer / ML Engineer":   14,
+  "Data Analyst":                7,
+  "Business Analyst":            8,
+  "BI Analyst":                  7.5,
+  "MLOps Engineer":              13,
+  "AI Research Scientist":       18,
+  "Computer Vision Engineer":    13,
+  "NLP Engineer":                13.5,
+  "Generative AI / LLM Engineer": 16,
+  "Analytics Manager":           20,
 };
 
+const LOCATION_MULT = {
+  Bangalore:   1.00,
+  "Delhi NCR": 0.88,
+  Mumbai:      0.93,
+  Hyderabad:   0.90,
+  Pune:        0.87,
+  Chennai:     0.85,
+  Remote:      0.95,
+};
+
+const EXP_MULT = { "0-2": 1.0, "3-5": 1.5, "6-10": 2.2, "10+": 3.5 };
+
+// Backwards-compatible export — anything still importing salaryData
+// gets a generated object instead of the old hand-tuned matrix.
+export const salaryData = ROLES.reduce((acc, role) => {
+  const base = BASE_LPA[role] || 10;
+  acc[role] = {
+    base: Object.fromEntries(LOCATIONS.map((loc) => [loc, +(base * (LOCATION_MULT[loc] || 1)).toFixed(1)])),
+    multiplier: { ...EXP_MULT },
+  };
+  return acc;
+}, {});
+
 // ── Salary helpers ────────────────────────────────────────────────
-export const getRoles       = () => Object.keys(salaryData);
-export const getLocations   = () => Object.keys(salaryData["Data Scientist"].base);
-export const getExperiences = () => Object.keys(salaryData["Data Scientist"].multiplier);
+export const getRoles       = () => ROLES;
+export const getLocations   = () => LOCATIONS;
+export const getExperiences = () => EXPERIENCES;
 
 export function getSalaryRange(role, location, experience) {
-  if (!salaryData[role]) return { min: 0, max: 0, median: 0 };
-  const base = salaryData[role].base[location] || 10;
-  const mult = salaryData[role].multiplier[experience] || 1.0;
-  const rawBase = base * mult;
+  const base = BASE_LPA[role];
+  if (!base) return { min: 0, max: 0, median: 0 };
+  const locMult = LOCATION_MULT[location] || 1.0;
+  const expMult = EXP_MULT[experience] || 1.0;
+  const rawBase = base * locMult * expMult;
   return {
     min:    (rawBase * 0.85).toFixed(1),
     max:    (rawBase * 1.25).toFixed(1),

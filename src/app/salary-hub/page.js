@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { getRoles, getLocations, getExperiences, getSalaryRange } from "@/lib/data";
+
+function formatRefreshed(iso) {
+  if (!iso) return "";
+  try {
+    return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  } catch { return ""; }
+}
 
 export default function SalaryHub() {
   const roles = getRoles();
@@ -15,14 +22,57 @@ export default function SalaryHub() {
   const [location, setLocation] = useState(locations[0]);
   const [exp, setExp] = useState(experiences[0]);
 
-  const salary = getSalaryRange(role, location, exp);
+  const [estimate, setEstimate] = useState(null);
+  const [meta, setMeta] = useState(null); // { source, sources, refreshed_at, commentary, yoy_delta_pct }
+  const [loading, setLoading] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+
+    const params = new URLSearchParams({ role, location, experience: exp });
+    fetch(`/api/salary?${params.toString()}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.ok && data.estimate) {
+          setEstimate({ min: data.estimate.min, median: data.estimate.median, max: data.estimate.max });
+          setMeta({
+            source: data.source,
+            sources: data.estimate.sources || [],
+            refreshed_at: data.estimate.refreshed_at,
+            commentary: data.estimate.commentary,
+            yoy_delta_pct: data.estimate.yoy_delta_pct,
+          });
+          setUsingFallback(false);
+        } else {
+          const fb = data.fallback || getSalaryRange(role, location, exp);
+          setEstimate(fb);
+          setMeta(null);
+          setUsingFallback(true);
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setEstimate(getSalaryRange(role, location, exp));
+        setMeta(null);
+        setUsingFallback(true);
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [role, location, exp]);
+
+  const salary = estimate || { min: "–", median: "–", max: "–" };
+  const refreshedLabel = meta?.refreshed_at ? formatRefreshed(meta.refreshed_at) : "";
 
   return (
     <div className="min-h-screen flex flex-col pt-16 font-[family-name:var(--font-body)] bg-background dark:bg-[#0b1326] text-on-background dark:text-[#dae2fd]">
       <Navbar activeCategory="Salary Hub" />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 md:py-20 flex flex-col md:flex-row gap-12">
-        
+
         {/* Left Side: Form */}
         <div className="w-full md:w-1/2 space-y-8">
           <div>
@@ -30,20 +80,20 @@ export default function SalaryHub() {
               Tech Salary <span className="text-primary dark:text-[#adc6ff]">Estimator</span>
             </h1>
             <p className="text-on-surface-variant dark:text-[#c2c6d6] text-lg leading-relaxed max-w-lg">
-              Get real-time market data on base compensation for data and AI roles across India's top tech hubs.
+              AI-estimated base compensation for data &amp; AI roles across India&apos;s top tech hubs, sourced from recent market reports and refreshed weekly.
             </p>
           </div>
 
           <div className="bg-surface-container-lowest dark:bg-[#131b2e] p-8 rounded-2xl border border-outline-variant/20 dark:border-[#424754]/30 shadow-sm space-y-6">
             <h3 className="font-bold text-lg font-[family-name:var(--font-headline)]">Your Profile</h3>
-            
+
             <div className="space-y-4">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
                   Job Role
                 </label>
-                <select 
-                  value={role} 
+                <select
+                  value={role}
                   onChange={(e) => setRole(e.target.value)}
                   className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
                 >
@@ -55,8 +105,8 @@ export default function SalaryHub() {
                 <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
                   Years of Experience
                 </label>
-                <select 
-                  value={exp} 
+                <select
+                  value={exp}
                   onChange={(e) => setExp(e.target.value)}
                   className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
                 >
@@ -68,8 +118,8 @@ export default function SalaryHub() {
                 <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
                   Location
                 </label>
-                <select 
-                  value={location} 
+                <select
+                  value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
                 >
@@ -91,12 +141,18 @@ export default function SalaryHub() {
                 <span className="font-[family-name:var(--font-label)] text-xs uppercase tracking-[0.2em] font-bold opacity-80 mb-2 block">
                   Estimated Base Compensation
                 </span>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-medium">₹</span>
-                  <span className="text-6xl md:text-7xl font-extrabold font-[family-name:var(--font-headline)] tracking-tighter">
-                    {salary.median}
-                  </span>
-                  <span className="text-xl font-medium opacity-80">LPA</span>
+                <div className="flex items-baseline gap-2 min-h-[80px]">
+                  {loading ? (
+                    <div className="h-16 w-48 bg-white/10 dark:bg-white/5 rounded-lg animate-pulse" />
+                  ) : (
+                    <>
+                      <span className="text-2xl font-medium">₹</span>
+                      <span className="text-6xl md:text-7xl font-extrabold font-[family-name:var(--font-headline)] tracking-tighter">
+                        {salary.median}
+                      </span>
+                      <span className="text-xl font-medium opacity-80">LPA</span>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -119,10 +175,43 @@ export default function SalaryHub() {
 
               <div className="mt-4 p-4 bg-white/10 dark:bg-white/5 rounded-xl border border-white/20 dark:border-white/10 flex gap-4 items-start backdrop-blur-sm">
                 <span className="material-symbols-outlined text-green-300">trending_up</span>
-                <p className="text-sm leading-relaxed text-white/90 dark:text-[#c2c6d6]">
-                  The market demand for <strong>{role}</strong> roles in <strong>{location}</strong> is currently high. Candidates with {exp} years of experience are receiving a ~12% premium compared to last year.
-                </p>
+                <div className="text-sm leading-relaxed text-white/90 dark:text-[#c2c6d6] flex-1">
+                  {meta?.commentary ? (
+                    <>
+                      <p>{meta.commentary}</p>
+                      {meta.yoy_delta_pct != null && (
+                        <p className="mt-1 opacity-80">
+                          YoY change: <strong>{meta.yoy_delta_pct >= 0 ? "+" : ""}{meta.yoy_delta_pct}%</strong>
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p>
+                      The market demand for <strong>{role}</strong> roles in <strong>{location}</strong> is currently steady. {usingFallback ? "Showing offline estimate." : "Refreshing live estimate…"}
+                    </p>
+                  )}
+                </div>
               </div>
+
+              {/* Sources + refreshed footer */}
+              {meta && (meta.sources?.length > 0 || refreshedLabel) && (
+                <div className="text-xs opacity-70 leading-relaxed">
+                  {refreshedLabel && <div>Refreshed: {refreshedLabel}</div>}
+                  {meta.sources?.length > 0 && (
+                    <div className="mt-1">
+                      Sources:{" "}
+                      {meta.sources.slice(0, 3).map((s, i) => (
+                        <span key={s.uri}>
+                          {i > 0 && ", "}
+                          <a href={s.uri} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100">
+                            {s.title || new URL(s.uri).hostname}
+                          </a>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
