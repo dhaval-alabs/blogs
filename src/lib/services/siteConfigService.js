@@ -115,9 +115,19 @@ export async function saveRedirect(payload, id = null) {
       return { success: false, error: 'Source and destination are required.' };
     }
 
+    // Normalize source so lookups match regardless of how the admin typed it.
+    // The proxy strips trailing slashes before lookup (see src/proxy.js), so
+    // sources stored with a trailing slash would silently never match.
+    const normalizeSource = (s) => {
+      let v = s.trim();
+      if (!v.startsWith('/') && !v.startsWith('http')) v = '/' + v;
+      if (v.length > 1) v = v.replace(/\/+$/, '');
+      return v;
+    };
+
     const db = getServiceClient();
     const row = {
-      source: payload.source.trim(),
+      source: normalizeSource(payload.source),
       destination: payload.destination.trim(),
       type: parseInt(payload.type || '301', 10),
       active: payload.active !== false,

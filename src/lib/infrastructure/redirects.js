@@ -27,7 +27,14 @@ const REDIRECTS_KEY = 'redirects';
 // Shape of the cached value: { "<source>": { destination, type } }
 export async function lookupRedirect(pathname) {
   const map = await getRedirectMap();
-  return map?.[pathname] || null;
+  if (!map) return null;
+  // Try exact, then the trailing-slash variant. Sources saved before
+  // normalization landed (or imported from elsewhere) may still carry a
+  // trailing slash; the proxy strips it before calling here, so without this
+  // fallback those rules would never fire.
+  if (map[pathname]) return map[pathname];
+  if (pathname !== '/' && map[pathname + '/']) return map[pathname + '/'];
+  return null;
 }
 
 async function getRedirectMap() {
