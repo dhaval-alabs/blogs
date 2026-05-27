@@ -35,8 +35,6 @@ function WidgetConfigPanel({ widgetId, widget, dispatch, context }) {
 
 export default function DetailsPanel({ state, dispatch, set, showToast, isSuperAdmin }) {
   const fileInputRef = useRef(null);
-  const cardImageInputRef = useRef(null);
-  const squareImageInputRef = useRef(null);
 
   // Topics + courses are fetched once by useStudioDraft on mount; this panel
   // just reads from session state. Previously each tab switch unmounted the
@@ -57,36 +55,6 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
       else showToast("Upload failed: " + (data.error || "unknown"), "err");
     } catch { showToast("Upload failed. Please try again.", "err"); }
     finally { set("isUploadingImage", false); e.target.value = ""; }
-  };
-
-  const handleCardImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    set("isUploadingCardImage", true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (data.url) set("cardImage", data.url);
-      else showToast("Upload failed: " + (data.error || "unknown"), "err");
-    } catch { showToast("Upload failed. Please try again.", "err"); }
-    finally { set("isUploadingCardImage", false); e.target.value = ""; }
-  };
-
-  const handleSquareImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    set("isUploadingSquareImage", true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await apiFetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (data.url) set("squareImage", data.url);
-      else showToast("Upload failed: " + (data.error || "unknown"), "err");
-    } catch { showToast("Upload failed. Please try again.", "err"); }
-    finally { set("isUploadingSquareImage", false); e.target.value = ""; }
   };
 
   const handleTagKeyDown = (e) => {
@@ -130,40 +98,6 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
             <div className="img-drop-text">
               {state.isUploadingImage ? "Uploading…" : <><b>Click to upload</b> or drag &amp; drop</>}
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Card Image 4:3 */}
-      <div className="pp-field" style={{ paddingTop: 0 }}>
-        <div className="f-lbl" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>CARD IMAGE <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400 }}>4:3 — post grid</span></span>
-          {state.cardImage && <button onClick={() => set("cardImage", "")} style={{ background: "none", border: "none", color: "var(--text3)", cursor: "pointer", fontSize: 11, padding: 0 }}>Remove</button>}
-        </div>
-        <input ref={cardImageInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleCardImageUpload} />
-        {state.cardImage ? (
-          <img src={state.cardImage} alt="Card" style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", borderRadius: "var(--radius)", display: "block" }} />
-        ) : (
-          <div className="img-drop" onClick={() => cardImageInputRef.current?.click()} style={{ opacity: state.isUploadingCardImage ? 0.6 : 1, aspectRatio: "4/3" }}>
-            <div className="img-drop-icon">{I.image}</div>
-            <div className="img-drop-text">{state.isUploadingCardImage ? "Uploading…" : <><b>Click to upload</b> 4:3</>}</div>
-          </div>
-        )}
-      </div>
-
-      {/* Square Image 1:1 */}
-      <div className="pp-field" style={{ paddingTop: 0 }}>
-        <div className="f-lbl" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>SQUARE IMAGE <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400 }}>1:1 — social / OG</span></span>
-          {state.squareImage && <button onClick={() => set("squareImage", "")} style={{ background: "none", border: "none", color: "var(--text3)", cursor: "pointer", fontSize: 11, padding: 0 }}>Remove</button>}
-        </div>
-        <input ref={squareImageInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleSquareImageUpload} />
-        {state.squareImage ? (
-          <img src={state.squareImage} alt="Square" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "var(--radius)", display: "block" }} />
-        ) : (
-          <div className="img-drop" onClick={() => squareImageInputRef.current?.click()} style={{ opacity: state.isUploadingSquareImage ? 0.6 : 1, aspectRatio: "1/1" }}>
-            <div className="img-drop-icon">{I.image}</div>
-            <div className="img-drop-text">{state.isUploadingSquareImage ? "Uploading…" : <><b>Click to upload</b> 1:1</>}</div>
           </div>
         )}
       </div>

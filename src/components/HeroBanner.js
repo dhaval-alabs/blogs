@@ -168,26 +168,20 @@ export default function HeroBanner({ post }) {
                     priority
                     fetchPriority="high"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    quality={80}
-                    style={{ objectFit: "cover", transition: "transform 0.5s ease" }}
+                    quality={85}
+                    style={{ objectFit: "contain", transition: "transform 0.5s ease" }}
                     className="hero-img-hover"
                   />
                 ) : (
                   <div style={{
                     width: "100%", height: "100%",
-                    background: "linear-gradient(135deg,rgba(100,160,255,0.12),rgba(0,80,200,0.08))",
+                    background: "#f1f5f9",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: 56, color: "rgba(255,255,255,0.15)" }}>article</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: 56, color: "#cbd5e1" }}>article</span>
                   </div>
                 )}
 
-                {/* Subtle gradient overlay at bottom for legibility */}
-                <div style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0, height: "25%",
-                  background: "linear-gradient(to top, rgba(0,0,0,0.15), transparent)",
-                  pointerEvents: "none",
-                }} />
               </div>
             </Link>
 
