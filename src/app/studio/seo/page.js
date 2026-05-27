@@ -10,63 +10,85 @@ import {
 } from "lucide-react";
 
 // ── SEO checks definition ──────────────────────────────────────────────────
+// Checks mirror what the production blog/[slug]/page.js actually renders:
+//   effective title    = seo.metaTitle  || post.title
+//   effective desc     = seo.metaDesc   || post.excerpt || post.title
+//   effective canonical= seo.canonicalUrl || `https://…/blog/${slug}/`  (auto-generated)
+//   effective og image = seo.ogImage    || post.image
 // severity: "critical" | "warning" | "info"
 const CHECKS = [
   {
     id: "indexable",
     label: "Indexable (noIndex = off)",
     severity: "critical",
-    why: "Pages with noIndex set won't appear in Google at all. All published posts should be indexable.",
+    why: "Pages with noIndex will not appear in Google at all, regardless of content quality. All published posts must be indexable.",
     test: (p) => !p.seo?.noIndex,
   },
   {
-    id: "meta_title",
-    label: "Meta title present",
+    id: "effective_title",
+    label: "Effective title present (SEO or post title)",
     severity: "critical",
-    why: "The meta title is the single most important on-page SEO signal and is shown in search results.",
+    why: "The page renders seo.metaTitle if set, otherwise '<Post Title> | AnalytixLabs'. A post with no title at all would render nothing.",
+    test: (p) => Boolean(p.seo?.metaTitle?.trim() || p.title?.trim()),
+  },
+  {
+    id: "custom_meta_title",
+    label: "Custom meta title set (not using post title fallback)",
+    severity: "warning",
+    why: "Without a custom meta title the page uses '<Post Title> | AnalytixLabs'. A crafted SEO title improves CTR by targeting the exact search query.",
     test: (p) => Boolean(p.seo?.metaTitle?.trim()),
   },
   {
     id: "meta_title_length",
-    label: "Meta title 50–70 chars",
+    label: "Effective title 50–70 chars",
     severity: "warning",
-    why: "Titles shorter than 50 chars waste space; longer than 70 chars get truncated in search results.",
+    why: "Titles under 50 chars waste SERP space; over 70 chars are truncated by Google.",
     test: (p) => {
-      const l = (p.seo?.metaTitle || "").trim().length;
+      const effective = (p.seo?.metaTitle || p.title || "").trim();
+      const l = effective.length;
       return l >= 50 && l <= 70;
     },
-    skip: (p) => !p.seo?.metaTitle?.trim(),
+    skip: (p) => !p.seo?.metaTitle?.trim() && !p.title?.trim(),
   },
   {
-    id: "meta_desc",
-    label: "Meta description present",
+    id: "effective_desc",
+    label: "Effective meta description present (SEO desc or excerpt)",
     severity: "critical",
-    why: "Google often uses the meta description as the search snippet. Missing it means Google picks arbitrary text.",
+    why: "The page uses seo.metaDesc, falling back to excerpt, then title. Without any of these Google will pick arbitrary body text as the snippet.",
+    test: (p) => Boolean(p.seo?.metaDesc?.trim() || p.excerpt?.trim()),
+  },
+  {
+    id: "custom_meta_desc",
+    label: "Explicit meta description set (not relying on excerpt fallback)",
+    severity: "warning",
+    why: "Using the excerpt as meta description is a fallback — excerpts aren't written for searchers. A custom meta description tuned for the target query consistently improves CTR.",
     test: (p) => Boolean(p.seo?.metaDesc?.trim()),
+    skip: (p) => !p.excerpt?.trim() && !p.seo?.metaDesc?.trim(),
   },
   {
     id: "meta_desc_length",
-    label: "Meta description 120–160 chars",
+    label: "Effective description 120–160 chars",
     severity: "warning",
-    why: "Descriptions under 120 chars are too thin; over 160 chars get cut off in SERPs.",
+    why: "Descriptions under 120 chars are too thin; over 160 chars are cut off in SERPs.",
     test: (p) => {
-      const l = (p.seo?.metaDesc || "").trim().length;
+      const effective = (p.seo?.metaDesc || p.excerpt || "").trim();
+      const l = effective.length;
       return l >= 120 && l <= 160;
     },
-    skip: (p) => !p.seo?.metaDesc?.trim(),
+    skip: (p) => !p.seo?.metaDesc?.trim() && !p.excerpt?.trim(),
   },
   {
     id: "canonical",
-    label: "Canonical URL set",
-    severity: "critical",
-    why: "Without a canonical, Google may choose any version of the URL (www, non-www, trailing slash) as the canonical — splitting link equity.",
+    label: "Custom canonical URL set",
+    severity: "warning",
+    why: "The page auto-generates a canonical from the slug (https://analytixlabs.co.in/blog/<slug>/), so every post already has one. Set an explicit canonical only if this post mirrors content on another domain or has multiple URL variants.",
     test: (p) => Boolean(p.seo?.canonicalUrl?.trim()),
   },
   {
     id: "og_image",
-    label: "OG image set",
+    label: "OG / social image available",
     severity: "warning",
-    why: "Open Graph images are shown when the post is shared on social media. Missing it results in a blank or generic preview.",
+    why: "The page uses seo.ogImage, falling back to the featured image. Without either, social shares show a blank preview.",
     test: (p) => Boolean(p.seo?.ogImage?.trim() || p.image?.trim()),
   },
   {
@@ -80,28 +102,31 @@ const CHECKS = [
     id: "focus_keyword",
     label: "Focus keyword set",
     severity: "warning",
-    why: "A focus keyword helps writers and reviewers verify that the title, description, and body are aligned with the target query.",
+    why: "A focus keyword helps writers and editors verify that the title, description, and body align with the target search query.",
     test: (p) => Boolean(p.seo?.focusKeyword?.trim()),
   },
   {
     id: "schema_type",
-    label: "Schema type set",
+    label: "Schema type set (HowTo / FAQ / Course enrichment)",
     severity: "info",
-    why: "Specifying a schema type (Article, HowTo, FAQ…) enables rich results in Google Search and improves CTR.",
-    test: (p) => Boolean(p.seo?.schemaType?.trim()),
+    why: "Posts default to 'Article' schema. Changing to HowTo, FAQPage, or Course can unlock rich results (featured snippets, star ratings) in Google.",
+    test: (p) => {
+      const t = (p.seo?.schemaType || "").trim();
+      return Boolean(t) && t !== "Article";
+    },
   },
   {
     id: "author",
-    label: "Author assigned",
+    label: "Named author assigned (not generic editorial)",
     severity: "warning",
-    why: "Author signals (E-E-A-T) increasingly influence Google's quality assessment, especially for YMYL content.",
-    test: (p) => Boolean(p.author_id?.trim()),
+    why: "Google's E-E-A-T guidelines reward content with real, named authors — especially for career, finance, and technical content.",
+    test: (p) => Boolean(p.author_id) && p.author_id !== "al-editorial",
   },
   {
     id: "excerpt",
-    label: "Excerpt / description present",
+    label: "Excerpt present",
     severity: "info",
-    why: "Used as the default meta description fallback and shown in article cards.",
+    why: "Used as a meta description fallback and shown in article cards. Every post should have a short, standalone summary.",
     test: (p) => Boolean(p.excerpt?.trim()),
   },
 ];
