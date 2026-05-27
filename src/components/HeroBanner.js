@@ -19,7 +19,10 @@ export default function HeroBanner({ post }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
             {/* Badges */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest bg-[#16a34a] text-white dark:bg-[#86efac] dark:text-[#14532d]">
+                New Post
+              </span>
               <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest bg-[#e8f0fe] text-[#1a56db] border border-[#c3d9ff] dark:bg-[#1e3a5f] dark:text-[#adc6ff] dark:border-[#2d5080]">
                 {post.category || "Featured Analysis"}
               </span>
@@ -32,7 +35,7 @@ export default function HeroBanner({ post }) {
 
             {/* Title */}
             <h1 className="text-[#0f172a] dark:text-[#dae2fd] font-black leading-tight tracking-tight m-0"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.75rem)" }}>
+              style={{ fontSize: "clamp(1.675rem, 3.25vw, 2.625rem)" }}>
               <Link
                 href={`/blog/${post.slug}`}
                 className="hover:opacity-80 transition-opacity"
