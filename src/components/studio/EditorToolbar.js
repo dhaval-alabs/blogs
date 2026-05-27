@@ -139,6 +139,40 @@ export default function EditorToolbar({ tbState, cmd }) {
 
       <div className="ed-sep" />
 
+      {/* Text alignment */}
+      <button
+        className={`ed-btn ${(!tbState.imageAlign && (tbState.textAlign === 'left' || !tbState.textAlign)) ? "on" : ""}`}
+        title="Align left (⌘⇧L)"
+        onClick={() => cmd((e) => tbState.imageAlign
+          ? e.chain().focus().updateAttributes('image', { align: 'left' }).run()
+          : e.chain().focus().setTextAlign('left').run()
+        )}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+      </button>
+      <button
+        className={`ed-btn ${(!tbState.imageAlign && tbState.textAlign === 'center') || tbState.imageAlign === 'center' ? "on" : ""}`}
+        title="Align center (⌘⇧E)"
+        onClick={() => cmd((e) => tbState.imageAlign
+          ? e.chain().focus().updateAttributes('image', { align: 'center' }).run()
+          : e.chain().focus().setTextAlign('center').run()
+        )}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <button
+        className={`ed-btn ${(!tbState.imageAlign && tbState.textAlign === 'right') || tbState.imageAlign === 'right' ? "on" : ""}`}
+        title="Align right (⌘⇧R)"
+        onClick={() => cmd((e) => tbState.imageAlign
+          ? e.chain().focus().updateAttributes('image', { align: 'right' }).run()
+          : e.chain().focus().setTextAlign('right').run()
+        )}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <div className="ed-sep" />
+
       <button
         className="ed-btn"
         title="Blockquote / Key Insight"

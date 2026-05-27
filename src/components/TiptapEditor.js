@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 import { stripInlineColors } from '@/utils/sanitizeContent';
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node, Extension, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import TiptapImage from '@tiptap/extension-image';
@@ -44,10 +44,60 @@ const VideoNode = Node.create({
   },
 });
 
+// ── Custom TextAlign extension (no separate package needed) ──────
+const TextAlignExtension = Extension.create({
+  name: 'textAlign',
+  addOptions() {
+    return { types: ['paragraph', 'heading'] };
+  },
+  addGlobalAttributes() {
+    return [{
+      types: this.options.types,
+      attributes: {
+        textAlign: {
+          default: null,
+          parseHTML: el => el.style.textAlign || null,
+          renderHTML: attrs => attrs.textAlign ? { style: `text-align: ${attrs.textAlign}` } : {},
+        },
+      },
+    }];
+  },
+  addCommands() {
+    return {
+      setTextAlign: alignment => ({ commands }) => {
+        return this.options.types.every(type => commands.updateAttributes(type, { textAlign: alignment }));
+      },
+      unsetTextAlign: () => ({ commands }) => {
+        return this.options.types.every(type => commands.resetAttributes(type, 'textAlign'));
+      },
+    };
+  },
+  addKeyboardShortcuts() {
+    return {
+      'Mod-Shift-l': () => this.editor.commands.setTextAlign('left'),
+      'Mod-Shift-e': () => this.editor.commands.setTextAlign('center'),
+      'Mod-Shift-r': () => this.editor.commands.setTextAlign('right'),
+    };
+  },
+});
+
 const CustomImage = TiptapImage.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
+      align: {
+        default: null,
+        parseHTML: el => el.getAttribute('data-align'),
+        renderHTML: attrs => {
+          if (!attrs.align) return {};
+          const styleMap = {
+            left:   'display:block;margin:20px auto 20px 0;',
+            center: 'display:block;margin:20px auto;',
+            right:  'display:block;margin:20px 0 20px auto;',
+          };
+          return { 'data-align': attrs.align, style: styleMap[attrs.align] || '' };
+        },
+      },
       commentId: {
         default: null,
         parseHTML: element => element.getAttribute('data-comment-id'),
@@ -781,18 +831,73 @@ function SelectionMenu({ editor, outerRef, comments, onUpdateComments, currentAu
         <MessageSquare size={14} style={{ marginBottom: -2 }} />
       </button>
 
-      {/* Media specific toggle */}
-      {(editor.isActive('image') || editor.state.selection.node?.type.name === 'video') && (
+      {/* Text alignment buttons — shown when text (not image) is selected */}
+      {!editor.state.selection.node && (
         <>
           <div className="bmenu-sep" />
-          <button 
-            onClick={() => setShowAltInput(s => !s)} 
+          {[
+            { align: 'left',   title: 'Align left (⌘⇧L)',   icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+            )},
+            { align: 'center', title: 'Align center (⌘⇧E)', icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+            )},
+            { align: 'right',  title: 'Align right (⌘⇧R)',  icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+            )},
+          ].map(({ align, title, icon }) => (
+            <button
+              key={align}
+              onClick={() => editor.chain().focus().setTextAlign(align).run()}
+              className={editor.isActive({ textAlign: align }) ? 'is-active' : ''}
+              title={title}
+            >{icon}</button>
+          ))}
+        </>
+      )}
+
+      {/* Image-specific: align + alt text */}
+      {editor.state.selection.node?.type.name === 'image' && (
+        <>
+          <div className="bmenu-sep" />
+          {[
+            { align: 'left',   title: 'Float left',   icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="3" width="8" height="8" rx="1"/><line x1="14" y1="5" x2="21" y2="5"/><line x1="14" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="3" y1="19" x2="21" y2="19"/></svg>
+            )},
+            { align: 'center', title: 'Center image', icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="8" y="3" width="8" height="8" rx="1"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="3" y1="19" x2="21" y2="19"/></svg>
+            )},
+            { align: 'right',  title: 'Float right',  icon: (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="13" y="3" width="8" height="8" rx="1"/><line x1="3" y1="5" x2="10" y2="5"/><line x1="3" y1="9" x2="10" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="3" y1="19" x2="21" y2="19"/></svg>
+            )},
+          ].map(({ align, title, icon }) => (
+            <button
+              key={align}
+              onClick={() => editor.chain().focus().updateAttributes('image', { align }).run()}
+              className={editor.state.selection.node?.attrs.align === align ? 'is-active' : ''}
+              title={title}
+            >{icon}</button>
+          ))}
+          <div className="bmenu-sep" />
+          <button
+            onClick={() => setShowAltInput(s => !s)}
             className={showAltInput ? 'is-active' : ''}
             title="Edit Alt Text"
             style={{ fontSize: 11, fontWeight: 700 }}
-          >
-            ALT
-          </button>
+          >ALT</button>
+        </>
+      )}
+
+      {/* Video alt text */}
+      {editor.state.selection.node?.type.name === 'video' && (
+        <>
+          <div className="bmenu-sep" />
+          <button
+            onClick={() => setShowAltInput(s => !s)}
+            className={showAltInput ? 'is-active' : ''}
+            title="Edit Alt Text"
+            style={{ fontSize: 11, fontWeight: 700 }}
+          >ALT</button>
         </>
       )}
 
@@ -1075,6 +1180,8 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
 
   const syncToolbarState = useCallback((editor) => {
     if (!onStateChangeRef.current) return;
+    const sel = editor.state.selection;
+    const isImage = sel.node?.type.name === 'image';
     onStateChangeRef.current({
       bold:       editor.isActive('bold'),
       italic:     editor.isActive('italic'),
@@ -1086,6 +1193,8 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
       ordered:    editor.isActive('orderedList'),
       fontFamily: editor.getAttributes('textStyle').fontFamily || '',
       color:      editor.getAttributes('textStyle').color || '',
+      textAlign:  editor.getAttributes('paragraph').textAlign || editor.getAttributes('heading').textAlign || 'left',
+      imageAlign: isImage ? (sel.node.attrs.align || 'left') : null,
     });
   }, []);
 
@@ -1112,6 +1221,7 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
       TableRow,
       TableHeader,
       TableCell,
+      TextAlignExtension.configure({ types: ['paragraph', 'heading'] }),
     ],
     // Strip baked-in inline colours on load so legacy white-on-white text and
     // mode-locked colours from earlier authoring don't leak into the editor or
