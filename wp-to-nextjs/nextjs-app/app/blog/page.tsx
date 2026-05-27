@@ -5,7 +5,6 @@ import { getPaginatedPosts, getAllCategories } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "Blog",
-  robots: { index: false, follow: false },
 };
 
 function PaginationLink({

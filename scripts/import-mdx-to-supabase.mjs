@@ -146,7 +146,7 @@ async function mdxToRow({ data, content }) {
     updated_at: formatDate(data.modified || data.date),
     seo: {
       canonicalUrl: data.canonical || "",
-      noIndex: true,
+      noIndex: false,
       metaTitle: data.title || "",
       metaDesc: data.description || "",
     },

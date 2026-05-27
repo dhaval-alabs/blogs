@@ -81,6 +81,13 @@ export default function StudioSidebar({
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Content
       </Link>
 
+      <Link
+        href="/studio/seo"
+        className={`sb-nav ${pathname === '/studio/seo' ? "active" : ""}`}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg> SEO Health
+      </Link>
+
       {/* Super Admin Nav */}
       {dynamicAuthor?.is_super_admin ? (
          <>

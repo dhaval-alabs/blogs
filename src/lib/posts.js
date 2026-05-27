@@ -34,7 +34,7 @@ function readPost(slug) {
     categories: Array.isArray(data.categories) ? data.categories : [],
     tags: Array.isArray(data.tags) ? data.tags : [],
     canonical: data.canonical || '',
-    noindex: data.noindex !== false,
+    noindex: data.noindex === true,
     content,
   };
 }

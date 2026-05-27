@@ -320,7 +320,7 @@ function buildFrontmatter(meta, slug) {
   fm += `categories:\n${cats || '  - Uncategorized'}\n`;
   fm += `tags:\n${tagList || '  - general'}\n`;
   fm += `canonical: ${escapeYaml(meta.canonical)}\n`;
-  fm += `noindex: true\n`;
+  fm += `noindex: false\n`;
   fm += '---\n';
   return fm;
 }
