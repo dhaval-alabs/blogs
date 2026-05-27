@@ -12,18 +12,8 @@ export default function HeroBanner({ post }) {
   return (
     <section
       className="mt-16 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg,#003369 60%,#001f4d 100%)" }}
+      style={{ background: "#ffffff" }}
     >
-      {/* Subtle grid texture overlay */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage:
-            "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 60%)," +
-            "radial-gradient(circle at 80% 20%, rgba(100,160,255,0.06) 0%, transparent 50%)",
-        }}
-      />
 
       <div className="max-w-7xl mx-auto px-6 relative" style={{ zIndex: 1 }}>
         <div
@@ -41,7 +31,7 @@ export default function HeroBanner({ post }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {/* Category / badge */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span className="glass-badge" style={{
+              <span style={{
                 display: "inline-block",
                 padding: "4px 14px",
                 borderRadius: 99,
@@ -49,18 +39,23 @@ export default function HeroBanner({ post }) {
                 fontWeight: 800,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
+                background: "#e8f0fe",
+                color: "#1a56db",
+                border: "1px solid #c3d9ff",
               }}>
                 {post.category || "Featured Analysis"}
               </span>
               {post.domain_tags?.[0] && post.domain_tags[0] !== post.category && (
-                <span className="glass-badge" style={{
+                <span style={{
                   display: "inline-block",
                   padding: "4px 12px",
                   borderRadius: 99,
                   fontSize: 11,
                   fontWeight: 600,
                   letterSpacing: "0.08em",
-                  opacity: 0.85,
+                  background: "#f1f5f9",
+                  color: "#475569",
+                  border: "1px solid #e2e8f0",
                 }}>
                   {post.domain_tags[0]}
                 </span>
@@ -73,7 +68,7 @@ export default function HeroBanner({ post }) {
                 fontWeight: 900,
                 fontSize: "clamp(1.8rem, 3.5vw, 2.75rem)",
                 lineHeight: 1.15,
-                color: "#fff",
+                color: "#0f172a",
                 letterSpacing: "-0.02em",
                 margin: 0,
               }}
@@ -81,7 +76,7 @@ export default function HeroBanner({ post }) {
               <Link
                 href={`/blog/${post.slug}`}
                 style={{ color: "inherit", textDecoration: "none" }}
-                className="hover:opacity-90 transition-opacity"
+                className="hover:opacity-80 transition-opacity"
               >
                 {post.title}
               </Link>
@@ -90,7 +85,7 @@ export default function HeroBanner({ post }) {
             {/* Excerpt */}
             {post.excerpt && (
               <p style={{
-                color: "rgba(186,210,255,0.9)",
+                color: "#475569",
                 fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)",
                 lineHeight: 1.7,
                 margin: 0,
@@ -104,7 +99,7 @@ export default function HeroBanner({ post }) {
             )}
 
             {/* Meta row */}
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20, color: "rgba(186,210,255,0.75)", fontSize: 13 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20, color: "#64748b", fontSize: 13 }}>
               {readMins > 0 && (
                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <span className="material-symbols-outlined" style={{ fontSize: 16 }}>schedule</span>
@@ -129,7 +124,6 @@ export default function HeroBanner({ post }) {
             <div style={{ marginTop: 4 }}>
               <Link
                 href={`/blog/${post.slug}`}
-                className="glass-btn"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -140,6 +134,9 @@ export default function HeroBanner({ post }) {
                   fontSize: 14,
                   textDecoration: "none",
                   letterSpacing: "0.02em",
+                  background: "#003369",
+                  color: "#ffffff",
+                  transition: "background 0.2s",
                 }}
               >
                 Read Article
@@ -159,8 +156,8 @@ export default function HeroBanner({ post }) {
                   overflow: "hidden",
                   aspectRatio: "16 / 10",
                   position: "relative",
-                  boxShadow: "0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08)",
-                  background: "linear-gradient(135deg,#0d2f5e,#001533)",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)",
+                  background: "#f1f5f9",
                 }}
               >
                 {post.image ? (
@@ -187,19 +184,19 @@ export default function HeroBanner({ post }) {
 
                 {/* Subtle gradient overlay at bottom for legibility */}
                 <div style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0, height: "35%",
-                  background: "linear-gradient(to top, rgba(0,20,60,0.55), transparent)",
+                  position: "absolute", bottom: 0, left: 0, right: 0, height: "25%",
+                  background: "linear-gradient(to top, rgba(0,0,0,0.15), transparent)",
                   pointerEvents: "none",
                 }} />
               </div>
             </Link>
 
-            {/* Decorative glow behind the card */}
+            {/* Decorative shadow behind the card */}
             <div aria-hidden="true" style={{
-              position: "absolute", top: "10%", left: "5%", right: "5%", bottom: "10%",
-              background: "rgba(100,160,255,0.12)",
+              position: "absolute", top: "8%", left: "4%", right: "4%", bottom: "-4%",
+              background: "rgba(0,51,105,0.07)",
               borderRadius: 24,
-              filter: "blur(40px)",
+              filter: "blur(28px)",
               zIndex: -1,
             }} />
           </div>
