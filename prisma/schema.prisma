@@ -6,6 +6,7 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  schemas   = ["blog"]
 }
 
 model SiteConfig {
@@ -16,6 +17,7 @@ model SiteConfig {
   layoutZones Json     @default("{}") @map("zones")
 
   @@map("site_config")
+  @@schema("blog")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -33,6 +35,8 @@ model authors {
   email          String?  @unique
   is_super_admin Boolean? @default(false)
   posts          posts[]
+
+  @@schema("blog")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -51,6 +55,7 @@ model comments {
   @@index([parent_comment_id], map: "comments_parent_idx")
   @@index([post_slug])
   @@index([status])
+  @@schema("blog")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -68,6 +73,8 @@ model courses {
   sort_order  Int      @default(0)
   created_at  DateTime @default(now()) @db.Timestamptz(6)
   updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("blog")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -98,6 +105,7 @@ model post_versions {
 
   @@index([post_id])
   @@index([post_id, version_number], map: "post_versions_version_idx")
+  @@schema("blog")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -137,6 +145,7 @@ model posts {
   @@index([domain_tags], type: Gin)
   @@index([slug])
   @@index([status])
+  @@schema("blog")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -149,4 +158,5 @@ model subscribers {
   is_active     Boolean?  @default(true)
 
   @@index([email])
+  @@schema("blog")
 }

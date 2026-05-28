@@ -8,17 +8,19 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Browser / RSC client (anon key — respects RLS)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  db: { schema: 'blog' },
+});
 
 // Service-role client for server actions (bypasses RLS for writes)
 // Only used server-side — never shipped to the browser
 export function getServiceClient() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!serviceKey) {
-    // Fall back to anon key during local dev if service key not set
     return supabase;
   }
   return createClient(supabaseUrl, serviceKey, {
+    db: { schema: 'blog' },
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

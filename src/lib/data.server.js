@@ -244,15 +244,21 @@ export const getAllSlugs = cache(async function getAllSlugs() {
 });
 
 /** Recommendations based on domain_tags + skill_level overlap.
- *  Uses a slimmer projection (no full content/JSONB) and caps the candidate
- *  pool — we don't need to rank against every post to pick 3. */
-export const getRecommendations = cache(async function getRecommendations(currentSlug, limit = 3) {
-  // First fetch the current post's tags + skill level (one small query).
-  const { data: currentRow } = await supabase
-    .from('posts')
-    .select('slug, domain_tags, skill_level')
-    .eq('slug', currentSlug)
-    .maybeSingle();
+ *  Accepts pre-fetched tags/skill from the caller (already loaded by getPostBySlug)
+ *  to avoid a redundant DB round-trip. */
+export const getRecommendations = cache(async function getRecommendations(currentSlug, limit = 3, domainTags = null, skillLevel = null) {
+  const currentRow = domainTags !== null ? { domain_tags: domainTags, skill_level: skillLevel } : null;
+
+  // If caller didn't supply tags, fall back to fetching them (legacy path).
+  let resolvedRow = currentRow;
+  if (!resolvedRow) {
+    const { data } = await supabase
+      .from('posts')
+      .select('slug, domain_tags, skill_level')
+      .eq('slug', currentSlug)
+      .maybeSingle();
+    resolvedRow = data ?? null;
+  }
 
   // Narrow the candidate pool: prefer posts that share a domain tag with the
   // current post. Fallback to newest 30 if the current post has no tags.
@@ -262,8 +268,8 @@ export const getRecommendations = cache(async function getRecommendations(curren
     .eq('status', 'Published')
     .neq('slug', currentSlug);
 
-  if (currentRow?.domain_tags?.length) {
-    qb = qb.overlaps('domain_tags', currentRow.domain_tags);
+  if (resolvedRow?.domain_tags?.length) {
+    qb = qb.overlaps('domain_tags', resolvedRow.domain_tags);
   }
 
   const { data, error } = await qb
@@ -277,15 +283,15 @@ export const getRecommendations = cache(async function getRecommendations(curren
   }
 
   const pool = (data || []).map(mapPostRow);
-  if (!currentRow) return pool.slice(0, limit);
+  if (!resolvedRow) return pool.slice(0, limit);
 
   const overlap = (a, b) => (a && b ? a.filter(t => b.includes(t)).length : 0);
 
   return pool
     .map(p => ({
       ...p,
-      _score: overlap(p.domain_tags, currentRow.domain_tags) * 2 +
-              (p.skill_level === currentRow.skill_level ? 1 : 0),
+      _score: overlap(p.domain_tags, resolvedRow.domain_tags) * 2 +
+              (p.skill_level === resolvedRow.skill_level ? 1 : 0),
     }))
     .sort((a, b) => b._score - a._score)
     .slice(0, limit);

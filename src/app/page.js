@@ -4,7 +4,7 @@ import { getSiteConfig } from "@/lib/site-config.server";
 import { ToastProvider } from "@/components/Toast";
 import HomeClient from "./HomeClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300; // 5 min ISR — homepage shows recent posts, staleness is fine
 
 /**
  * Dynamic Homepage (Server Component)

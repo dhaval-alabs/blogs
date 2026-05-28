@@ -3,6 +3,9 @@ import { searchPosts, searchPostsLite } from '@/lib/data.server';
 import { getServiceClient } from '@/lib/supabase';
 import { createClient } from '@/utils/supabase/server';
 
+// Cache public listing for 5 minutes — studio requests bypass via ?all=true
+export const revalidate = 300;
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const query  = searchParams.get('q')      ?? '';

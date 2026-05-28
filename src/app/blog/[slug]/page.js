@@ -6,7 +6,7 @@ import CategoryView from "@/components/CategoryView";
 import { SITE_NAME } from "@/lib/config";
 import { getMdxPostBySlug, mdxToHtml, mapMdxToPost } from "@/lib/mdx-posts";
 
-export const revalidate = 60; // fallback ISR if on-demand revalidation misses
+export const revalidate = 600; // 10 min ISR — articles rarely change; bots were thrashing at 60s
 
 /** Generate dynamic SEO metadata for each article */
 export async function generateMetadata({ params }) {
@@ -143,7 +143,7 @@ export default async function ArticlePage({ params }) {
   }
 
   const [recommendedArticles, courseMatch, authorPostCount, siteConfig] = await Promise.all([
-    getRecommendations(slug, 3),
+    getRecommendations(slug, 3, post.domain_tags ?? null, post.skill_level ?? null),
     Promise.resolve(getCourseMatch(post.domain_tags)),
     getAuthorPostCount(post.authorId),
     getSiteConfig(),
