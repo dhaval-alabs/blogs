@@ -135,10 +135,17 @@ export const getPostBySlug = cache(async function getPostBySlug(slug) {
     .single();
 
   if (error) {
-    if (error.code !== 'PGRST116') {
-      console.error('[data.server] getPostBySlug error:', error.message);
+    // PGRST116 = "no rows" — a genuine 404, so return null and let the page
+    // call notFound(). Any OTHER error (timeout, connection limit, RLS, server
+    // error) is transient: returning null here would make the page fall through
+    // to Next's default 404, which ships `noindex` — silently de-indexing a
+    // real, published post. Re-throw instead so Next serves a 500, which Google
+    // retries rather than recording as "Excluded by 'noindex' tag".
+    if (error.code === 'PGRST116') {
+      return null;
     }
-    return null;
+    console.error('[data.server] getPostBySlug error:', error.message);
+    throw new Error(`getPostBySlug failed for "${slug}": ${error.message}`);
   }
   return mapPostRow(data);
 });
