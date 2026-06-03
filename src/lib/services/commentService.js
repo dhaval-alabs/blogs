@@ -1,6 +1,8 @@
+import { after } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
 import { getCallerSlug } from '@/lib/infrastructure/auth';
 import { revalidateRoute } from '@/lib/utils/core';
+import { reviewComment } from './commentAiService';
 
 function formatRelativeTime(dateStr) {
   const now = new Date();
@@ -40,8 +42,19 @@ export async function postComment(input) {
       status: 'pending',
     };
 
-    const { error: dbError } = await db.from('comments').insert(row);
+    const { data: inserted, error: dbError } = await db
+      .from('comments')
+      .insert(row)
+      .select('id')
+      .single();
     if (dbError) throw dbError;
+
+    // Hand the comment to Gemini for review AFTER the response is sent, so the
+    // visitor gets an instant "submitted" ack. Relevant comments get
+    // auto-approved + a brand reply; the rest stay pending for human review.
+    if (inserted?.id) {
+      after(() => reviewComment(inserted.id));
+    }
 
     return { success: true, pending: true };
   } catch (err) {
