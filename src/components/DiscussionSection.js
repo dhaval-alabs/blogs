@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useToast } from "@/components/Toast";
 import { postCommentAction, fetchCommentsAction, likeCommentAction } from "@/app/actions";
 
@@ -24,11 +24,17 @@ function getInitials(name = "") {
   return name.split(" ").map((w) => w[0] || "").join("").toUpperCase().slice(0, 2) || "?";
 }
 
+const norm = (s) => String(s || "").trim().toLowerCase();
+
 /**
  * Discussion / comments section backed by Supabase.
  *
+ * Relevant comments are auto-approved and answered by the brand within a few
+ * seconds (Gemini, server-side). To surface that without a manual refresh we
+ * optimistically show the submitted comment, then poll briefly after posting
+ * until the approved comment + AI reply arrive.
+ *
  * @param {{ postSlug?: string, title?: string }} props
- *   - postSlug: required to persist to DB. If omitted, falls back to local-only mode.
  */
 export default function DiscussionSection({ postSlug, title = "Discussion" }) {
   const addToast = useToast();
@@ -39,38 +45,81 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
   const [replyText, setReplyText] = useState("");
   const [loading, setLoading] = useState(false);
   const [likedSet, setLikedSet] = useState(new Set());
+  // Optimistic, not-yet-confirmed items the visitor just submitted.
+  const [pending, setPending] = useState([]);
+  const watchRef = useRef(0);
 
-  // Load comments from Supabase
+  // Load comments from Supabase. Returns the fresh list so callers can reconcile.
   const loadComments = useCallback(async () => {
-    if (!postSlug) return;
+    if (!postSlug) return [];
     const result = await fetchCommentsAction(postSlug);
     if (result.success) {
       setComments(result.comments);
+      return result.comments;
     }
+    return [];
   }, [postSlug]);
 
   useEffect(() => {
     loadComments();
-    // Restore liked set from localStorage
     try {
       const stored = localStorage.getItem(`likedComments_${postSlug}`);
       if (stored) setLikedSet(new Set(JSON.parse(stored)));
     } catch {}
+    return () => { watchRef.current++; }; // cancel any in-flight poll on unmount
   }, [loadComments, postSlug]);
+
+  // Drop optimistic items once the server confirms them (matched by user+text).
+  const reconcile = useCallback((fresh) => {
+    const seen = new Set();
+    for (const c of fresh) {
+      seen.add(`${norm(c.user)}::${norm(c.text)}`);
+      for (const r of c.replies || []) seen.add(`${norm(r.user)}::${norm(r.text)}`);
+    }
+    setPending((prev) => prev.filter((p) => !seen.has(`${norm(p.user)}::${norm(p.text)}`)));
+  }, []);
+
+  // After a post, the brand reply lands in ~2-5s. Poll a few times so it shows
+  // up live. Only runs right after the visitor acts — no steady-state polling.
+  const watchForUpdates = useCallback(() => {
+    const token = ++watchRef.current;
+    let attempts = 0;
+    const tick = async () => {
+      if (watchRef.current !== token) return; // superseded by a newer action/unmount
+      const fresh = await loadComments();
+      reconcile(fresh);
+      attempts++;
+      if (attempts < 12 && watchRef.current === token) {
+        setTimeout(tick, 2500);
+      }
+    };
+    setTimeout(tick, 2000);
+  }, [loadComments, reconcile]);
+
+  // Resolve which top-level thread a given comment id belongs to.
+  const rootIdOf = useCallback((id) => {
+    for (const c of comments) {
+      if (c.id === id) return c.id;
+      if ((c.replies || []).some((r) => r.id === id)) return c.id;
+    }
+    return null;
+  }, [comments]);
 
   async function postComment() {
     if (!commentInput.trim()) return;
+    const text = commentInput;
+    const user = userName.trim() || "Anonymous";
     setLoading(true);
     try {
-      const result = await postCommentAction({
-        postSlug: postSlug || "general",
-        userName: userName.trim() || "Anonymous",
-        text: commentInput,
-      });
+      const result = await postCommentAction({ postSlug: postSlug || "general", userName: user, text });
       if (result.success) {
         setCommentInput("");
-        // Comment is pending moderation — do not append to UI
-        addToast("Your comment has been submitted and is awaiting moderation.", "success");
+        setPending((p) => [
+          { tmpId: `tmp-${Date.now()}`, user, text, parentCommentId: null, rootId: null, createdAt: Date.now() },
+          ...p,
+        ]);
+        addToast("Submitted — checking for a reply…", "success");
+        watchForUpdates();
       } else {
         addToast(result.error || "Failed to post", "error");
       }
@@ -83,19 +132,26 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
 
   async function postReply(parentId) {
     if (!replyText.trim()) return;
+    const text = replyText;
+    const user = userName.trim() || "Anonymous";
+    const rootId = rootIdOf(parentId) ?? parentId;
     setLoading(true);
     try {
       const result = await postCommentAction({
         postSlug: postSlug || "general",
-        userName: userName.trim() || "Anonymous",
-        text: replyText,
+        userName: user,
+        text,
         parentCommentId: parentId,
       });
       if (result.success) {
         setReplyText("");
         setReplyingTo(null);
-        // Reply is pending moderation — do not append to UI
-        addToast("Your reply has been submitted and is awaiting moderation.", "success");
+        setPending((p) => [
+          ...p,
+          { tmpId: `tmp-${Date.now()}`, user, text, parentCommentId: parentId, rootId, createdAt: Date.now() },
+        ]);
+        addToast("Reply submitted — checking for a response…", "success");
+        watchForUpdates();
       } else {
         addToast(result.error || "Failed to reply", "error");
       }
@@ -111,7 +167,6 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
     const already = likedSet.has(key);
     const delta = already ? -1 : 1;
 
-    // Optimistic update
     const nextLiked = new Set(likedSet);
     if (already) nextLiked.delete(key);
     else nextLiked.add(key);
@@ -130,19 +185,15 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
       })
     );
 
-    // Persist to DB
     const result = await likeCommentAction(commentId, delta);
-    
+
     if (!result.success) {
-      // Revert optimistic update on failure
       addToast(result.error || "Failed to sync like with server", "error");
-      
       const revertedLiked = new Set(likedSet);
       if (already) revertedLiked.add(key);
       else revertedLiked.delete(key);
       setLikedSet(revertedLiked);
       localStorage.setItem(`likedComments_${postSlug}`, JSON.stringify([...revertedLiked]));
-
       setComments((prev) =>
         prev.map((c) => {
           if (c.id === commentId) return { ...c, likes: Math.max(0, c.likes - delta) };
@@ -157,7 +208,49 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
     }
   }
 
-  const totalComments = comments.length + comments.reduce((a, c) => a + (c.replies?.length || 0), 0);
+  const pendingTop = pending.filter((p) => !p.parentCommentId);
+  const pendingRepliesFor = (rootId) =>
+    pending.filter((p) => p.parentCommentId && p.rootId === rootId);
+
+  const totalComments =
+    comments.length +
+    comments.reduce((a, c) => a + (c.replies?.length || 0), 0) +
+    pending.length;
+
+  // Small reusable reply composer
+  const ReplyForm = ({ parentId }) => (
+    <div className="mt-3 flex gap-2">
+      <input
+        value={replyText}
+        onChange={(e) => setReplyText(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && !loading && postReply(parentId)}
+        placeholder="Write a reply…"
+        disabled={loading}
+        autoFocus
+        className="flex-1 px-3 py-2 rounded-xl text-sm outline-none bg-surface-container-lowest dark:bg-[#060e20] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+      />
+      <button
+        onClick={() => postReply(parentId)}
+        disabled={loading}
+        className="px-4 py-2 bg-primary text-on-primary rounded-full font-bold text-xs whitespace-nowrap disabled:opacity-60"
+      >
+        Reply
+      </button>
+    </div>
+  );
+
+  const BrandBadge = () => (
+    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary dark:bg-[#adc6ff]/15 dark:text-[#adc6ff]">
+      <span className="material-symbols-outlined text-[11px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+      Team
+    </span>
+  );
+
+  const PendingTag = () => (
+    <span className="text-[10px] font-medium text-on-surface-variant/70 dark:text-[#8c909f] italic">
+      · awaiting review…
+    </span>
+  );
 
   return (
     <div>
@@ -204,8 +297,31 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
 
       {/* Comments list */}
       <div className="flex flex-col divide-y divide-outline-variant/10 dark:divide-[#424754]/40">
+        {/* Optimistic top-level comments the visitor just posted */}
+        {pendingTop.map((p) => {
+          const color = getAvatarColor(p.user);
+          return (
+            <div key={p.tmpId} className="flex gap-4 py-5 opacity-60">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-bold" style={{ background: color.bg, color: color.text }}>
+                {getInitials(p.user)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-bold text-sm text-on-background dark:text-[#dae2fd]">{p.user}</span>
+                  <PendingTag />
+                </div>
+                <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed">{p.text}</p>
+              </div>
+            </div>
+          );
+        })}
+
         {comments.map((c) => {
           const color = getAvatarColor(c.user);
+          const threadReplies = [
+            ...(c.replies || []),
+            ...pendingRepliesFor(c.id).map((p) => ({ ...p, id: p.tmpId, time: "now", _pending: true })),
+          ];
           return (
             <div key={c.id} className="flex gap-4 py-5">
               <div
@@ -217,6 +333,7 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-bold text-sm text-on-background dark:text-[#dae2fd]">{c.user}</span>
+                  {c.isBrand && <BrandBadge />}
                   <span className="text-xs text-on-surface-variant dark:text-[#8c909f]">{c.time}</span>
                 </div>
                 <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed">{c.text}</p>
@@ -238,39 +355,23 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
                     {c.likes > 0 && c.likes}
                   </button>
                   <button
-                    onClick={() => setReplyingTo(replyingTo === c.id ? null : c.id)}
+                    onClick={() => { setReplyingTo(replyingTo === c.id ? null : c.id); setReplyText(""); }}
                     className="text-xs font-medium text-on-surface-variant dark:text-[#8c909f] hover:text-primary dark:hover:text-[#adc6ff] transition-colors"
                   >
                     Reply
                   </button>
                 </div>
 
-                {/* Reply form */}
-                {replyingTo === c.id && (
-                  <div className="mt-3 flex gap-2">
-                    <input
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && !loading && postReply(c.id)}
-                      placeholder="Write a reply..."
-                      disabled={loading}
-                      className="flex-1 px-3 py-2 rounded-xl text-sm outline-none bg-surface-container-lowest dark:bg-[#060e20] dark:text-[#dae2fd] border border-outline-variant/20 dark:border-[#424754] focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
-                    />
-                    <button
-                      onClick={() => postReply(c.id)}
-                      disabled={loading}
-                      className="px-4 py-2 bg-primary text-on-primary rounded-full font-bold text-xs whitespace-nowrap disabled:opacity-60"
-                    >
-                      Reply
-                    </button>
-                  </div>
-                )}
+                {replyingTo === c.id && <ReplyForm parentId={c.id} />}
 
-                {/* Replies */}
-                {c.replies?.map((r) => {
+                {/* Thread replies (flattened, time-ordered) */}
+                {threadReplies.map((r) => {
                   const rColor = getAvatarColor(r.user);
                   return (
-                    <div key={r.id} className="mt-4 flex gap-3 pl-4 border-l-2 border-outline-variant/10 dark:border-[#424754]">
+                    <div
+                      key={r.id}
+                      className={`mt-4 flex gap-3 pl-4 border-l-2 border-outline-variant/10 dark:border-[#424754] ${r._pending ? "opacity-60" : ""}`}
+                    >
                       <div
                         className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
                         style={{ background: rColor.bg, color: rColor.text }}
@@ -280,25 +381,37 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
                           <span className="font-bold text-sm text-on-background dark:text-[#dae2fd]">{r.user}</span>
-                          <span className="text-xs text-on-surface-variant dark:text-[#8c909f]">{r.time}</span>
+                          {r.isBrand && <BrandBadge />}
+                          {r._pending ? <PendingTag /> : <span className="text-xs text-on-surface-variant dark:text-[#8c909f]">{r.time}</span>}
                         </div>
                         <p className="text-sm text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed">{r.text}</p>
-                        <button
-                          onClick={() => handleLike(r.id)}
-                          className={`mt-1 text-xs font-medium flex items-center gap-1 transition-colors ${
-                            likedSet.has(String(r.id))
-                              ? "text-primary dark:text-[#adc6ff]"
-                              : "text-on-surface-variant dark:text-[#8c909f] hover:text-primary dark:hover:text-[#adc6ff]"
-                          }`}
-                        >
-                          <span
-                            className="material-symbols-outlined text-sm"
-                            style={{ fontVariationSettings: likedSet.has(String(r.id)) ? "'FILL' 1" : "'FILL' 0" }}
-                          >
-                            favorite
-                          </span>
-                          {r.likes > 0 && r.likes}
-                        </button>
+                        {!r._pending && (
+                          <div className="flex items-center gap-4 mt-1">
+                            <button
+                              onClick={() => handleLike(r.id)}
+                              className={`text-xs font-medium flex items-center gap-1 transition-colors ${
+                                likedSet.has(String(r.id))
+                                  ? "text-primary dark:text-[#adc6ff]"
+                                  : "text-on-surface-variant dark:text-[#8c909f] hover:text-primary dark:hover:text-[#adc6ff]"
+                              }`}
+                            >
+                              <span
+                                className="material-symbols-outlined text-sm"
+                                style={{ fontVariationSettings: likedSet.has(String(r.id)) ? "'FILL' 1" : "'FILL' 0" }}
+                              >
+                                favorite
+                              </span>
+                              {r.likes > 0 && r.likes}
+                            </button>
+                            <button
+                              onClick={() => { setReplyingTo(replyingTo === r.id ? null : r.id); setReplyText(""); }}
+                              className="text-xs font-medium text-on-surface-variant dark:text-[#8c909f] hover:text-primary dark:hover:text-[#adc6ff] transition-colors"
+                            >
+                              Reply
+                            </button>
+                          </div>
+                        )}
+                        {replyingTo === r.id && <ReplyForm parentId={r.id} />}
                       </div>
                     </div>
                   );
@@ -308,7 +421,7 @@ export default function DiscussionSection({ postSlug, title = "Discussion" }) {
           );
         })}
 
-        {comments.length === 0 && (
+        {comments.length === 0 && pendingTop.length === 0 && (
           <p className="text-sm text-on-surface-variant dark:text-[#8c909f] py-8 text-center">
             No comments yet. Be the first to share your thoughts!
           </p>

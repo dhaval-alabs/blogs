@@ -2,7 +2,7 @@ import { after } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
 import { getCallerSlug } from '@/lib/infrastructure/auth';
 import { revalidateRoute } from '@/lib/utils/core';
-import { reviewComment } from './commentAiService';
+import { reviewComment, BRAND_AUTHOR } from './commentAiService';
 
 function formatRelativeTime(dateStr) {
   const now = new Date();
@@ -100,30 +100,50 @@ export async function fetchComments(postSlug) {
       return { success: true, comments: [] };
     }
 
-    const topLevel = [];
-    const replyMap = {};
+    // Flatten each thread under its ROOT comment. Replies can nest arbitrarily
+    // (a user replies to the brand reply, the brand replies again, …) — we walk
+    // each row up to its top-most ancestor and collect every descendant as a
+    // single time-ordered list under that root. This keeps the UI a clean
+    // two-level thread no matter how deep the underlying chain goes.
+    const rows = data || [];
+    const byId = new Map(rows.map((r) => [r.id, r]));
+    const toComment = (row) => ({
+      id: row.id,
+      user: row.user_name,
+      text: row.text,
+      likes: row.likes || 0,
+      time: formatRelativeTime(row.created_at),
+      parentCommentId: row.parent_comment_id,
+      createdAt: row.created_at,
+      isBrand: row.user_name === BRAND_AUTHOR,
+      replies: [],
+    });
+    const rootIdOf = (row) => {
+      let cur = row;
+      let guard = 0;
+      while (cur.parent_comment_id && byId.has(cur.parent_comment_id) && guard++ < 50) {
+        cur = byId.get(cur.parent_comment_id);
+      }
+      return cur.id;
+    };
 
-    for (const row of data || []) {
-      const comment = {
-        id: row.id,
-        user: row.user_name,
-        text: row.text,
-        likes: row.likes || 0,
-        time: formatRelativeTime(row.created_at),
-        parentCommentId: row.parent_comment_id,
-        createdAt: row.created_at,
-        replies: [],
-      };
-      if (row.parent_comment_id) {
-        if (!replyMap[row.parent_comment_id]) replyMap[row.parent_comment_id] = [];
-        replyMap[row.parent_comment_id].push(comment);
+    const topLevel = [];
+    const repliesByRoot = new Map();
+    for (const row of rows) {
+      const isRoot = !row.parent_comment_id || !byId.has(row.parent_comment_id);
+      if (isRoot) {
+        topLevel.push(toComment(row));
       } else {
-        topLevel.push(comment);
+        const rootId = rootIdOf(row);
+        if (!repliesByRoot.has(rootId)) repliesByRoot.set(rootId, []);
+        repliesByRoot.get(rootId).push(toComment(row));
       }
     }
 
     for (const c of topLevel) {
-      c.replies = (replyMap[c.id] || []).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      c.replies = (repliesByRoot.get(c.id) || []).sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+      );
     }
 
     return { success: true, comments: topLevel };
