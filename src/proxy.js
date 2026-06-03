@@ -2,6 +2,34 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import { lookupRedirect } from '@/lib/infrastructure/redirects';
 
+// Legacy WordPress URL shapes that were never migrated and 404 on the new
+// site (GSC "Not found (404)"). These are open-ended families, so we collapse
+// them with patterns rather than enumerating thousands of dead URLs. Takes a
+// pathname with NO trailing slash (the proxy normalizes before calling) and
+// returns a canonical 301 destination, or null. Destinations are chosen so the
+// normalized form never re-matches a pattern — no redirect loops.
+function legacyWpRedirect(pathname) {
+  if (!pathname.startsWith('/blog/') && pathname !== '/blog') return null;
+
+  // WordPress tag & author archives — no equivalent on the new site.
+  if (pathname === '/blog/tag' || pathname.startsWith('/blog/tag/')) return '/blog/';
+  if (pathname === '/blog/author' || pathname.startsWith('/blog/author/')) return '/blog/';
+
+  // RSS feed endpoints: /blog/<...>/feed → the canonical page it belonged to;
+  // bare /blog/feed → the blog index.
+  if (pathname === '/blog/feed') return '/blog/';
+  if (pathname.endsWith('/feed')) {
+    const base = pathname.slice(0, -'/feed'.length);
+    return base === '/blog' || base === '' ? '/blog/' : `${base}/`;
+  }
+
+  // Old dated permalinks: /blog/2019/01/30/some-slug → /blog/some-slug/
+  const dated = pathname.match(/^\/blog\/\d{4}\/\d{2}\/\d{2}\/([^/]+)$/);
+  if (dated) return `/blog/${dated[1]}/`;
+
+  return null;
+}
+
 export async function proxy(request) {
   // Subdomain canonicalization: 301 direct hits on blog.analytixlabs.co.in
   // to www.analytixlabs.co.in so Google only sees one canonical URL.
@@ -92,6 +120,13 @@ export async function proxy(request) {
       ? dynamicRedirect.destination
       : new URL(dynamicRedirect.destination, request.url).toString();
     return NextResponse.redirect(dest, dynamicRedirect.type || 301);
+  }
+
+  // Catch-all for legacy WordPress tag/author/feed/dated URLs (runs after the
+  // exact-match table above, so a specific redirect always takes priority).
+  const legacy = legacyWpRedirect(pathname);
+  if (legacy) {
+    return NextResponse.redirect(new URL(legacy, request.url).toString(), 301);
   }
 
   return NextResponse.next({ request });
