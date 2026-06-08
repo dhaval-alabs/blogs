@@ -30,7 +30,7 @@ const POST_WITH_AUTHOR_SELECT = `
 // Used by getRecommendations. Drops heavy JSONB / content blobs.
 const POST_LIST_SELECT = `
   id, title, slug, excerpt, category, domain_tags, skill_level,
-  read_time, author_id, image, published_at, likes,
+  read_time, author_id, image, published_at, updated_at, likes,
   author:authors!posts_author_id_fkey (
     slug, name, initials, color, image, position
   )
@@ -46,6 +46,39 @@ function formatDate(dateStr) {
   } catch {
     return dateStr;
   }
+}
+
+// Effective recency = the most recent of published_at and updated_at.
+// A post's published_at is preserved across edits (so "Published Jun 4, 2020"
+// stays accurate), and updated_at is bumped on every edit. Sorting "Latest"
+// on published_at alone pins a refreshed old post to its original date so it
+// never resurfaces; ranking on effective recency floats substantively
+// updated posts back to the top while keeping their original publish date.
+function effectiveRecency(row) {
+  const p = row?.published_at ? new Date(row.published_at).getTime() : 0;
+  const u = row?.updated_at ? new Date(row.updated_at).getTime() : 0;
+  return Math.max(Number.isFinite(p) ? p : 0, Number.isFinite(u) ? u : 0);
+}
+
+// Same idea as effectiveRecency() but for already-mapped posts (camelCase
+// date fields, possibly mixing Supabase rows and MDX posts) — used where we
+// merge/sort post objects rather than raw DB rows.
+function mappedRecency(p) {
+  const pub = p?.publishedAt || p?.published_at;
+  const upd = p?.updatedAt || p?.updated_at;
+  const a = pub ? new Date(pub).getTime() : 0;
+  const b = upd ? new Date(upd).getTime() : 0;
+  return Math.max(Number.isFinite(a) ? a : 0, Number.isFinite(b) ? b : 0);
+}
+
+// Sort a copy of raw DB rows by effective recency, falling back to id DESC as
+// a stable tiebreaker. Used by the "Latest"/listing/search queries so a
+// refreshed older post resurfaces while keeping its original publish date.
+function rankByRecency(rows) {
+  return (rows || []).slice().sort((a, b) => {
+    const diff = effectiveRecency(b) - effectiveRecency(a);
+    return diff !== 0 ? diff : (b.id - a.id);
+  });
 }
 
 // ── Column mapping: DB snake_case → app camelCase ─────────────────
@@ -103,6 +136,7 @@ function mapPostRowLite(row) {
     authorId:    row.author_id,
     image:       row.image,
     publishedAt: formatDate(row.published_at),
+    updatedAt:   formatDate(row.updated_at),
     likeCount:   row.likes ?? 0,
     author,
   };
@@ -123,7 +157,9 @@ export const getPosts = cache(async function getPosts() {
     console.error('[data.server] getPosts error:', error.message);
     return [];
   }
-  return (data || []).map(mapPostRowLite);
+  // Re-rank by effective recency so refreshed older posts resurface in
+  // "Latest" / the hero card while keeping their original publish date.
+  return rankByRecency(data).map(mapPostRowLite);
 });
 
 /** Fetch a single post by slug, with embedded author. */
@@ -225,7 +261,7 @@ export async function getCategoryPosts(slug) {
   return [
     ...supabasePosts,
     ...mdxPosts.filter((p) => !supabaseSlugs.has(p.slug)),
-  ].sort((a, b) => new Date(b.publishedAt || b.published_at || 0) - new Date(a.publishedAt || a.published_at || 0));
+  ].sort((a, b) => mappedRecency(b) - mappedRecency(a));
 }
 
 /** Count published posts by a given author */
@@ -326,7 +362,7 @@ export const searchPosts = cache(async function searchPosts(query = '', activeTo
     return [];
   }
 
-  let results = (data || []).map(mapPostRow);
+  let results = rankByRecency(data).map(mapPostRow);
 
   if (query) {
     const q = query.toLowerCase();
@@ -364,7 +400,7 @@ export const searchPostsLite = cache(async function searchPostsLite(query = '', 
     return [];
   }
 
-  let results = (data || []).map(mapPostRowLite);
+  let results = rankByRecency(data).map(mapPostRowLite);
 
   if (query) {
     const q = query.toLowerCase();
