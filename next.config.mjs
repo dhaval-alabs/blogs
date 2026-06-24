@@ -94,6 +94,12 @@ const nextConfig = {
         destination: '/blog/:slug*/',
         permanent: true,
       },
+      // NOTE: the SEO-team 404/migration redirects (Antigravity brief,
+      // 2026-06-16) intentionally live in src/proxy.js, NOT here. With
+      // `trailingSlash: true`, a next.config redirect on a bare URL chains
+      // (308 add-slash → 301), which fails the brief's "single 301, no chains"
+      // requirement. The proxy runs before trailing-slash normalization, so it
+      // emits one clean 301 (with UTM preserved). See briefRedirect() there.
     ];
   },
 };

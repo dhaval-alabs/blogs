@@ -121,6 +121,62 @@ function extractFaqJsonLd(htmlContent, slug = "") {
   };
 }
 
+// ── schema.org JSON-LD ──────────────────────────────────────────────
+// Canonical host for every schema URL — always the public www host, never
+// the blog. origin (matches generateMetadata + the site canonical).
+const SITE_ORIGIN = "https://www.analytixlabs.co.in";
+
+/** Normalize any date-ish value to an ISO 8601 string, or null. */
+function toISO(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d.toISOString();
+}
+
+/** BlogPosting schema — rich-result eligibility + author/publisher/date signals. */
+function buildArticleJsonLd(post) {
+  const url = post.seo?.canonicalUrl || `${SITE_ORIGIN}/blog/${post.slug}/`;
+  const image = post.seo?.ogImage || post.image || null;
+  const datePublished = toISO(post.publishedAtISO);
+  const dateModified = toISO(post.updatedAtISO) || datePublished;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    headline: post.seo?.metaTitle || post.title,
+    description: post.seo?.metaDesc || post.excerpt || post.title,
+    ...(image ? { image: [image] } : {}),
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    author: { "@type": "Person", name: post.author?.name || SITE_NAME },
+    publisher: {
+      "@type": "Organization",
+      name: "AnalytixLabs",
+      logo: { "@type": "ImageObject", url: `${SITE_ORIGIN}/blog/logo.svg` },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+}
+
+/** BreadcrumbList schema: Home › Blog › <post>. */
+function buildBreadcrumbJsonLd(post) {
+  const url = post.seo?.canonicalUrl || `${SITE_ORIGIN}/blog/${post.slug}/`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_ORIGIN}/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_ORIGIN}/blog/` },
+      { "@type": "ListItem", position: 3, name: post.title, item: url },
+    ],
+  };
+}
+
+/** Serialize JSON-LD for safe inlining in a <script> tag (escape `<`). */
+function jsonLd(obj) {
+  return JSON.stringify(obj).replace(/</g, "\\u003c");
+}
+
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
   let post = await getPostBySlug(slug);
@@ -155,10 +211,18 @@ export default async function ArticlePage({ params }) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(buildArticleJsonLd(post)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(buildBreadcrumbJsonLd(post)) }}
+      />
       {faqJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(faqJsonLd) }}
         />
       )}
       <ArticleContent post={post} recommendedArticles={recommendedArticles} courseMatch={courseMatch} authorPostCount={authorPostCount} sidebarWidgets={siteConfig.zones.article_sidebar} />

@@ -30,6 +30,58 @@ function legacyWpRedirect(pathname) {
   return null;
 }
 
+// SEO 404 / migration redirects confirmed by the SEO team (Antigravity
+// blog-fixes brief, 2026-06-16). Implemented here rather than in next.config
+// `redirects()` so they run BEFORE trailing-slash canonicalization — that
+// yields a single 301 hop for both the slashed and unslashed forms (a
+// next.config redirect would chain 308→301 under `trailingSlash: true`).
+// `pathname` arrives already trailing-slash-stripped; the caller re-attaches
+// the query string so UTM params survive the redirect.
+const BRIEF_EXACT_REDIRECTS = {
+  // Fix 1 — truncated-slug 404s (destinations verified live 200 by SEO team)
+  '/blog/the-best': '/blog/the-best-machine-learning-tools-python-vs-r-vs-sas/',
+  '/blog/building-': '/blog/building-self-learning-ai-agents-in-python/',
+  '/blog/real-time-': '/blog/real-time-analytics/',
+  '/blog/what-is-i': '/blog/what-is-image-segmentation/',
+  '/blog/101-of-artificial-': '/blog/101-of-artificial-intelligence-ai-what-to-know-as-a-beginner/',
+  '/blog/characteristics-': '/blog/characteristics-of-big-data/',
+  '/blog/business-intelligence-': '/blog/business-intelligence-value-chain/',
+  '/blog/what-is-agentic-': '/blog/what-is-agentic-ai/',
+  '/blog/what-is-artificial-': '/blog/what-is-artificial-intelligence-engineering/',
+  // Fix 2 — old / garbled blog slugs
+  // INTERIM: remove this line when /careers/ ships on the main site (Dhaval will notify).
+  '/blog/careers-at-analytixlabs': '/contact-us/',
+  '/blog/data-science-and-ai-1777560853996': '/blog/data-science-and-ai/', // LinkedIn share artefact
+  '/blog/blog--analytixlabs': '/blog/', // garbled CMS artefact
+  // Fix 3 — old category pages
+  '/blog/business-intelligence': '/blog/business-analytics/',
+  '/blog/report': 'https://www.analytixlabs.co.in/free-resources/', // cross-domain → main site
+};
+
+function briefRedirect(pathname) {
+  // Fix 1–3 — exact matches.
+  const exact = BRIEF_EXACT_REDIRECTS[pathname];
+  if (exact) return exact;
+
+  // Fix 4 — /blog/blog/ double-prefix (legacy WP URLs Google still holds).
+  // This app has NO /blog/page/[n] route, so paginated double-prefix URLs go
+  // to the blog index; any other double-prefix collapses one /blog/ level.
+  // (Confirmed there is no link-generation bug in the app — this IS the fix.)
+  if (pathname === '/blog/blog' || pathname.startsWith('/blog/blog/page/')) return '/blog/';
+  if (pathname.startsWith('/blog/blog/')) {
+    return `/blog/${pathname.slice('/blog/blog/'.length)}/`;
+  }
+
+  // Fix 5 — strip a trailing /1000 segment (suspected Elementor/WP artefact,
+  // ~57 URLs). Interim safety net; skip bare /blog/1000 to avoid a `//` dest.
+  if (pathname.endsWith('/1000')) {
+    const base = pathname.slice(0, -'/1000'.length);
+    if (base.startsWith('/blog/') && base !== '/blog') return `${base}/`;
+  }
+
+  return null;
+}
+
 export async function proxy(request) {
   // Subdomain canonicalization: 301 direct hits on blog.analytixlabs.co.in
   // to www.analytixlabs.co.in so Google only sees one canonical URL.
@@ -120,6 +172,17 @@ export async function proxy(request) {
       ? dynamicRedirect.destination
       : new URL(dynamicRedirect.destination, request.url).toString();
     return NextResponse.redirect(dest, dynamicRedirect.type || 301);
+  }
+
+  // ── SEO 404 / migration redirects (SEO-team brief, 2026-06-16) ───
+  // Runs before trailing-slash normalization → one clean 301 with UTM kept.
+  const brief = briefRedirect(pathname);
+  if (brief) {
+    const target = brief.startsWith('http')
+      ? new URL(brief)
+      : new URL(brief, request.url);
+    target.search = request.nextUrl.search; // preserve UTM / query params
+    return NextResponse.redirect(target.toString(), 301);
   }
 
   // Catch-all for legacy WordPress tag/author/feed/dated URLs (runs after the

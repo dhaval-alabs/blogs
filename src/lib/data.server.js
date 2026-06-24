@@ -103,6 +103,11 @@ function mapPostRow(row) {
     status:         row.status,
     publishedAt:    formatDate(row.published_at),
     updatedAt:      formatDate(row.updated_at),
+    // Raw ISO timestamps preserved for schema.org JSON-LD (datePublished /
+    // dateModified must be ISO 8601 — the formatted strings above lose the
+    // time and would shift the date across the IST→UTC boundary).
+    publishedAtISO: row.published_at ?? null,
+    updatedAtISO:   row.updated_at ?? null,
     seo:            row.seo ?? {},
     courseMappings: row.course_mappings ?? [],
     courseCTA:      row.course_cta ?? '',

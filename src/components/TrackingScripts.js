@@ -13,11 +13,14 @@ import Script from "next/script";
  * - ScaleX 360 analytics
  * - Heap analytics
  */
-export default function TrackingScripts() {
+export default function TrackingScripts({ enabled = false }) {
   return (
     <>
 
-      {/* ── GTM Standard (GTM-MN7KJTVN) — deferred to lazyOnload ── */}
+      {/* ── GTM Standard (GTM-MN7KJTVN) — production only (gated via the
+          `enabled` prop from the server layout; VERCEL_ENV isn't readable
+          client-side). Keeps preview/dev deploys out of GTM→GA4. ── */}
+      {enabled && (
       <Script id="gtm-standard" strategy="lazyOnload">{`
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -25,6 +28,7 @@ export default function TrackingScripts() {
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MN7KJTVN');
       `}</Script>
+      )}
 
       {/* ── jQuery (required by OwlCarousel) — deferred to lazyOnload to avoid blocking critical path ── */}
       <Script

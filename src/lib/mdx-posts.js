@@ -108,6 +108,9 @@ export function mapMdxToPost(mdxPost, htmlContent = null) {
     status:         'Published',
     publishedAt:    formatDate(mdxPost.date),
     updatedAt:      formatDate(mdxPost.modified) || formatDate(mdxPost.date),
+    // Raw dates for schema.org JSON-LD (normalized to ISO 8601 at render time).
+    publishedAtISO: mdxPost.date || null,
+    updatedAtISO:   mdxPost.modified || mdxPost.date || null,
     seo:            {},
     courseMappings: [],
     courseCTA:      '',

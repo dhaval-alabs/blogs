@@ -5,7 +5,7 @@ export const revalidate = 86400 // regenerate once per day
 export async function GET() {
   const content = `# AnalytixLabs Blog
 
-	⁠Technical blog with 499+ articles covering Data Science, Machine Learning, Artificial Intelligence, Generative AI, Python, Business Analytics, Big Data, and data career guidance. Published by IIT, IIM & ISB alumni and industry practitioners. Target audience: working professionals, students, and career switchers entering the data and AI industry in India and globally.
+Technical blog with 499+ articles covering Data Science, Machine Learning, Artificial Intelligence, Generative AI, Python, Business Analytics, Big Data, and data career guidance. Published by IIT, IIM & ISB alumni and industry practitioners. Target audience: working professionals, students, and career switchers entering the data and AI industry in India and globally.
 
 This blog does not sell products. All articles are educational and free. For course information visit https://www.analytixlabs.co.in. The blog index is at https://www.analytixlabs.co.in/blog/.
 
