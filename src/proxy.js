@@ -58,9 +58,42 @@ const BRIEF_EXACT_REDIRECTS = {
   '/blog/report': 'https://www.analytixlabs.co.in/free-resources/', // cross-domain → main site
 };
 
+// Residual individual 404s from the GSC "Not found (404)" report (June 2026)
+// that the brief's Fix 1–5 don't cover. Every destination was verified to
+// return 200 on www.analytixlabs.co.in (no chains). Exact-match only, so they
+// resolve via briefRedirect's exact check below — which runs before
+// legacyWpRedirect, letting the two dated-permalink entries override its
+// generic dated rule (which would otherwise resolve them to a now-renamed slug
+// and 404).
+const GSC_RESIDUAL_REDIRECTS = {
+  // Renamed / variant slugs → current live post
+  '/blog/7-data-science-deep-learning-projects-absolutely-learn': '/blog/deep-learning-projects/',
+  '/blog/business-analytics-vs-business-intelligence-whats-difference': '/blog/business-intelligence-vs-business-analytics/',
+  '/blog/data-preprocessing-in-machine-learning': '/blog/data-processing-in-machine-learning/',
+  '/blog/healthcare-analytics-with-python': '/blog/healthcare-analytics/',
+  '/blog/how-to-build-custom-nlp-pipelines': '/blog/building-custom-nlp-pipeline/',
+  '/blog/random-forest-regression-a-comprehensive-guide': '/blog/random-forest-regression/',
+  '/blog/artificial-intelligence/ai-models': '/blog/ai-models/',
+  '/blog/ai-skills-playbook-2026': '/blog/ai-skills-in-demand/',
+  // Old dated permalinks whose target slug was itself renamed (override the
+  // generic dated handler in legacyWpRedirect)
+  '/blog/2020/05/07/50-ultimate-python-data-science-libraries-to-learn-in-2020': '/blog/50-ultimate-python-data-science-libraries-to-learn/',
+  '/blog/2019/02/19/exploring-career-avenues-deep-learning-certification-2019': '/blog/exploring-career-avenues-deep-learning-certification-2024/',
+  // Original post no longer exists → closest live page / category hub
+  '/blog/advantages-disadvantages-of-artificial-intelligence': '/blog/artificial-intelligence/',
+  '/blog/data-scientist-vs-machine-learning-engineer': '/blog/data-science/',
+  '/blog/what-is-marketing-analytics': '/blog/what-is-business-analytics/',
+  '/blog/2020/02/08/the-ai-and-machine-learning-trends-to-watch-out-for-in-2020': '/blog/artificial-intelligence/',
+  '/blog/what-is-langchain': '/blog/artificial-intelligence/',
+  // No relevant target → blog index
+  '/blog/best-geospatial-technology-trends-for-2022': '/blog/',
+  '/blog/interview-q-a': '/blog/',
+  '/blog/securepanel': '/blog/',
+};
+
 function briefRedirect(pathname) {
-  // Fix 1–3 — exact matches.
-  const exact = BRIEF_EXACT_REDIRECTS[pathname];
+  // Fix 1–3 — exact matches (SEO-team brief) + residual GSC 404s.
+  const exact = BRIEF_EXACT_REDIRECTS[pathname] ?? GSC_RESIDUAL_REDIRECTS[pathname];
   if (exact) return exact;
 
   // Fix 4 — /blog/blog/ double-prefix (legacy WP URLs Google still holds).
