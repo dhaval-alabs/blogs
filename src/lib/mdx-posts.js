@@ -107,10 +107,10 @@ export function mapMdxToPost(mdxPost, htmlContent = null) {
     image:          mdxPost.featuredImage,
     status:         'Published',
     publishedAt:    formatDate(mdxPost.date),
-    updatedAt:      formatDate(mdxPost.modified) || formatDate(mdxPost.date),
-    // Raw dates for schema.org JSON-LD (normalized to ISO 8601 at render time).
+    // Raw date for schema.org JSON-LD (normalized to ISO 8601 at render time).
+    // The "modified" date is intentionally not surfaced: the frontend only
+    // ever shows/sorts by the publish date.
     publishedAtISO: mdxPost.date || null,
-    updatedAtISO:   mdxPost.modified || mdxPost.date || null,
     seo:            {},
     courseMappings: [],
     courseCTA:      '',

@@ -73,10 +73,10 @@ export default function HeroBanner({ post }) {
                   <span>{post.author.name}</span>
                 </span>
               )}
-              {(post.publishedAt || post.updatedAt) && (
+              {post.publishedAt && (
                 <span className="flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-base">calendar_today</span>
-                  <span>{post.publishedAt || post.updatedAt}</span>
+                  <span>{post.publishedAt}</span>
                 </span>
               )}
             </div>

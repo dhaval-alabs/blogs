@@ -137,7 +137,7 @@ export default function StudioSidebar({
       <div className="sb-drafts">
         {allPosts.slice(0, 8).map((p) => {
           const dotColor = p.status === "Published" ? "var(--green)" : p.status === "Scheduled" ? "var(--orange)" : "#64748b";
-          const displayDate = p.publishedAt || p.updatedAt || "";
+          const displayDate = p.publishedAt || "";
           return (
             <div key={p.id} className="sb-draft" onClick={() => loadPostForEdit(p)}>
               <div className="sb-draft-row">

@@ -38,7 +38,7 @@ export async function GET(request) {
 
     let query = db
       .from('posts')
-      .select('id,title,slug,status,category,image,alt_text,published_at,updated_at,read_time,author_id,domain_tags,skill_level,excerpt,content,seo,course_mappings,course_cta,newsletter,quiz,ai_hints,trust,discussion,advanced')
+      .select('id,title,slug,status,category,image,alt_text,published_at,read_time,author_id,domain_tags,skill_level,excerpt,content,seo,course_mappings,course_cta,newsletter,quiz,ai_hints,trust,discussion,advanced')
       .order('id', { ascending: false });
 
     if (!caller.is_super_admin) {
@@ -57,7 +57,6 @@ export async function GET(request) {
       readTime: r.read_time,
       authorId: r.author_id,
       publishedAt: fmtDate(r.published_at),
-      updatedAt: fmtDate(r.updated_at),
       altText: r.alt_text,
     }));
     return NextResponse.json(posts);

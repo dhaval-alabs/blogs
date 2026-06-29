@@ -18,7 +18,7 @@ import { courses, salaryData, authors as staticAuthors } from './data';
 // list is explicit so we never pull PII (e.g. email) into public responses.
 const POST_WITH_AUTHOR_SELECT = `
   id, title, slug, excerpt, content, category, domain_tags, skill_level,
-  read_time, author_id, image, status, published_at, updated_at,
+  read_time, author_id, image, status, published_at,
   seo, course_mappings, course_cta, newsletter, quiz, ai_hints,
   trust, discussion, advanced, likes,
   author:authors!posts_author_id_fkey (
@@ -30,7 +30,7 @@ const POST_WITH_AUTHOR_SELECT = `
 // Used by getRecommendations. Drops heavy JSONB / content blobs.
 const POST_LIST_SELECT = `
   id, title, slug, excerpt, category, domain_tags, skill_level,
-  read_time, author_id, image, published_at, updated_at, likes,
+  read_time, author_id, image, published_at, likes,
   author:authors!posts_author_id_fkey (
     slug, name, initials, color, image, position
   )
@@ -99,12 +99,11 @@ function mapPostRow(row) {
     image:          row.image,
     status:         row.status,
     publishedAt:    formatDate(row.published_at),
-    updatedAt:      formatDate(row.updated_at),
-    // Raw ISO timestamps preserved for schema.org JSON-LD (datePublished /
-    // dateModified must be ISO 8601 — the formatted strings above lose the
-    // time and would shift the date across the IST→UTC boundary).
+    // Raw ISO timestamp preserved for schema.org JSON-LD (datePublished must
+    // be ISO 8601 — the formatted string above loses the time and would shift
+    // the date across the IST→UTC boundary). updated_at is intentionally not
+    // surfaced: the frontend only ever shows/sorts by the publish date.
     publishedAtISO: row.published_at ?? null,
-    updatedAtISO:   row.updated_at ?? null,
     seo:            row.seo ?? {},
     courseMappings: row.course_mappings ?? [],
     courseCTA:      row.course_cta ?? '',
@@ -138,7 +137,6 @@ function mapPostRowLite(row) {
     authorId:    row.author_id,
     image:       row.image,
     publishedAt: formatDate(row.published_at),
-    updatedAt:   formatDate(row.updated_at),
     likeCount:   row.likes ?? 0,
     author,
   };

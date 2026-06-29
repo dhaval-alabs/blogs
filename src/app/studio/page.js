@@ -371,6 +371,7 @@ export default function AuthorStudio() {
                     readTime={state.readTime}
                     featuredImage={state.featuredImage}
                     authorObj={dynamicAuthor}
+                    publishDate={state.publishDate}
                   />
                 )}
               </div>

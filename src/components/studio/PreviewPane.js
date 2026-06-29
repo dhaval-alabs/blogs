@@ -1,6 +1,13 @@
 "use client";
 
-export default function PreviewPane({ postTitle, postBody, excerpt, category, readTime, featuredImage, authorObj }) {
+export default function PreviewPane({ postTitle, postBody, excerpt, category, readTime, featuredImage, authorObj, publishDate }) {
+  // Frontend never surfaces "updated" dates — only the (editable) publish date.
+  const publishLabel = (() => {
+    const raw = publishDate || "";
+    const d = raw ? new Date(raw) : null;
+    if (!d || isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" });
+  })();
   return (
     <div className="preview-view">
       <div className="preview-sections">
@@ -17,7 +24,7 @@ export default function PreviewPane({ postTitle, postBody, excerpt, category, re
               <div className="preview-card-meta">
                 <span>{readTime || 0} min read</span>
                 <span>{category}</span>
-                <span>Updated {new Date().toLocaleString("en", { month: "short", year: "numeric" })}</span>
+                {publishLabel && <span>Published {publishLabel}</span>}
               </div>
               <div className="preview-card-actions">
                 <button className="pca-btn pca-read">Read More</button>

@@ -251,11 +251,16 @@ function studioReducer(state, action) {
 
     case "LOAD_POST": {
       const p = action.post;
-      // Normalise publishedAt to YYYY-MM-DD for the date picker
-      const rawDate = p.publishedAt || p.published_at || "";
+      // Normalise the publish date to YYYY-MM-DD for the date picker.
+      // Prefer the raw ISO timestamp and slice its date part directly — parsing
+      // a formatted/local string through new Date() shifts the day across the
+      // IST→UTC boundary, which silently re-dates the post on every save.
+      const rawDate = p.published_at || p.publishedAt || "";
       let publishDate = "";
       if (rawDate) {
-        try { const d = new Date(rawDate); if (!isNaN(d.getTime())) publishDate = d.toISOString().slice(0, 10); } catch { }
+        const iso = /^(\d{4}-\d{2}-\d{2})/.exec(rawDate);
+        if (iso) publishDate = iso[1];
+        else { try { const d = new Date(rawDate); if (!isNaN(d.getTime())) publishDate = d.toISOString().slice(0, 10); } catch { } }
       }
       return {
         ...state,

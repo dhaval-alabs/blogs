@@ -44,7 +44,7 @@ function isoToDateOnly(dateStr) {
 function buildSeoCsv(posts) {
   const headers = [
     "id", "title", "slug", "status", "topic", "tags", "author",
-    "publishedAt", "updatedAt", "wordCount", "focusKeyword",
+    "publishedAt", "wordCount", "focusKeyword",
     "metaTitle", "metaDescription", "urlSlug",
     "internalLinksCount", "externalLinksCount", "keywordDensity", "seoScore",
   ];
@@ -66,7 +66,6 @@ function buildSeoCsv(posts) {
       (p.domain_tags || []).join("|"),
       p.authorId || p.author_id || "",
       isoToDateOnly(p.publishedAt || p.published_at || ""),
-      isoToDateOnly(p.updatedAt || p.updated_at || ""),
       wordCount,
       seo.focusKeyword || "",
       seo.metaTitle || p.title || "",
