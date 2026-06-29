@@ -11,10 +11,51 @@
   max-width: 100% !important;
   height: auto;
 }
+/* WordPress-migrated tables ship inline style="height:NNpx" / width="NNN".
+   Under display:block (our horizontal-scroll wrapper) that fixed height becomes
+   a hard block height that CLIPS the rows. Force height/width to auto and give
+   the table real grid styling. border-collapse is an inherited property, so it
+   still reaches the anonymous table box that display:block generates. */
 .tiptap-prose table {
-  max-width: 100%;
-  overflow-x: auto;
   display: block;
+  width: max-content;
+  max-width: 100%;
+  height: auto !important;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1.75rem 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.tiptap-prose table td,
+.tiptap-prose table th {
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  height: auto !important;
+  vertical-align: top;
+}
+/* Treat the first row as a header even when WP used <td> (no <thead>/<th>). */
+.tiptap-prose table th,
+.tiptap-prose table tr:first-child td {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #0f172a;
+}
+.tiptap-prose table tr:nth-child(even):not(:first-child) td {
+  background: #f8fafc;
+}
+.dark .tiptap-prose table td,
+.dark .tiptap-prose table th {
+  border-color: rgba(255, 255, 255, 0.10);
+  color: #dae2fd;
+}
+.dark .tiptap-prose table th,
+.dark .tiptap-prose table tr:first-child td {
+  background: #16203a;
+  color: #ffffff;
+}
+.dark .tiptap-prose table tr:nth-child(even):not(:first-child) td {
+  background: rgba(255, 255, 255, 0.02);
 }
 .tiptap-prose pre {
   max-width: 100%;
