@@ -113,7 +113,12 @@ As mentioned earlier, R is a modular language, it’s the packages that play an 
 
 Common functions include-
 
-<table dir="ltr" style="height: 186px;" border="1" width="675" cellspacing="0" cellpadding="10"><colgroup><col width="306"><col width="199"></colgroup><tbody><tr><td>&nbsp;</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Functions&quot;}">Functions</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To find all the libraries available in the CRAN repository&quot;}">To find all the libraries available in the CRAN repository</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;available.packages()&quot;}">available.packages()</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To find all the installed packages&quot;}">To find all the installed packages</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;installed.packages()&quot;}">installed.packages()</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To load a library&quot;}">To load a library</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;install.package(“library name”)&quot;}">install.package(“library name”)</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To load a library&quot;}">To load a library</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;library(libraryname)&quot;}">library(libraryname)</td></tr></tbody></table>
+|  | Functions |
+| --- | --- |
+| To find all the libraries available in the CRAN repository | available.packages() |
+| To find all the installed packages | installed.packages() |
+| To load a library | install.package(“library name”) |
+| To load a library | library(libraryname) |
 
 ### **(10) Shortcuts**
 
@@ -311,7 +316,14 @@ Being an object-based language, in R anything that can be saved in a variable is
 
 All these objects are shown in the Environment window. This makes managing objects extremely easy as the user can see the objects that are currently occupying the space in RAM. The user can export, and import objects using a .RData file and can even delete objects that are unnecessary to make the coding process more efficient. Common functions include: 
 
-<table dir="ltr" style="height: 343px;" border="0" width="706" cellspacing="10" cellpadding="10"><colgroup><col width="245"><col width="242"></colgroup><tbody><tr><td style="text-align: center;" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Function&quot;}"><strong>Function</strong></td><td style="text-align: center;" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Formula&quot;}"><strong>Formula</strong></td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Finding all the names of objects in the environment&quot;}">Finding all the names of objects in the environment</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; ls()&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; ls()</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Saving all the objects that are there in the environment&quot;}">Saving all the objects that are there in the environment</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; save.image(\&quot;MyBackup.RData\&quot;)&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; save.image(“MyBackup.RData”)</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Saving one object from the environment&quot;}">Saving one object from the environment</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; save(Cities, file=\&quot;cityobj.RData\&quot;)&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; save(Cities, file=”cityobj.RData”)</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Removing an object&quot;}">Removing an object</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; rm(Cities)&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; rm(Cities)</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Removing all the object from the environment&quot;}">Removing all the object from the environment</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; rm(list=ls())&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; rm(list=ls())</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Loading a RData file&quot;}">Loading a RData file</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;&gt;&gt; load(\&quot;MyBackup.RData\&quot;)&quot;}">&nbsp; &nbsp; &nbsp; &nbsp;&gt;&gt; load(“MyBackup.RData”)</td></tr></tbody></table>
+| **Function** | **Formula** |
+| --- | --- |
+| Finding all the names of objects in the environment | >> ls() |
+| Saving all the objects that are there in the environment | >> save.image(“MyBackup.RData”) |
+| Saving one object from the environment | >> save(Cities, file=”cityobj.RData”) |
+| Removing an object | >> rm(Cities) |
+| Removing all the object from the environment | >> rm(list=ls()) |
+| Loading a RData file | >> load(“MyBackup.RData”) |
 
 ### **(2) Console**
 
@@ -331,7 +343,12 @@ These are symbols that allow us to perform certain operations. For example, the 
 
 In R there are a number of operators such as: 
 
-<table dir="ltr" style="height: 1024px;" border="1" width="742" cellspacing="0" cellpadding="10"><colgroup><col width="242"><col width="100"></colgroup><tbody><tr><td style="text-align: center;" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Type&quot;}">Type</td><td style="text-align: center;" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Operators&quot;}">Operators</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Assignment Operators&quot;}">Assignment Operators</td><td><p>=</p><p>-&gt;</p><p>&lt;-</p></td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Arithmatic Operators&quot;}">Arithmetic Operators</td><td><p>/ (division)</p><p>* (multiplication)</p><p>+ (addition)</p><p>– (substraction)</p><p>%% (modulus) Remainder</p><p>%/% (Integer Division) Quotient</p><p>^ (Power)&nbsp;</p></td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Relational Operators&quot;}">Relational Operators</td><td><p>&gt; (Greater than)</p><p>&lt; (Less than)</p><p></p><p>&lt;= (Greater than equal to)</p><p></p><p>&gt;= (Less than equal to)</p><p></p><p>== (Equal to Equal to)</p></td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Logical Operators&quot;}">Logical Operators</td><td><p>&amp; (AND)</p><p>| (OR)</p><p>! (NOT)</p></td></tr></tbody></table>
+| Type | Operators |
+| --- | --- |
+| Assignment Operators | = -> <- |
+| Arithmetic Operators | / (division) * (multiplication) + (addition) – (substraction) %% (modulus) Remainder %/% (Integer Division) Quotient ^ (Power) |
+| Relational Operators | > (Greater than) < (Less than) <= (Greater than equal to) >= (Less than equal to) == (Equal to Equal to) |
+| Logical Operators | & (AND) \| (OR) ! (NOT) |
 
 ### **(5) Syntax Rules**
 
@@ -430,7 +447,12 @@ As mentioned earlier, R is a modular language, it’s the packages that play an 
 
 Common functions include-
 
-<table dir="ltr" style="height: 186px;" border="1" width="675" cellspacing="0" cellpadding="10"><colgroup><col width="306"><col width="199"></colgroup><tbody><tr><td>&nbsp;</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Functions&quot;}">Functions</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To find all the libraries available in the CRAN repository&quot;}">To find all the libraries available in the CRAN repository</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;available.packages()&quot;}">available.packages()</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To find all the installed packages&quot;}">To find all the installed packages</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;installed.packages()&quot;}">installed.packages()</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To load a library&quot;}">To load a library</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;install.package(“library name”)&quot;}">install.package(“library name”)</td></tr><tr><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;To load a library&quot;}">To load a library</td><td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;library(libraryname)&quot;}">library(libraryname)</td></tr></tbody></table>
+|  | Functions |
+| --- | --- |
+| To find all the libraries available in the CRAN repository | available.packages() |
+| To find all the installed packages | installed.packages() |
+| To load a library | install.package(“library name”) |
+| To load a library | library(libraryname) |
 
 ### **(10) Shortcuts**
 

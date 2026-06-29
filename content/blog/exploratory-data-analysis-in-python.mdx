@@ -187,25 +187,51 @@ The details of the three datasets are as follows-
 -   Dataset #2: Having information about the insurance policy the customer has bought
 -   Dataset #3: Having information about the insurance claims
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># importing pandas</span><br></span><span style="color: #0000ff"><b>import</b></span><span style="font-weight: 400"> pandas </span><b><span style="color: #0000ff">a</span>s</b><span style="font-weight: 400"> pd</span><p></p><p><span style="font-weight: 400"><span style="color: #26bc00"># importing numpy</span><br></span><span style="color: #0000ff"><b>import</b></span><span style="font-weight: 400"> numpy </span><span style="color: #0000ff"><b>as</b></span><span style="font-weight: 400"> np</span></p><p><span style="font-weight: 400"><span style="color: #26bc00"># importing scipy</span><br></span><span style="color: #0000ff"><b>from</b></span><span style="font-weight: 400"> scipy </span><b><span style="color: #0000ff">impor</span>t</b><span style="font-weight: 400"> stats</span></p><p><span style="font-weight: 400"><span style="color: #26bc00"># import seaborn</span><br></span><span style="color: #0000ff"><b style="font-family: inherit;font-size: inherit">import</b></span><span style="font-family: inherit;font-size: inherit"> seaborn </span><span style="color: #0000ff"><b style="font-family: inherit;font-size: inherit">as</b></span><span style="font-family: inherit;font-size: inherit"> sns</span></p><p><span style="font-weight: 400"><span style="color: #26bc00"># import pyplot</span><br></span><span style="color: #0000ff"><b>import</b></span><span style="font-weight: 400"> matplotlib</span><b>.</b><span style="font-weight: 400">pyplot </span><span style="color: #0000ff"><b>as</b></span><span style="font-weight: 400"> plt</span></p><p><span style="font-weight: 400"><span style="color: #26bc00"># importing the demographic data</span><br></span><span style="font-family: inherit;font-size: inherit">demographic_details </span><b style="font-family: inherit;font-size: inherit">=</b><span style="font-family: inherit;font-size: inherit"> pd</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">read_csv</span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-family: inherit;font-size: inherit">‘Insurance_Company_Customer_Demographics.csv’</span><b style="font-family: inherit;font-size: inherit">)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># importing the insurance policy details</span><br></span><span style="font-weight: 400">policy_details </span><b>=</b><span style="font-weight: 400"> pd</span><b>.</b><span style="font-weight: 400">read_excel</span><b>(</b><span style="font-weight: 400">‘Insurance_Company_Customer_Insurance_Details.xlsx’</span><b>,</b><span style="font-weight: 400">sheet_name</span><b>=</b><span style="font-weight: 400">‘Policy_Details’</span><b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># importing the insurance claim details</span><br></span><span style="font-weight: 400">claim_details </span><b>=</b><span style="font-weight: 400"> pd</span><b>.</b><span style="font-weight: 400">read_excel</span><b>(</b><span style="font-weight: 400">‘Insurance_Company_Customer_Insurance_Details.xlsx’</span><b>,</b><span style="font-weight: 400">sheet_name</span><b>=</b><span style="font-weight: 400">‘Claim_Details’</span><b>)</b></p></td></tr></tbody></table>
+```python
+# importing pandas
+import pandas as pd
+# importing numpy
+import numpy as np
+# importing scipy
+from scipy import stats
+# import seaborn
+import seaborn as sns
+# import pyplot
+import matplotlib.pyplot as plt
+# importing the demographic data
+demographic_details = pd.read_csv(‘Insurance_Company_Customer_Demographics.csv’)
+# importing the insurance policy details
+policy_details = pd.read_excel(‘Insurance_Company_Customer_Insurance_Details.xlsx’,sheet_name=‘Policy_Details’)
+# importing the insurance claim details
+claim_details = pd.read_excel(‘Insurance_Company_Customer_Insurance_Details.xlsx’,sheet_name=‘Claim_Details’)
+```
 
 Once the required modules and the dataset are imported, you can view the dataset to understand its contents and how to combine them.
 
 #### View data
 
-<table><tbody><tr><td><span style="color: #26bc00">#viewing demographic data<br><span style="color: #000000">demographic_details.head(<span style="color: #ff6600">5</span>)</span></span></td></tr></tbody></table>
+```
+#viewing demographic data
+demographic_details.head(5)
+```
 
 ![dataset EDA](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/1.jpg)
 
 The first data has details regarding the customer, such as their gender, education, income, etc.
 
-<table><tbody><tr><td><span style="color: #26bc00">#viewing demographic data<br><span style="color: #000000">policy_details.head(<span style="color: #ff6600">5</span>)</span></span></td></tr></tbody></table>
+```
+#viewing demographic data
+policy_details.head(5)
+```
 
 ![dataset data analysis](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/2.jpg)
 
 The second dataset has information regarding the nature of the policy they have purchased.
 
-<table><tbody><tr><td><span style="color: #26bc00">#viewing claim details<br><span style="color: #000000">claim_details.head(</span></span><span style="color: #ff6600">5</span><span style="color: #26bc00"><span style="color: #000000">)</span></span></td></tr></tbody></table>
+```
+#viewing claim details
+claim_details.head(5)
+```
 
 ![claim dataset](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/3.jpg)
 
@@ -213,7 +239,18 @@ The third data is information regarding the insurance claim, raised complaints, 
 
 #### Collate data
 
-<table><tbody><tr><td><span style="color: #26bc00">#combining data #1 with #2</span><span style="color: #26bc00"><span style="color: #000000">mrg_df <span style="color: #0000ff">=</span> pd.merge(left=<br>demographic_details, right <span style="color: #0000ff">=</span></span><br><span style="color: #000000">policy_details, on<span style="color: #0000ff">=</span>‘Customer ID’,</span><br></span>how= ‘inner’)<p></p><p><span style="color: #26bc00">#combining data #1 and #2 with data #3</span><br>df = pd.merge (left = mrg_df,<br>right=claim_details, on=’Customer ID’,<br>how=’inner’)</p><p><span style="color: #26bc00">#viewing the first 5 rows</span><br>df.head()</p></td></tr></tbody></table>
+```python
+#combining data #1 with #2mrg_df = pd.merge(left=
+demographic_details, right =
+policy_details, on=‘Customer ID’,
+how= ‘inner’)
+#combining data #1 and #2 with data #3
+df = pd.merge (left = mrg_df,
+right=claim_details, on=’Customer ID’,
+how=’inner’)
+#viewing the first 5 rows
+df.head()
+```
 
 ![data for eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/data-e1687170384759.png)
 
@@ -223,7 +260,10 @@ The third data is information regarding the insurance claim, raised complaints, 
 
 #### Column names
 
-<table><tbody><tr><td><span style="color: #26bc00">#viewing the column names</span><br>df.columns</td></tr></tbody></table>
+```python
+#viewing the column names
+df.columns
+```
 
 ![basic information column name](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/4.jpg)
 
@@ -231,7 +271,12 @@ You first start by looking at all the column names to understand the kind of inf
 
 The scope of EDA is to explore the data and identify such issues so that they can be addressed when performing data preprocessing and feature engineering. However, you can switch back and forth from EDA to other steps and perform preprocessing and feature engineering while performing EDA. Therefore, you can make the column per Python conventions in this case.
 
-<table><tbody><tr><td><span style="color: #26bc00">#making the column names as per Python conventions</span><br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(” “,” “)<br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(“(” “,” “)<br>df.columns = df.columns.<span style="color: #7c1dc9">str</span>.replace(“)”,” “)</td></tr></tbody></table>
+```python
+#making the column names as per Python conventions
+df.columns = df.columns.str.replace(” “,” “)
+df.columns = df.columns.str.replace(“(” “,” “)
+df.columns = df.columns.str.replace(“)”,” “)
+```
 
 ![column data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/5.jpg)
 
@@ -239,23 +284,33 @@ Removing the unnecessary characters from the column names makes it easier to ope
 
 #### Check duplicate rows
 
-<table><tbody><tr><td><span style="color: #26bc00">#checking duplicate rows</span><br>df.duplicated()[df.duplicated()==<span style="color: #0000ff">True</span>]</td></tr></tbody></table>
+```python
+#checking duplicate rows
+df.duplicated()[df.duplicated()==True]
+```
 
 You start by checking for any duplicate rows, as when performing data exploration in Python, duplicate rows can cause issues. In your case, you don’t have any duplicate rows.
 
 #### No. of rows and columns
 
-<table><tbody><tr><td><span style="color: #26bc00">#finding number of rows and columns</span><br><span style="color: #7c1dc9">print</span>(“number of rows: “, df.shape[<span style="color: #ff6600">0</span>])<br><span style="color: #7c1dc9">print</span>(“number of columns: “, df.shape[<span style="color: #ff6600">1</span>])</td></tr></tbody></table>
+```python
+#finding number of rows and columns
+print(“number of rows: “, df.shape[0])
+print(“number of columns: “, df.shape[1])
+```
 
 `# finding number of rows and columns   print("number of rows: ", df.shape[0])   print("number of columns: ", df.shape[1])`
 
-<table><tbody><tr><td>No. of Rows:9134<p></p><p>No of Columns: 26</p></td></tr></tbody></table>
+> No. of Rows:9134 No of Columns: 26
 
 The next important thing in Python data exploration is to know the dimensions of the data, as it allows you to use functionalities like .iloc if required. In your case, you have 9,134 rows and 26 columns.
 
 #### Data type of columns
 
-<table><tbody><tr><td><span style="color: #26bc00">#viewing the data types of columns</span><br>df.dtypes</td></tr></tbody></table>
+```python
+#viewing the data types of columns
+df.dtypes
+```
 
 ![data type columns](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/7.jpg)
 
@@ -263,7 +318,11 @@ When performing exploratory data analysis in Python, you use various functions, 
 
 #### Combining the identified similar variable
 
-<table><tbody><tr><td><span style="color: #26bc00">#Combining the identified similar variables</span><br>df[‘Total_Claim_Amount’] = df.Claim_Amount_1_USD +<br>df.Claim_Amount_2_USD + df.Claim_Amount_3_USD</td></tr></tbody></table>
+```python
+#Combining the identified similar variables
+df[‘Total_Claim_Amount’] = df.Claim_Amount_1_USD +
+df.Claim_Amount_2_USD + df.Claim_Amount_3_USD
+```
 
 You can perform another feature engineering step in the middle of EDA by looking at the columns above; a ‘Total\_Claim Amount’ column can be created by summing all the claim amount columns.
 
@@ -277,21 +336,37 @@ Let’s start with univariate non-graphical analysis, exploring one column at a 
 
 #### Column Data Type
 
-<table style="height: 68px" width="241"><tbody><tr><td><span style="color: #26bc00">#checking data type</span><br>df.Income_USD.dtype</td></tr></tbody></table>
+```python
+#checking data type
+df.Income_USD.dtype
+```
 
 Interestingly, the column ‘Income\_USD’ data type is being shown as ‘O’, i.e., Object, which refers to a string data type which should not be the case. As per the column name, the data type should be numeric, like float.
 
-<table><tbody><tr><td><span style="color: #26bc00">#identifying why certain columns don’t have the correct data type e.g. ‘Income_USD’</span><br>df.Income_USD.value_counts()</td></tr></tbody></table>
+```python
+#identifying why certain columns don’t have the correct data type e.g. ‘Income_USD’
+df.Income_USD.value_counts()
+```
 
 ![column data set](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/8.jpg)
 
 By exploring the variable or by looking at the data dictionary, you find that ‘NILL’ is being mentioned in place of 0 and ‘$’ and ‘, ‘ is in the data causing it to have a string-based data type.
 
-<table><tbody><tr><td><span style="color: #26bc00">#resolving the above identified issues</span><br>df.Income_USD =df.Income_USD.<span style="color: #7c1dc9">str</span>.replace(‘NILL’, ‘0’)<br>df.Income_USD =df.Income_USD.<span style="color: #7c1dc9">str</span>.replace(‘$’, ‘ ‘)<br>df.Income_USD =df.Income_USD.<span style="color: #7c1dc9">str</span>.replace(‘ , ‘, ‘ ‘)<br>df.Income_USD =df.Income_USD.astype(‘float’)</td></tr></tbody></table>
+```python
+#resolving the above identified issues
+df.Income_USD =df.Income_USD.str.replace(‘NILL’, ‘0’)
+df.Income_USD =df.Income_USD.str.replace(‘$’, ‘ ‘)
+df.Income_USD =df.Income_USD.str.replace(‘ , ‘, ‘ ‘)
+df.Income_USD =df.Income_USD.astype(‘float’)
+```
 
 You can replace the characters with appropriate values and perform feature engineering by converting the column’s data type.
 
-<table><tbody><tr><td><span style="color: #26bc00">#identifying why certain columns don’t have the correct data type e.g.</span><br><span style="color: #26bc00">#’Customer_Lifetime_Value_USD’</span><br>df.Customer_Lifetime_Value_USD.value_counts()</td></tr></tbody></table>
+```python
+#identifying why certain columns don’t have the correct data type e.g.
+#’Customer_Lifetime_Value_USD’
+df.Customer_Lifetime_Value_USD.value_counts()
+```
 
 Similarly, you can look at ‘Customer\_Lifetime\_Value\_USD’ also. There too, seems to be a mismatch of data type.
 
@@ -299,7 +374,11 @@ Similarly, you can look at ‘Customer\_Lifetime\_Value\_USD’ also. There too,
 
 Here it seems that in place of missings, some specials characters ‘$$$’ have been mentioned.
 
-<table><tbody><tr><td><span style="color: #26bc00">#resolving the above identified issues<br></span>df[‘Customer_Lifetime_Value_USD’].loc[df [‘Customer<br>_lifetime_value_USD]==’$$$’,] = np.nandf.Customer_Lifetime_Value_USD <b>=</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Customer_Lifetime_Value_USD</span><b>.</b><span style="font-weight: 400">astype</span><b>(</b><span style="font-weight: 400">‘float’</span><b>)</b></td></tr></tbody></table>
+```python
+#resolving the above identified issues
+df[‘Customer_Lifetime_Value_USD’].loc[df [‘Customer
+_lifetime_value_USD]==’$$$’,] = np.nandf.Customer_Lifetime_Value_USD = df.Customer_Lifetime_Value_USD.astype(‘float’)
+```
 
 If required, you can perform feature engineering here, replace the special character with the missing value, and convert the column’s data type to an appropriate one.
 
@@ -309,11 +388,17 @@ The next important step in Python data exploration is to understand the type of 
 
 Common types of variables include numerical (continuous or discrete) and categorical (binary, nominal, or ordinal).
 
-<table><tbody><tr><td><span style="color: #26bc00">#identifying the type of variable</span><br>df.Gender.unique()</td></tr></tbody></table>
+```python
+#identifying the type of variable
+df.Gender.unique()
+```
 
 By looking at the categories of the column ‘Gender’, it is a nominal categorical variable that has been label encoded.
 
-<table><tbody><tr><td><span style="color: #26bc00">#identifying the type of variable</span><br>df.Vehicle_size.unique()</td></tr></tbody></table>
+```python
+#identifying the type of variable
+df.Vehicle_size.unique()
+```
 
 `array(['Midsize', 'Small', 'Large'], dtype=object)`
 
@@ -323,7 +408,10 @@ The column ‘Vehicle\_Size’ categories suggest that it is an ordinal categori
 
 Knowing the column’s missing values and its quantum is crucial when working on EDA projects in Python. If a column has an extremely high amount of missing values, then such a column may be dropped.
 
-<table><tbody><tr><td><span style="color: #26bc00">#calculating the missing values</span><br>df.State.isnull(). sum() [df.State.isnull(). sum()&gt;0] [<span style="color: #ff0000">0</span>]</td></tr></tbody></table>
+```python
+#calculating the missing values
+df.State.isnull(). sum() [df.State.isnull(). sum()>0] [0]
+```
 
 `**20**`
 
@@ -333,19 +421,33 @@ In your dataset, for example, the column ‘State’ seems to have 20 missing va
 
 Statistics and statistical functions play an important role in Python data exploration, and they are highly susceptible to outliers. Therefore one needs to identify the outliers (and cap them as part of feature engineering) so that the subsequent results of EDA that use statistics are correct.
 
-<table><tbody><tr><td><span style="color: #26bc00">#Calculating upper cap using IQR</span><br>Q1, Q3 = df.Income_USD.quantile ([<span style="color: #ff0000">0.25,0.75</span>])<br>IQR = Q3-Q1<br>UC = Q3 + (IQR*<span style="color: #ff0000">1.5</span>)<p></p><p><span style="color: #26bc00">#identifying upper outliers</span><br>df.Income_USD[df.Income_USD&gt;UC]</p></td></tr></tbody></table>
+```python
+#Calculating upper cap using IQR
+Q1, Q3 = df.Income_USD.quantile ([0.25,0.75])
+IQR = Q3-Q1
+UC = Q3 + (IQR*1.5)
+#identifying upper outliers
+df.Income_USD[df.Income_USD>UC]
+```
 
 ![output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/output.png)
 
 For example, you identify the upper outliers for the ‘Income\_USD’ column using the IQR method and find two such outliers.
 
-<table><tbody><tr><td><span style="color: #26bc00">#Outlier capping</span><br>df.Income_USD[df.Income_USD&gt;UC] = UC</td></tr></tbody></table>
+```python
+#Outlier capping
+df.Income_USD[df.Income_USD>UC] = UC
+```
 
 You can perform feature engineering here and cap them on the spot.
 
 #### Duplicate values
 
-<table><tbody><tr><td><span style="color: #26bc00">#checking duplicate customer id</span><br>df.Customer_ID.duplicated()<br>[df.Customer_ID.duplicated()==<span style="color: #ff0000">1</span>]</td></tr></tbody></table>
+```python
+#checking duplicate customer id
+df.Customer_ID.duplicated()
+[df.Customer_ID.duplicated()==1]
+```
 
 `**series ([], Name: Customer_ID, dtype: bool)**`
 
@@ -353,7 +455,32 @@ In datasets that are at a customer level, you need to ensure that each row provi
 
 #### Descriptive summary Statistics
 
-<table><tbody><tr><td><span style="color: #26bc00"># calculating mean</span><br><span style="color: #7c1dc9"><b style="font-family: inherit;font-size: inherit">print</b></span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-family: inherit;font-size: inherit">“mean: “</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-family: inherit;font-size: inherit"> df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">Total_Claim_Amount</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">mean</span><b style="font-family: inherit;font-size: inherit">()</b> <b style="font-family: inherit;font-size: inherit">)</b><p></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating median</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“median: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">median</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating mode</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“mode: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">mode</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating variance</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“variance: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">var</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating standard deviation</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“standard deviation: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">std</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating minimum</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“minimum: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><b>min</b><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating maximum</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“maximum: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><b>max</b><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating IQR</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“IQR: “</span><b>,</b><span style="font-weight: 400"> stats</span><b>.</b><span style="font-weight: 400">iqr</span><b>(</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>,</b><span style="font-weight: 400"> interpolation </span><b>=</b> <span style="font-weight: 400">‘midpoint’</span><b>)</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># coefficient of variance</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“coefficient of variance: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">std</span><b>()/</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">mean</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating skewness</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“skewness: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">skew</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating kurtosis</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b><span style="font-weight: 400">“kurtosis: “</span><b>,</b><span style="font-weight: 400"> df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>.</b><span style="font-weight: 400">kurtosis</span><b>()</b> <b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># calculating the cardinality (number of unique values)</span><br></span><span style="color: #7c1dc9"><b>print</b></span><b>(</b>“unique values: “<b>,</b> df<b>.</b>Total_Claim_Amount<b>.</b>nunique<b>()</b> <b>)</b></p></td></tr></tbody></table>
+```python
+# calculating mean
+print(“mean: “, df.Total_Claim_Amount.mean() )
+# calculating median
+print(“median: “, df.Total_Claim_Amount.median() )
+# calculating mode
+print(“mode: “, df.Total_Claim_Amount.mode() )
+# calculating variance
+print(“variance: “, df.Total_Claim_Amount.var() )
+# calculating standard deviation
+print(“standard deviation: “, df.Total_Claim_Amount.std() )
+# calculating minimum
+print(“minimum: “, df.Total_Claim_Amount.min() )
+# calculating maximum
+print(“maximum: “, df.Total_Claim_Amount.max() )
+# calculating IQR
+print(“IQR: “, stats.iqr(df.Total_Claim_Amount, interpolation = ‘midpoint’) )
+# coefficient of variance
+print(“coefficient of variance: “, df.Total_Claim_Amount.std()/df.Total_Claim_Amount.mean() )
+# calculating skewness
+print(“skewness: “, df.Total_Claim_Amount.skew() )
+# calculating kurtosis
+print(“kurtosis: “, df.Total_Claim_Amount.kurtosis() )
+# calculating the cardinality (number of unique values)
+print(“unique values: “, df.Total_Claim_Amount.nunique() )
+```
 
 ![descriptive summary statistics output](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/11.jpg)
 
@@ -361,25 +488,42 @@ Descriptive statistics play a crucial role in data exploration in Python. As see
 
 #### One sample T-test
 
-<table><tbody><tr><td><span style="color: #26bc00">#running one sample T-test<br><span style="color: #000000">stats.ttest_1samp(a = df.Total_Claim_Amount,<br>popmean= <span style="color: #ff0000">500</span></span></span></td></tr></tbody></table>
+```
+#running one sample T-test
+stats.ttest_1samp(a = df.Total_Claim_Amount,
+popmean= 500
+```
 
 In univariate analysis, some hypothesis testing can be done. Here you run a one-sample t-test to check if the average ‘Total\_Claim\_Amount’ is statistically different from $500.
 
 #### Independent T-test
 
-<table><tbody><tr><td><span style="color: #26bc00">#running independent t-test</span><br>stats.ttest_ind(a= df.Income_USD[df.Gender==<span style="color: #ff0000">0</span>],<br>b= df.Income_USD[df.Gender==<span style="color: #ff0000">1</span>],<br>equal_var=<span style="color: #7c1dc9">False</span>)<p></p><p><span style="color: #26bc00">#assuming samples have equal variance</span></p></td></tr></tbody></table>
+```
+#running independent t-test
+stats.ttest_ind(a= df.Income_USD[df.Gender==0],
+b= df.Income_USD[df.Gender==1],
+equal_var=False)
+#assuming samples have equal variance
+```
 
 An Independent t-test allows you to understand whether the mean of two categories of a variable is similar. Here, for example, there is little proof that the income of male and female customers is statistically the same.
 
 #### One-way ANOVA (F-test)
 
-<table><tbody><tr><td><span style="color: #26bc00">#finding categories</span><br>df.Education.value_counts()</td></tr></tbody></table>
+```python
+#finding categories
+df.Education.value_counts()
+```
 
 ![anova test data](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/anova-test-data.png)
 
 One Way Analysis of Variance, a kind of F-test, allows you to understand if the mean of two or more categories of a variable is similar. Here, for example, there is strong proof that the Income of individuals from different educational backgrounds is statistically similar.
 
-<table><tbody><tr><td><span style="color: #26bc00"># data for each category</span><br>s1 = df.Income_USD[df.Education==’Bachelor’] s2 = df.Income_USD[df.Education==’College’] s3 = df.Income_USD[df.Education==’High School or Below’] s4 = df.Income_USD[df.Education==’Master’] s5 = df.Income_USD[df.Education==’Doctor’]<p><span style="color: #26bc00">#running one way ANOVA</span><br>stats.f_onewat(s2, s2, s3, s4, s5)</p></td></tr></tbody></table>
+```
+# data for each category
+s1 = df.Income_USD[df.Education==’Bachelor’] s2 = df.Income_USD[df.Education==’College’] s3 = df.Income_USD[df.Education==’High School or Below’] s4 = df.Income_USD[df.Education==’Master’] s5 = df.Income_USD[df.Education==’Doctor’]#running one way ANOVA
+stats.f_onewat(s2, s2, s3, s4, s5)
+```
 
 `**F_onewayResult(statistic=15.32657653737315, pvalue=1.6967129487932849e-12)**`
 
@@ -390,7 +534,11 @@ The exploratory data analysis in Python is continued using one variable (univari
 -   #### Histogram
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating histogram</span><br>sns.histplot(x = ‘Total_Claim_Amount’, data = df, kde = <span style="color: #7c1dc9">True</span>)<br>plt.show()</td></tr></tbody></table>
+```python
+# creating histogram
+sns.histplot(x = ‘Total_Claim_Amount’, data = df, kde = True)
+plt.show()
+```
 
 If you create the histogram of ‘Total\_Claim\_Amount’, you can understand its distribution. Suppose you intend to use this variable as a dependent variable with a statistical algorithm like linear regression.
 
@@ -401,7 +549,10 @@ In that case, you may want to transform it to ensure its distribution is normal 
 -   #### Boxplot
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating boxplot<br></span>df.Income_USD.plot(kind=’box’) plt.show()</td></tr></tbody></table>
+```python
+# creating boxplot
+df.Income_USD.plot(kind=’box’) plt.show()
+```
 
 The outliers can also be visualized using a boxplot. As seen before using the IQR outlier detection method, there are two outliers in ‘Income\_USD.’
 
@@ -410,7 +561,11 @@ The outliers can also be visualized using a boxplot. As seen before using the IQ
 -   #### Frequency Bar Chart
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># frequency bar chart</span><br></span><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">State</span><b>.</b><span style="font-weight: 400">value_counts</span><b>(</b><span style="font-weight: 400">normalize </span><b>=</b> <span style="color: #7c1dc9"><b>False</b></span><b>).</b><span style="font-weight: 400">plot</span><b>.</b><span style="font-weight: 400">barh</span><b>()<br></b><span style="font-weight: 400">plt</span><b>.</b><span style="font-weight: 400">show</span><b>()</b></td></tr></tbody></table>
+```python
+# frequency bar chart
+df.State.value_counts(normalize = False).plot.barh()
+plt.show()
+```
 
 Frequency bar charts allow you to understand the count of each value in a categorical variable. As per the chart, most customers seem to be from California.
 
@@ -419,7 +574,11 @@ Frequency bar charts allow you to understand the count of each value in a catego
 -   #### Frequency Pie Chart
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># frequency pie chart</span><br></span>df<b>.</b>Location_Code<b>.</b>value_counts<b>(</b>normalize <b>=</b> <span style="color: #7c1dc9"><b>False</b></span><b>).</b>plot<b>.</b>pie<b>()<br></b><span style="font-weight: 400">plt</span><b>.</b><span style="font-weight: 400">show</span><b>()</b></td></tr></tbody></table>
+```python
+# frequency pie chart
+df.Location_Code.value_counts(normalize = False).plot.pie()
+plt.show()
+```
 
 Just like frequency bar charts, frequency pie charts can also be created. As per the chart, most customers seem to be from a suburban location.
 
@@ -428,7 +587,11 @@ Just like frequency bar charts, frequency pie charts can also be created. As per
 -   #### Line Chart
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># creating line chart</span><br></span><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Monthly_Premium_Auto_USD</span><b>.</b><span style="font-weight: 400">value_counts</span><b>().</b><span style="font-weight: 400">sort_index</span><b>().</b><span style="font-weight: 400">plot</span><b>.</b><span style="font-weight: 400">line</span><b>()<br></b><span style="font-weight: 400">plt</span><b>.</b><span style="font-weight: 400">show</span><b>()</b></td></tr></tbody></table>
+```python
+# creating line chart
+df.Monthly_Premium_Auto_USD.value_counts().sort_index().plot.line()
+plt.show()
+```
 
 A univariate line chart uses an index to form one axis. Such graphs are helpful when datetime is used to index data.
 
@@ -439,7 +602,10 @@ The next step in exploratory data analysis in Python is to use two variables to 
 -   #### Cross-frequency Tables
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># creating cross frequency table</span><br></span>pd.crosstab(df.Location_Code, df.Marital_Status)</td></tr></tbody></table>
+```python
+# creating cross frequency table
+pd.crosstab(df.Location_Code, df.Marital_Status)
+```
 
 A cross-frequency table lets you know the frequency of each unique combination of categories from two categorical variables. For example, most customers are married and are located in suburban areas.
 
@@ -448,7 +614,10 @@ A cross-frequency table lets you know the frequency of each unique combination o
 -   #### Aggregation and Summarization
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># performing aggregation and summarization<br></span></span><b></b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">groupby</span><b>(</b><span style="font-weight: 400">by</span><b>=[</b><span style="font-weight: 400">‘Location_Code’</span><b>]).</b><span style="font-weight: 400">agg</span><b>({</b><span style="font-weight: 400">‘Total_Claim_Amount’</span><b>:</b><span style="font-weight: 400">‘mean’</span><b>})</b></td></tr></tbody></table>
+```python
+# performing aggregation and summarization
+df.groupby(by=[‘Location_Code’]).agg({‘Total_Claim_Amount’:‘mean’})
+```
 
 Cross tables can be created using one numerical and one categorical variable. For example, you calculate the sum of ‘Total\_Claim\_Amount’ for each location type. It seems customers make most claims from suburban areas.
 
@@ -457,7 +626,10 @@ Cross tables can be created using one numerical and one categorical variable. Fo
 -   #### Correlation Coefficient
     
 
-<table><tbody><tr><td><span style="font-weight: 400"><span style="color: #26bc00"># calculating pearsons correlation coefficient<br></span></span><span style="font-weight: 400">np</span><b>.</b><span style="font-weight: 400">corrcoef</span><b>(</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Income_USD</span><b>,</b><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Total_Claim_Amount</span><b>)[</b><span style="font-weight: 400;color: #ff0000">0</span><b>][</b><span style="font-weight: 400;color: #ff0000">1</span><b>]</b></td></tr></tbody></table>
+```python
+# calculating pearsons correlation coefficient
+np.corrcoef(df.Income_USD,df.Total_Claim_Amount)[0][1]
+```
 
 `**-0.3549593958604483**`
 
@@ -466,13 +638,23 @@ You can use the correlation coefficient to understand the relationship between t
 -   #### Chi-Square Test
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># converting the numerical data into categories</span><span style="font-weight: 400">labels_vals </span><span style="color: #071ac6"><b>=</b></span> <b>[</b><span style="font-weight: 400">‘Small Claim’</span><b>,</b><span style="font-weight: 400">‘Medium Claim’</span><b>,</b><span style="font-weight: 400">‘Large Income’</span><b>,</b> <span style="font-weight: 400">‘Very Large Claim’</span><b>]</b><p></p><p><span style="font-weight: 400">df</span><b>[</b><span style="font-weight: 400">‘Claim_Level’</span><b>]</b> <span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400"> pd</span><b>.</b><span style="font-weight: 400">qcut</span><b>(</b><span style="font-weight: 400">df</span><b>[</b><span style="font-weight: 400">‘Total_Claim_Amount’</span><b>],</b><span style="font-weight: 400"> q</span><span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400;color: #ff0000">4</span><b>,</b><span style="font-weight: 400"> duplicates</span><span style="color: #071ac6"><b>=</b></span><span style="font-weight: 400">‘drop’</span><b>,</b><span style="font-weight: 400"> labels</span><b>=</b><span style="font-weight: 400">labels_vals</span><b>)</b></p><p><span style="font-weight: 400"><span style="color: #26bc00"># viewing the ‘Claim_Level’ variable</span><br></span><span style="font-weight: 400">df</span><b>.</b><span style="font-weight: 400">Claim_Level</span><b>.</b><span style="font-weight: 400">head</span><b>()</b></p></td></tr></tbody></table>
+```python
+# converting the numerical data into categorieslabels_vals = [‘Small Claim’,‘Medium Claim’,‘Large Income’, ‘Very Large Claim’]
+df[‘Claim_Level’] = pd.qcut(df[‘Total_Claim_Amount’], q=4, duplicates=‘drop’, labels=labels_vals)
+# viewing the ‘Claim_Level’ variable
+df.Claim_Level.head()
+```
 
 ![chi square test](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/13.jpg)
 
 You use the chi-square test to understand the relationship between two categorical columns. Here you convert the claim amount into bins such that they indicate the claim amount level.
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating the contingency table<br></span>contingency_table <b style="font-family: inherit;font-size: inherit">=</b><span style="font-weight: 400"> pd</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">crosstab</span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-weight: 400">df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">Claim_Level</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-weight: 400"> df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">Location_Code</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-weight: 400"> margins </span><b style="font-family: inherit;font-size: inherit">=</b> <b style="font-family: inherit;font-size: inherit">True</b><b style="font-family: inherit;font-size: inherit">)</b><p></p><p><span style="font-weight: 400"><span style="color: #26bc00"># running chi-square test</span><br></span><span style="font-weight: 400">stats</span><b>.</b><span style="font-weight: 400">chi2_contingency</span><b>(</b><span style="font-weight: 400">observed </span><b>=</b><span style="font-weight: 400"> contingency_table</span><b>)</b></p></td></tr></tbody></table>
+```
+# creating the contingency table
+contingency_table = pd.crosstab(df.Claim_Level, df.Location_Code, margins = True)
+# running chi-square test
+stats.chi2_contingency(observed = contingency_table)
+```
 
 ![chi square contingency test result](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/14.jpg)
 
@@ -481,7 +663,10 @@ If you run a chi-square to test the relationship between the claim level and loc
 -   #### Dependent T-Test
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># running dependent t-test</span><br>stats.ttest_rel(a = df.Claim_Amount_1_USD, b = df.Claim_Amount_2_USD)</td></tr></tbody></table>
+```
+# running dependent t-test
+stats.ttest_rel(a = df.Claim_Amount_1_USD, b = df.Claim_Amount_2_USD)
+```
 
 `**Ttest_relResult(statistic=142.7974436778173, pvalue=0.0)**`
 
@@ -494,7 +679,11 @@ Next, you try to understand the relationship between two columns by creating var
 -   #### Bar Chart
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating bar chart</span><br>my_graph =<br>df.groupby(by=[‘Location_Code’]).agg({‘Total_Claim_Amount’:’mean’}).plot(kind=’bar’, figsize=(<span style="color: #ff0000">8</span>,<span style="color: #ff0000">5</span>), color=”blue”, fontsize=<span style="color: #ff0000">13</span>)</td></tr></tbody></table>
+```python
+# creating bar chart
+my_graph =
+df.groupby(by=[‘Location_Code’]).agg({‘Total_Claim_Amount’:’mean’}).plot(kind=’bar’, figsize=(8,5), color=”blue”, fontsize=13)
+```
 
 You can create a bar chart to understand the numerical and categorical relationship. Below – on the x-axis, you have location type; on the y-axis, the total claim amount.
 
@@ -503,7 +692,12 @@ You can create a bar chart to understand the numerical and categorical relations
 -   #### Pie Chart
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating data</span><br>agg_data = df.groupby(by=[‘Vehicle_Class’])[[‘Income_USD’]].<span style="color: #7c1dc9">sum</span>()<p></p><p><span style="color: #26bc00"># creating pie chart</span> agg_data.plot(kind=’pie’,subplots=<span style="color: #7c1dc9">True</span>,autopct=’%.2f%%’,legend=<span style="color: #7c1dc9">False</span>,figsize=(<span style="color: #ff0000">10</span>,<span style="color: #ff0000">5</span>)) plt.ylabel(“”)<br>plt.show()</p></td></tr></tbody></table>
+```python
+# creating data
+agg_data = df.groupby(by=[‘Vehicle_Class’])[[‘Income_USD’]].sum()
+# creating pie chart agg_data.plot(kind=’pie’,subplots=True,autopct=’%.2f%%’,legend=False,figsize=(10,5)) plt.ylabel(“”)
+plt.show()
+```
 
 Similar to a bar chart, a pie chart can also be created. Here the income % of all those customers who own different kinds of cars is identified.
 
@@ -512,7 +706,19 @@ Similar to a bar chart, a pie chart can also be created. Here the income % of al
 -   #### Line Chart
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating data</span><br>agg_data =<br>df.groupby(by=[‘Number_of_Open_Complaints’])[[‘Monthly_Premium_Auto_USD’]].<br><span style="color: #7c1dc9">sum</span>().reset_index()<p></p><p><span style="color: #26bc00"># creating line chart</span><br>plt.plot(agg_data.Number_of_Open_Complaints, agg_data.Monthly_Premium_Auto_USD)<br>plt.xlabel(“Number of Complaints”)<br>plt.ylabel(“Monthly Premium”)<br>plt.title(“Number of Open Complaints – Monthly Premium Auto USD”)</p><p><span style="color: #26bc00"># add title</span><br>plt.show()</p></td></tr></tbody></table>
+```python
+# creating data
+agg_data =
+df.groupby(by=[‘Number_of_Open_Complaints’])[[‘Monthly_Premium_Auto_USD’]].
+sum().reset_index()
+# creating line chart
+plt.plot(agg_data.Number_of_Open_Complaints, agg_data.Monthly_Premium_Auto_USD)
+plt.xlabel(“Number of Complaints”)
+plt.ylabel(“Monthly Premium”)
+plt.title(“Number of Open Complaints – Monthly Premium Auto USD”)
+# add title
+plt.show()
+```
 
 You can create a line chart to understand the relationship between two numerical columns. Above, the monthly premium is plotted against the number of complaints which shows that the premium decreases as the complaints increase.
 
@@ -521,7 +727,10 @@ You can create a line chart to understand the relationship between two numerical
 -   #### Scatterplot
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating scatter plot</span><br>plt.scatter(x= df.Income_USD, y=df.Total_Claim_Amount) plt.show()</td></tr></tbody></table>
+```python
+# creating scatter plot
+plt.scatter(x= df.Income_USD, y=df.Total_Claim_Amount) plt.show()
+```
 
 The scatterplot is the most prominently used chart to understand the relationship between two numerical columns. Above, the scatterplot is created using income and claim amount.
 
@@ -530,7 +739,11 @@ The scatterplot is the most prominently used chart to understand the relationshi
 -   #### Boxplot
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating boxplot<br></span>sns<b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">boxplot</span><b style="font-family: inherit;font-size: inherit">(</b><span style="font-family: inherit;font-size: inherit">df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">Location_Code</span><b style="font-family: inherit;font-size: inherit">,</b><span style="font-family: inherit;font-size: inherit"> df</span><b style="font-family: inherit;font-size: inherit">.</b><span style="font-family: inherit;font-size: inherit">Income_USD</span><b style="font-family: inherit;font-size: inherit">)<br></b>plt<b style="font-family: inherit;font-size: inherit">.</b><span style="font-weight: 400">show</span><b style="font-family: inherit;font-size: inherit">()</b></td></tr></tbody></table>
+```python
+# creating boxplot
+sns.boxplot(df.Location_Code, df.Income_USD)
+plt.show()
+```
 
 Bivariate boxplots can also be created where a boxplot is created using a numerical variable for each category of a categorical variable. In the example above, boxplots for each category of ‘Location\_code’ is created using the income variable.
 
@@ -543,7 +756,12 @@ Lastly, one can perform EDA by simultaneously using and analyzing more than two 
 -   #### Correlation Matrix
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># naming all the columns where the column type is numerical</span><br>numerical_columns = [‘Income_USD’,’Customer_Lifetime_Value_USD’,’Coverage’, ‘Monthly_Premium_Auto_USD’,’Number_of_Policies’,’Number_of_Open_Complaints’,<br>‘Total_Claim_Amount’]<p><span style="color: #26bc00"># correlation matrix</span><br>df[numerical_columns].corr()</p></td></tr></tbody></table>
+```python
+# naming all the columns where the column type is numerical
+numerical_columns = [‘Income_USD’,’Customer_Lifetime_Value_USD’,’Coverage’, ‘Monthly_Premium_Auto_USD’,’Number_of_Policies’,’Number_of_Open_Complaints’,
+‘Total_Claim_Amount’]# correlation matrix
+df[numerical_columns].corr()
+```
 
 You can create a correlation matrix where for every variable, you get the correlation values against all other variables in the dataset. Such matrices are crucial when addressing the issue of multicollinearity and checking various assumptions for statistical algorithms.
 
@@ -552,7 +770,10 @@ You can create a correlation matrix where for every variable, you get the correl
 -   #### Multivariate Cross Table
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating a multivariate cross table</span><br>df.groupby(by=[‘Location_Code’,’Marital_Status’]).agg({‘Marital_Status’:’count’,’Total_Claim_Amount’:’mean’,’Income_USD’:’mean’,’Number_of_Open_Complaints’:’count’})</td></tr></tbody></table>
+```python
+# creating a multivariate cross table
+df.groupby(by=[‘Location_Code’,’Marital_Status’]).agg({‘Marital_Status’:’count’,’Total_Claim_Amount’:’mean’,’Income_USD’:’mean’,’Number_of_Open_Complaints’:’count’})
+```
 
 ![multivariate cross table eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/16.jpg)
 
@@ -561,7 +782,16 @@ A multivariate cross table can be created using frequency or summary statistics.
 -   #### Multivariate Regression
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># improting the module</span><br><span style="color: #071ac6">import</span> statsmodels.formula.api <span style="color: #071ac6">as</span> sm<p></p><p><span style="color: #26bc00"># initialization regression model</span><br>model = sm.ols(‘Total_Claim_Amount~Income_USD+Gender+Number_of_Open_Complaints’, data=df)</p><p><span style="color: #26bc00"># fitting the model on the dataset</span><br>model = model.fit()</p><p><span style="color: #26bc00"># printing model summary</span><br><span style="color: #7c1dc9">print</span>(model.summary())</p></td></tr></tbody></table>
+```python
+# improting the module
+import statsmodels.formula.api as sm
+# initialization regression model
+model = sm.ols(‘Total_Claim_Amount~Income_USD+Gender+Number_of_Open_Complaints’, data=df)
+# fitting the model on the dataset
+model = model.fit()
+# printing model summary
+print(model.summary())
+```
 
 ![regression results exploratory data analysis in python](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/Screenshot-2023-06-12-at-3.09.34-PM.png)
 
@@ -574,7 +804,10 @@ Let’s end the discussion on exploratory data analysis in Python by performing 
 -   #### Scatterplot
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating scatterplot</span> sns.lmplot(data=df,x=”Income_USD”,y=”Total_Claim_Amount”,fit_reg=<span style="color: #7c1dc9">False</span>,hue=”State”,palette=[“green”,”blue”,”red”,”purple”,”black”])<p></p><p>plt.show()</p></td></tr></tbody></table>
+```python
+# creating scatterplot sns.lmplot(data=df,x=”Income_USD”,y=”Total_Claim_Amount”,fit_reg=False,hue=”State”,palette=[“green”,”blue”,”red”,”purple”,”black”])
+plt.show()
+```
 
 ![multivariate eda scatterplot](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/K.jpg)
 
@@ -583,7 +816,18 @@ You can easily create a scatterplot using two numerical and a categorical variab
 -   #### Stacked/Dodged Bar Chart
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating the dataset</span><br>df_agg =<br>df.groupby(by=[‘Vehicle_Class’,’Vehicle_Size’])[[‘Total_Claim_Amount’]].mean()<br>df_agg =df_agg.reset_index()<br>df_agg = df_agg.pivot_table(index=’Vehicle_Class’, columns=’Vehicle_Size’,values=’Total_Claim_Amount’)<p></p><p><span style="color: #26bc00"># creating stacked bar chart</span><br>df_agg.plot(kind=’bar’,stacked=<span style="color: #7c1dc9">True</span>)<br>plt.ylabel(“Claim Amount”)<br>plt.xticks(rotation=’30’)<br>plt.show()</p></td></tr></tbody></table>
+```python
+# creating the dataset
+df_agg =
+df.groupby(by=[‘Vehicle_Class’,’Vehicle_Size’])[[‘Total_Claim_Amount’]].mean()
+df_agg =df_agg.reset_index()
+df_agg = df_agg.pivot_table(index=’Vehicle_Class’, columns=’Vehicle_Size’,values=’Total_Claim_Amount’)
+# creating stacked bar chart
+df_agg.plot(kind=’bar’,stacked=True)
+plt.ylabel(“Claim Amount”)
+plt.xticks(rotation=’30’)
+plt.show()
+```
 
 You can use stacked or dodged bar charts to visualize two categorical and one numerical variable. For example, the vehicle class and size are plotted against the claim amount, which shows that the claim amount is most for luxury cars, with all their sizes having roughly the same contribution.
 
@@ -592,7 +836,28 @@ You can use stacked or dodged bar charts to visualize two categorical and one nu
 -   #### Multiline Chart
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># creating data</span><br>agg_data =<br>df.groupby(by=[‘Number_of_Open_Complaints’])[[‘Claim_Amount_1_USD’,’Claim_Amount_2_USD’,’Claim_Amount_3_USD’]].<span style="color: #7c1dc9">sum</span>().reset_index()<p></p><p><span style="color: #26bc00"># defining data values</span><br>x = agg_data.Number_of_Open_Complaints<br>y1 = agg_data.Claim_Amount_1_USD<br>y2 = agg_data.Claim_Amount_2_USD<br>y3 = agg_data.Claim_Amount_3_USD</p><p><span style="color: #26bc00"># creating line chart</span><br>plt.plot(x, y1, ‘g’, label=’Claim Amount #1′)</p><p><span style="color: #26bc00"># adding another line on the same chart</span><br>plt.plot(x, y2, ‘r’, label=’Claim Amount #2′)</p><p><span style="color: #26bc00"># adding another line on the same chart</span><br>plt.plot(x, y3, ‘b’, label=’Claim Amount #3′)</p><p><span style="color: #26bc00"># showing graph</span><br>plt.xlabel(“Number of Complaints”)<br>plt.ylabel(“Claim Amount”)<br>plt.title(“Number of Open Complaints – Claim Amount”)<br>plt.legend()<br>plt.show()</p></td></tr></tbody></table>
+```python
+# creating data
+agg_data =
+df.groupby(by=[‘Number_of_Open_Complaints’])[[‘Claim_Amount_1_USD’,’Claim_Amount_2_USD’,’Claim_Amount_3_USD’]].sum().reset_index()
+# defining data values
+x = agg_data.Number_of_Open_Complaints
+y1 = agg_data.Claim_Amount_1_USD
+y2 = agg_data.Claim_Amount_2_USD
+y3 = agg_data.Claim_Amount_3_USD
+# creating line chart
+plt.plot(x, y1, ‘g’, label=’Claim Amount #1′)
+# adding another line on the same chart
+plt.plot(x, y2, ‘r’, label=’Claim Amount #2′)
+# adding another line on the same chart
+plt.plot(x, y3, ‘b’, label=’Claim Amount #3′)
+# showing graph
+plt.xlabel(“Number of Complaints”)
+plt.ylabel(“Claim Amount”)
+plt.title(“Number of Open Complaints – Claim Amount”)
+plt.legend()
+plt.show()
+```
 
 ![multiline chart eda](https://tumfgdyurswklrzsnevv.supabase.co/storage/v1/object/public/uploads/wp-content/uploads/2023/06/M.jpg)
 
@@ -601,7 +866,10 @@ Multiline charts allow you to plot multiple numerical columns against another nu
 -   #### Heatmap
     
 
-<table><tbody><tr><td><span style="color: #26bc00"># correlation matrix heat map</span><br>sns.heatmap(df[numerical_columns].corr(), annot=<span style="color: #7c1dc9">True</span>, cmap = ‘Blues’)</td></tr></tbody></table>
+```
+# correlation matrix heat map
+sns.heatmap(df[numerical_columns].corr(), annot=True, cmap = ‘Blues’)
+```
 
 Heatmaps can be created to visualize tables such as a correlation matrix. Above, a heat map is created using the correlation matrix created during multivariate non-graphical EDA. Such a graphical matrix representation helps identify the highly correlated variables.
 

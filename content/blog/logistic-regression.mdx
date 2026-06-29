@@ -63,7 +63,10 @@ You must have a basic idea of the type of variables out there to understand the 
 
 > Also read: [Types of Distribution in Statistics](https://www.analytixlabs.co.in/blog/types-of-distribution/)
 
-<table><tbody><tr><td>Binary/binomial</td><td>A variable is binary when there are only two mutually exclusive values in a variable.<p></p><p>They are typically represented by 1 and 0. In cases where categories are like Yes/No or True/False (binary), Yes/True is usually represented by 1.</p><p>In the binomial case (where you have two classes that may not be yes/no, such as type of house – ‘rented’/’ own’), 1 is assigned to the class you are interested in predicting.</p></td></tr><tr><td>Continuous</td><td>A continuous variable can take any numerical value. It can be of type interval where the interval between every two values is equally split (such as temperature in Celsius), or it can be of type ratio with a true zero indicating the absence of a value (such as weight in Kgs).</td></tr><tr><td>Discrete</td><td>Discrete takes any numerical data within a range. Here, the numbers are typically whole or integers.<p></p><p>Discrete can be of two types:</p><ol><li>Ordinal</li><li>Nominal.</li></ol><p><em>Ordinal</em> is where the numbers have a certain order to them (such as danger level on a scale of 1-5), while <em>N</em><em>ominal</em> is where there is no order (such as race of individuals denoted by 1=caucassian, 2=Asian, 3=Hispanic, and so on).</p></td></tr></tbody></table>
+| Binary/binomial | A variable is binary when there are only two mutually exclusive values in a variable. They are typically represented by 1 and 0. In cases where categories are like Yes/No or True/False (binary), Yes/True is usually represented by 1. In the binomial case (where you have two classes that may not be yes/no, such as type of house – ‘rented’/’ own’), 1 is assigned to the class you are interested in predicting. |
+| --- | --- |
+| Continuous | A continuous variable can take any numerical value. It can be of type interval where the interval between every two values is equally split (such as temperature in Celsius), or it can be of type ratio with a true zero indicating the absence of a value (such as weight in Kgs). |
+| Discrete | Discrete takes any numerical data within a range. Here, the numbers are typically whole or integers. Discrete can be of two types: OrdinalNominal. *Ordinal* is where the numbers have a certain order to them (such as danger level on a scale of 1-5), while *N**ominal* is where there is no order (such as race of individuals denoted by 1=caucassian, 2=Asian, 3=Hispanic, and so on). |
 
 When you encounter string-based variables having categories, they are encoded such that a nominal categorical variable is converted into discrete nominal or binary variables (where one binary variable is created for each unique category).
 
@@ -80,7 +83,14 @@ Linear regression and logistic regression are key machine learning algorithms wi
 
 Here’s a comprehensive comparison:
 
-<table><tbody><tr><td><b>Aspect</b></td><td><b>Linear Regression</b></td><td><b>Logistic Regression</b></td></tr><tr><td><b>Problem Type</b></td><td><span style="font-weight: 400;">Regression (predicting continuous values)</span></td><td><span style="font-weight: 400;">Classification (predicting categorical outcomes)</span></td></tr><tr><td><b>Output</b></td><td><span style="font-weight: 400;">Continuous numerical values (can be any real number)</span></td><td><span style="font-weight: 400;">Probabilities (0 to 1) converted to discrete class labels</span></td></tr><tr><td><b>Function Used</b></td><td><span style="font-weight: 400;">Linear function: y = β₀ + β₁x₁ + β₂x₂ + …</span></td><td><span style="font-weight: 400;">Sigmoid/Logistic function: σ(z) = 1/(1+e⁻ᶻ)</span></td></tr><tr><td><b>Output Range</b></td><td><span style="font-weight: 400;">−∞ to +∞ (any real number)</span></td><td><span style="font-weight: 400;">0 to 1 (probability)</span></td></tr><tr><td><b>Use Case Example</b></td><td><span style="font-weight: 400;">Predicting house prices, stock prices, and temperature</span></td><td><span style="font-weight: 400;">Email spam detection, disease diagnosis, and customer churn</span></td></tr><tr><td><b>Evaluation Metrics</b></td><td><span style="font-weight: 400;">R-squared, MSE, RMSE, MAE</span></td><td><span style="font-weight: 400;">Accuracy, Precision, Recall, F1-score, AUC-ROC</span></td></tr></tbody></table>
+| **Aspect** | **Linear Regression** | **Logistic Regression** |
+| --- | --- | --- |
+| **Problem Type** | Regression (predicting continuous values) | Classification (predicting categorical outcomes) |
+| **Output** | Continuous numerical values (can be any real number) | Probabilities (0 to 1) converted to discrete class labels |
+| **Function Used** | Linear function: y = β₀ + β₁x₁ + β₂x₂ + … | Sigmoid/Logistic function: σ(z) = 1/(1+e⁻ᶻ) |
+| **Output Range** | −∞ to +∞ (any real number) | 0 to 1 (probability) |
+| **Use Case Example** | Predicting house prices, stock prices, and temperature | Email spam detection, disease diagnosis, and customer churn |
+| **Evaluation Metrics** | R-squared, MSE, RMSE, MAE | Accuracy, Precision, Recall, F1-score, AUC-ROC |
 
 Both algorithms belong to the family of Generalized Linear Models (GLM), but they use different link functions. Linear regression uses the identity link function (output = linear combination of inputs), while logistic regression uses the logit link function to constrain outputs between 0 and 1.
 

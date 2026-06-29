@@ -132,7 +132,11 @@ This data standardization makes it extremely handy when performing data science 
 
 In Data Science, we often require a specific dataset for analysis or creating a model. Therefore, to select and retrieve the dataset from the database, commands such as SELECT of SQL come in handy. For example, if we have a table in our current database with the name – Employee.
 
-<table style="height: 146px;" width="659"><tbody><tr><td style="text-align: center;"><strong>Employee ID</strong></td><td style="text-align: center;"><strong>Employee F. Name</strong></td><td style="text-align: center;"><strong>Employee L.Name</strong></td><td style="text-align: center;"><strong>Salary</strong></td></tr><tr><td style="text-align: center;">1</td><td style="text-align: center;">Aron</td><td style="text-align: center;">Mathew</td><td style="text-align: center;">20000</td></tr><tr><td style="text-align: center;">2</td><td style="text-align: center;">Deb</td><td style="text-align: center;">Woods</td><td style="text-align: center;">40000</td></tr><tr><td style="text-align: center;">3</td><td style="text-align: center;">John</td><td style="text-align: center;">Adams</td><td style="text-align: center;">60000</td></tr></tbody></table>
+| **Employee ID** | **Employee F. Name** | **Employee L.Name** | **Salary** |
+| --- | --- | --- | --- |
+| 1 | Aron | Mathew | 20000 |
+| 2 | Deb | Woods | 40000 |
+| 3 | John | Adams | 60000 |
 
 And if we want to retrieve the whole data, then we use the SELECT command:
 
@@ -150,7 +154,9 @@ Suppose we want to retrieve the data based on conditions, e.g., want the employe
 
 **Where salary >60000;**
 
-<table style="height: 73px;" width="267"><tbody><tr><td>Employee ID</td><td>Salary</td></tr><tr><td>3</td><td>60000</td></tr></tbody></table>
+| Employee ID | Salary |
+| --- | --- |
+| 3 | 60000 |
 
 This is the output we get by running the above query. If you want to sort the data, then the ORDER BY clause is used for sorting any column. 
 

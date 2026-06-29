@@ -60,7 +60,9 @@ export async function generateMetadata({ params }) {
       description: seo.metaDesc || post.excerpt || post.title,
       type: "article",
       publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt,
+      // Updated date is intentionally not surfaced anywhere in the frontend
+      // (incl. social/structured metadata) — mirror it to the publish date.
+      modifiedTime: post.publishedAt,
       images: image ? [{ url: image }] : [],
     },
     twitter: {
@@ -138,7 +140,9 @@ function buildArticleJsonLd(post) {
   const url = post.seo?.canonicalUrl || `${SITE_ORIGIN}/blog/${post.slug}/`;
   const image = post.seo?.ogImage || post.image || null;
   const datePublished = toISO(post.publishedAtISO);
-  const dateModified = toISO(post.updatedAtISO) || datePublished;
+  // Don't advertise an "updated" date anywhere in the frontend: keep
+  // dateModified equal to datePublished so Google never shows "Updated …".
+  const dateModified = datePublished;
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

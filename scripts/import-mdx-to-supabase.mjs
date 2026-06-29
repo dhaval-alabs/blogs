@@ -2,10 +2,14 @@
  * Bulk-import 491 WordPress-migrated MDX posts into Supabase `posts` table.
  *
  * Usage:
- *   node scripts/import-mdx-to-supabase.mjs
- *   node scripts/import-mdx-to-supabase.mjs --dry-run   # preview without inserting
+ *   node scripts/import-mdx-to-supabase.mjs            # import posts not already in the DB
+ *   node scripts/import-mdx-to-supabase.mjs --dry-run  # preview without inserting
+ *   node scripts/import-mdx-to-supabase.mjs --refresh  # re-import ALL posts, overwriting
+ *                                                      # existing rows by slug (use after
+ *                                                      # cleaning MDX content)
  *
- * Reads .env.local for Supabase credentials.
+ * Reads .env.local (then .env) for Supabase credentials:
+ *   NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
 
 import fs from "fs";
@@ -22,6 +26,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CONTENT_DIR = path.join(ROOT, "content", "blog");
 const ENV_FILE = path.join(ROOT, ".env.local");
 const DRY_RUN = process.argv.includes("--dry-run");
+const REFRESH = process.argv.includes("--refresh"); // re-import & overwrite existing posts by slug
 const BATCH_SIZE = 25; // Supabase upsert batch size
 
 // ── Load .env.local manually (no dotenv dependency needed) ──────────
@@ -69,6 +74,14 @@ function formatDate(dateStr) {
   } catch {
     return "";
   }
+}
+
+// Full ISO 8601 timestamp for timestamptz columns (preserves the original
+// publish time/timezone). Returns null on an unparseable/missing date.
+function toISO(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
 // Mirror of src/lib/readTime.js. Inlined here because this script runs
@@ -142,11 +155,13 @@ async function mdxToRow({ data, content }) {
     image: data.featuredImage || "",
     alt_text: data.title ? data.title.slice(0, 150) : "",
     status: "Published",
-    published_at: formatDate(data.date),
-    updated_at: formatDate(data.modified || data.date),
+    // Store full ISO timestamps (column is timestamptz). published_at is the
+    // post's original WordPress publish date and is what the blog sorts by.
+    published_at: toISO(data.date),
+    updated_at: toISO(data.modified || data.date),
     seo: {
       canonicalUrl: data.canonical || "",
-      noIndex: false,
+      noIndex: data.noindex === true,
       metaTitle: data.title || "",
       metaDesc: data.description || "",
     },
@@ -190,15 +205,21 @@ async function main() {
   const existingSlugs = await getExistingSlugs();
   console.log(`Existing posts in Supabase: ${existingSlugs.size}`);
 
-  // Filter out posts that already exist (by slug)
-  const newFiles = mdxFiles.filter((f) => {
-    const slug = f.data.slug || f.filename.replace(".mdx", "");
-    return !existingSlugs.has(slug);
-  });
+  // By default only import posts that don't exist yet (never clobber edits
+  // made in the studio). Pass --refresh to re-import ALL posts, overwriting
+  // existing rows by slug — use this to push freshly-cleaned MDX content.
+  const newFiles = REFRESH
+    ? mdxFiles
+    : mdxFiles.filter((f) => {
+        const slug = f.data.slug || f.filename.replace(".mdx", "");
+        return !existingSlugs.has(slug);
+      });
 
-  console.log(`New posts to import: ${newFiles.length}`);
+  console.log(REFRESH
+    ? `Refreshing ALL posts (overwrite by slug): ${newFiles.length}`
+    : `New posts to import: ${newFiles.length}`);
   if (newFiles.length === 0) {
-    console.log("\nNothing to import — all posts already exist in Supabase.");
+    console.log("\nNothing to import — all posts already exist in Supabase. (Use --refresh to overwrite.)");
     return;
   }
 

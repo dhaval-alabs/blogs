@@ -166,7 +166,11 @@ where, λ = λ(Ridge) + λ(Lasso) and is written as:
 
 #### **The formula for L1\_ratio for all the methods becomes:**
 
-<table class="has-background" style="background-color:#e7f5fe"><tbody><tr><td>&nbsp;</td><td><strong>Regularization Technique</strong></td><td><strong>Penalty</strong></td></tr><tr><td><strong>L1_ratio = 0</strong></td><td>Ridge Regression</td><td>L-2</td></tr><tr><td><strong>L1_ratio = 1</strong></td><td>Lasso Regression</td><td>L-1</td></tr><tr><td><strong>0&lt; L1_ratio &lt;1</strong></td><td>Elastic Net Regression</td><td>Combination of L-1 and L-2</td></tr></tbody></table>
+|  | **Regularization Technique** | **Penalty** |
+| --- | --- | --- |
+| **L1_ratio = 0** | Ridge Regression | L-2 |
+| **L1_ratio = 1** | Lasso Regression | L-1 |
+| **0< L1_ratio <1** | Elastic Net Regression | Combination of L-1 and L-2 |
 
 **In Python, the strength of the penalty is controlled by the argument called _alpha_. If:**
 
@@ -214,7 +218,14 @@ It would be an understatement to say that the data is growing at the speed of li
 
 L1 and L2 are the norms of regularization. These are the types of regularization that help in reducing the overfitting problem by reducing the less important features. It is done by shrinking the beta coefficients of the linear regression model. The differences between L1 and L2 norms are as follows:
 
-<table class="has-background" style="background-color:#e7f5fe"><tbody><tr><td><strong>L1 regularization</strong></td><td><strong>L2 regularization</strong></td></tr><tr><td>L1 is equal to the absolute value of the beta coefficients.</td><td>L2 is equal to the squares of magnitudes of beta coefficients.</td></tr><tr><td>It is used in Lasso regression.</td><td>It is used in Ridge regression.</td></tr><tr><td>To prevent overfitting, L1 estimates the median of the data.</td><td>L2 estimates the mean of the data to avoid overfitting.</td></tr><tr><td>L1 has built-in feature selection.</td><td>L2 is not used for feature selection.</td></tr><tr><td>L1 returns sparse outputs.</td><td>L2 results in non-sparse outputs.</td></tr><tr><td>It is computationally inefficient on the non-sparse cases.</td><td>It is computationally efficient since it has analytical solutions.</td></tr></tbody></table>
+| **L1 regularization** | **L2 regularization** |
+| --- | --- |
+| L1 is equal to the absolute value of the beta coefficients. | L2 is equal to the squares of magnitudes of beta coefficients. |
+| It is used in Lasso regression. | It is used in Ridge regression. |
+| To prevent overfitting, L1 estimates the median of the data. | L2 estimates the mean of the data to avoid overfitting. |
+| L1 has built-in feature selection. | L2 is not used for feature selection. |
+| L1 returns sparse outputs. | L2 results in non-sparse outputs. |
+| It is computationally inefficient on the non-sparse cases. | It is computationally efficient since it has analytical solutions. |
 
 ### **Q2. What is L1 and L2 Penalty?**
 

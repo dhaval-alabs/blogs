@@ -490,7 +490,28 @@ Therefore, again as seen before, lists support efficient in-place modification, 
 
 To summarize, a list and a tuple can be differentiated on the following aspects-
 
-<table class="has-fixed-layout"><tbody><tr><td><strong>Feature</strong></td><td><strong>List</strong></td><td><strong>Tuple</strong></td></tr><tr><td><strong>Mutability</strong></td><td>Mutable (elements can be added, removed, or modified)</td><td>Immutable (elements cannot be changed after creation)</td></tr><tr><td><strong>Size Flexibility</strong></td><td>Dynamic; can grow and shrink</td><td>Fixed; size cannot change after creation</td></tr><tr><td><strong>Syntax</strong></td><td>Defined using square brackets []</td><td>Defined using parentheses ()</td></tr><tr><td><strong>Creation Speed</strong></td><td>Slightly slower due to dynamic allocation</td><td>Faster due to fixed size and immutability</td></tr><tr><td><strong>Iteration Speed</strong></td><td>Slightly slower</td><td>Slightly faster</td></tr><tr><td><strong>Lookup Efficiency</strong></td><td>O(1) indexing</td><td>O(1) indexing (marginally faster)</td></tr><tr><td><strong>Memory Consumption</strong></td><td>Higher memory usage</td><td>Lower memory usage</td></tr><tr><td><strong>Memory Allocation Strategy</strong></td><td>Uses over-allocation to support resizing</td><td>Allocates exact required memory once</td></tr><tr><td><strong>Bytecode Optimization</strong></td><td>Requires BUILD_LIST instruction</td><td>Uses optimized constant loading</td></tr><tr><td><strong>Built-in Methods</strong></td><td>Extensive API (append, extend, insert, remove, pop, sort, clear, etc.)</td><td>Limited API (count, index)</td></tr><tr><td><strong>Element Reassignment</strong></td><td>Supported</td><td>Not supported (TypeError on modification)</td></tr><tr><td><strong>Hashability</strong></td><td>Not hashable</td><td>Hashable (if elements are hashable)</td></tr><tr><td><strong>Use as Dictionary Key</strong></td><td>Not allowed</td><td>Allowed</td></tr><tr><td><strong>Copying Behavior</strong></td><td>Assignment shares reference; explicit copy creates new object</td><td>Assignment safe; concatenation creates new tuple</td></tr><tr><td><strong>Duplicate Elements</strong></td><td>Allowed</td><td>Allowed</td></tr><tr><td><strong>Heterogeneous Data Storage</strong></td><td>Supported</td><td>Supported</td></tr><tr><td><strong>Indexing &amp; Slicing</strong></td><td>Supported</td><td>Supported</td></tr><tr><td><strong>Data Safety</strong></td><td>More prone to accidental modification</td><td>Safer due to immutability</td></tr><tr><td><strong>Use Case Orientation</strong></td><td>Best for frequently changing data</td><td>Best for fixed, constant data structures</td></tr><tr><td><strong>Structural Stability</strong></td><td>Structure can change during execution</td><td>Structure remains constant</td></tr></tbody></table>
+| **Feature** | **List** | **Tuple** |
+| --- | --- | --- |
+| **Mutability** | Mutable (elements can be added, removed, or modified) | Immutable (elements cannot be changed after creation) |
+| **Size Flexibility** | Dynamic; can grow and shrink | Fixed; size cannot change after creation |
+| **Syntax** | Defined using square brackets [] | Defined using parentheses () |
+| **Creation Speed** | Slightly slower due to dynamic allocation | Faster due to fixed size and immutability |
+| **Iteration Speed** | Slightly slower | Slightly faster |
+| **Lookup Efficiency** | O(1) indexing | O(1) indexing (marginally faster) |
+| **Memory Consumption** | Higher memory usage | Lower memory usage |
+| **Memory Allocation Strategy** | Uses over-allocation to support resizing | Allocates exact required memory once |
+| **Bytecode Optimization** | Requires BUILD_LIST instruction | Uses optimized constant loading |
+| **Built-in Methods** | Extensive API (append, extend, insert, remove, pop, sort, clear, etc.) | Limited API (count, index) |
+| **Element Reassignment** | Supported | Not supported (TypeError on modification) |
+| **Hashability** | Not hashable | Hashable (if elements are hashable) |
+| **Use as Dictionary Key** | Not allowed | Allowed |
+| **Copying Behavior** | Assignment shares reference; explicit copy creates new object | Assignment safe; concatenation creates new tuple |
+| **Duplicate Elements** | Allowed | Allowed |
+| **Heterogeneous Data Storage** | Supported | Supported |
+| **Indexing & Slicing** | Supported | Supported |
+| **Data Safety** | More prone to accidental modification | Safer due to immutability |
+| **Use Case Orientation** | Best for frequently changing data | Best for fixed, constant data structures |
+| **Structural Stability** | Structure can change during execution | Structure remains constant |
 
 To further enrich the understanding, let’s explore the difference between list and tuple in python with examples.
 

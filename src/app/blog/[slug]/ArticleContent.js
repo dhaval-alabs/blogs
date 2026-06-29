@@ -337,9 +337,7 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
             {/* Meta row */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-on-surface-variant dark:text-[#8c909f] mb-6">
               {post.publishedAt && <span>Published {formatBlogDate(post.publishedAt)}</span>}
-              {post.updatedAt && post.updatedAt !== post.publishedAt && (
-                <><span className="opacity-30">·</span><span>Updated {formatBlogDate(post.updatedAt)}</span></>
-              )}
+              {/* "Updated" date intentionally hidden — only the publish date is shown in the frontend. */}
               {(() => {
                 const mins = resolveReadTime(post.readTime, post.content);
                 return mins > 0 ? <><span className="opacity-30">·</span><span>{mins} min read</span></> : null;

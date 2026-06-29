@@ -334,7 +334,11 @@ Python document strings (or docstrings) describe what the function does. These a
 
 ### Q3.2. What is the difference between data frames and matrices?
 
-<table><tbody><tr><td><strong>Data Frames</strong></td><td><strong>Matrices</strong></td></tr><tr><td>Data frames are a collection of series that share a common index.</td><td>A matrix in Numpy is constructed with multiple vectors.</td></tr><tr><td>It can hold multiple series, which are of different data types.</td><td>It can hold only one data type in the entire two-dimensional structure.&nbsp;</td></tr><tr><td>For example, the customer data has various columns as cust_id, customer_name, age, gender, sales. These are each individually a series that is of a different data type.</td><td>&nbsp;</td></tr></tbody></table>
+| **Data Frames** | **Matrices** |
+| --- | --- |
+| Data frames are a collection of series that share a common index. | A matrix in Numpy is constructed with multiple vectors. |
+| It can hold multiple series, which are of different data types. | It can hold only one data type in the entire two-dimensional structure. |
+| For example, the customer data has various columns as cust_id, customer_name, age, gender, sales. These are each individually a series that is of a different data type. |  |
 
 ### Q3.3. What is the difference between lists and arrays?
 
@@ -342,7 +346,12 @@ An array is a data structure that contains a group of elements where the element
 
 ### Q3.4. What is the difference between .iloc and .loc?
 
-<table><tbody><tr><td><strong>.iloc</strong></td><td><strong>.loc</strong></td></tr><tr><td>It is referred to as the internal index: 0,1,2…, (n-1).</td><td>It is referred to as the external, labeled, or custom index.</td></tr><tr><td>It is only for the indexes.</td><td>It is only for the labels.</td></tr><tr><td>Example: stores.iloc[0:9] will return the rows with 0,1,2,3,4,5,6,7,8 as the indices.</td><td>Example: stores.loc[0:9] will return the rows with 0,1,2,3,4,5,6,7,8,9 as the indices.</td></tr><tr><td>It works in the same manner as Python’s range function works; that is, the last element is not included.</td><td>Here, the upper bound is included.</td></tr></tbody></table>
+| **.iloc** | **.loc** |
+| --- | --- |
+| It is referred to as the internal index: 0,1,2…, (n-1). | It is referred to as the external, labeled, or custom index. |
+| It is only for the indexes. | It is only for the labels. |
+| Example: stores.iloc[0:9] will return the rows with 0,1,2,3,4,5,6,7,8 as the indices. | Example: stores.loc[0:9] will return the rows with 0,1,2,3,4,5,6,7,8,9 as the indices. |
+| It works in the same manner as Python’s range function works; that is, the last element is not included. | Here, the upper bound is included. |
 
 ### Q3.5. What is the difference between merge, join and concatenate?
 

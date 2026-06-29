@@ -48,32 +48,29 @@ function formatDate(dateStr) {
   }
 }
 
-// Effective recency = the most recent of published_at and updated_at.
-// A post's published_at is preserved across edits (so "Published Jun 4, 2020"
-// stays accurate), and updated_at is bumped on every edit. Sorting "Latest"
-// on published_at alone pins a refreshed old post to its original date so it
-// never resurfaces; ranking on effective recency floats substantively
-// updated posts back to the top while keeping their original publish date.
+// Recency = the post's published_at (its creation/publish date) ONLY.
+// updated_at is deliberately ignored for ordering: editing an old post bumps
+// updated_at, but we do NOT want a refreshed old post to jump back to the top
+// of "Latest". A post's position is fixed by when it was published; to
+// intentionally re-date a post, change its published_at (see the studio
+// Publish Date field / MDX `date` frontmatter).
 function effectiveRecency(row) {
   const p = row?.published_at ? new Date(row.published_at).getTime() : 0;
-  const u = row?.updated_at ? new Date(row.updated_at).getTime() : 0;
-  return Math.max(Number.isFinite(p) ? p : 0, Number.isFinite(u) ? u : 0);
+  return Number.isFinite(p) ? p : 0;
 }
 
 // Same idea as effectiveRecency() but for already-mapped posts (camelCase
 // date fields, possibly mixing Supabase rows and MDX posts) — used where we
-// merge/sort post objects rather than raw DB rows.
+// merge/sort post objects rather than raw DB rows. Ranks on publish date only.
 function mappedRecency(p) {
   const pub = p?.publishedAt || p?.published_at;
-  const upd = p?.updatedAt || p?.updated_at;
   const a = pub ? new Date(pub).getTime() : 0;
-  const b = upd ? new Date(upd).getTime() : 0;
-  return Math.max(Number.isFinite(a) ? a : 0, Number.isFinite(b) ? b : 0);
+  return Number.isFinite(a) ? a : 0;
 }
 
-// Sort a copy of raw DB rows by effective recency, falling back to id DESC as
-// a stable tiebreaker. Used by the "Latest"/listing/search queries so a
-// refreshed older post resurfaces while keeping its original publish date.
+// Sort a copy of raw DB rows by publish date, falling back to id DESC as a
+// stable tiebreaker. Used by the "Latest"/listing/search queries. Editing an
+// old post no longer resurfaces it — only its published_at decides position.
 function rankByRecency(rows) {
   return (rows || []).slice().sort((a, b) => {
     const diff = effectiveRecency(b) - effectiveRecency(a);

@@ -91,14 +91,21 @@ Below are the key operations of a circular queue in data structure.
 -   #### Primary Queue Operations
     
 
-<table style="height: 254px" width="855"><tbody><tr><td>enQueue</td><td>The first primary operation when operating in circular queues is enQueue. It refers to inserting a new element at the end of the queue, which is determined by the current position of the rear. The rear pointer then moves to the next position circularly, looping back to the start if it reaches the end of the queue.</td></tr><tr><td>deQueue</td><td>The next critical operation is deQueue. It removes and returns an element from the front of the queue. After the operation, the front pointer moves to the next position circularly. This mechanism ensures that the queue can reuse vacant spaces created by removing elements.</td></tr></tbody></table>
+| enQueue | The first primary operation when operating in circular queues is enQueue. It refers to inserting a new element at the end of the queue, which is determined by the current position of the rear. The rear pointer then moves to the next position circularly, looping back to the start if it reaches the end of the queue. |
+| --- | --- |
+| deQueue | The next critical operation is deQueue. It removes and returns an element from the front of the queue. After the operation, the front pointer moves to the next position circularly. This mechanism ensures that the queue can reuse vacant spaces created by removing elements. |
 
 -   #### Auxilliary Queue Operations
     
 
 Apart from the above two, several other operations help you handle circular questions. The following are the key ones.
 
-<table><tbody><tr><td>FRONT</td><td>The FRONT operation is used to access the first element in the queue without removing it. It points to the element that will be dequeued next.</td></tr><tr><td>REAR</td><td>The REAR operation is the opposite of the FRONT as it provides access to the last element in the queue. It points to the most recently added element and indicates where the next element will be enqueued.</td></tr><tr><td>isEmpty</td><td>The operation, also known as Underflow, checks if the queue is empty.</td></tr><tr><td>isFull</td><td>Also known as Overflow, this operation checks whether the circular queues are full. If they are, no further elements can be enqueued (added) until some are dequeued (removed).</td></tr><tr><td>isSize</td><td>Lastly, the size operation assesses the number of elements in the queue and returns its size.</td></tr></tbody></table>
+| FRONT | The FRONT operation is used to access the first element in the queue without removing it. It points to the element that will be dequeued next. |
+| --- | --- |
+| REAR | The REAR operation is the opposite of the FRONT as it provides access to the last element in the queue. It points to the most recently added element and indicates where the next element will be enqueued. |
+| isEmpty | The operation, also known as Underflow, checks if the queue is empty. |
+| isFull | Also known as Overflow, this operation checks whether the circular queues are full. If they are, no further elements can be enqueued (added) until some are dequeued (removed). |
+| isSize | Lastly, the size operation assesses the number of elements in the queue and returns its size. |
 
 _Let us now explore how circular queues in data structure work._ 
 
@@ -256,7 +263,10 @@ The sequence of operations discussed above demonstrates how a circular queue han
 
 Below, we have performed a time and space complexity analysis of a circular queue in a data structure. First, we provide an overview, and then we dive deep and explain the reasoning behind the values you are getting.
 
-<table><tbody><tr><td><strong>Overview:</strong> Following is the time and space complexity of the different circular queue operations.</td><td>Enqueue</td><td><ul><li>Time Complexity: O(1)</li><li>Space Complexity: O(1)</li></ul></td></tr><tr><td></td><td>Dequeue:</td><td><ul><li>Time Complexity: O(1)</li><li>Space Complexity: O(1)</li></ul></td></tr><tr><td></td><td>Others</td><td><ul><li>Auxiliary Space for N Elements: O(N)</li></ul></td></tr></tbody></table>
+| **Overview:** Following is the time and space complexity of the different circular queue operations. | Enqueue | Time Complexity: O(1)Space Complexity: O(1) |
+| --- | --- | --- |
+|  | Dequeue: | Time Complexity: O(1)Space Complexity: O(1) |
+|  | Others | Auxiliary Space for N Elements: O(N) |
 
 ### Analysis:
 
