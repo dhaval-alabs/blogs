@@ -94,6 +94,16 @@ export default function Navbar({ activeCategory = "Data Science" }) {
 
           {/* Right Controls */}
           <div className="flex items-center space-x-3 flex-1 md:flex-none justify-end md:ml-auto">
+            {/* Guest Post CTA — primary action, surfaced at the top of every blog page */}
+            <Link
+              href="https://www.analytixlabs.co.in/submit-a-guest-post/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center font-[family-name:var(--font-headline)] font-bold text-sm tracking-tight px-4 py-1.5 rounded-full bg-[#003b93] text-white border border-[#003b93] hover:bg-[#0051c3] dark:bg-[#adc6ff] dark:text-[#001b3f] dark:border-[#adc6ff] dark:hover:bg-[#c5d8ff] transition-colors whitespace-nowrap"
+            >
+              Submit a Guest Post
+            </Link>
+
             {/* Desktop Nav — right-aligned as buttons */}
             <div className="hidden md:flex items-center gap-2 mr-2">
               {NAV_CATEGORIES.map((cat) => {
@@ -170,6 +180,16 @@ export default function Navbar({ activeCategory = "Data Science" }) {
         } md:hidden overflow-y-auto px-8 pb-8 pt-24`}
       >
         <nav className="flex flex-col gap-4">
+          {/* Guest Post CTA — first item so it leads the mobile menu */}
+          <Link
+            href="https://www.analytixlabs.co.in/submit-a-guest-post/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-[family-name:var(--font-headline)] font-bold text-sm text-center px-4 py-2.5 rounded-full bg-[#003b93] text-white dark:bg-[#adc6ff] dark:text-[#001b3f] transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            Submit a Guest Post
+          </Link>
           {NAV_CATEGORIES.map((cat) => (
             <Link
               key={cat.label}
