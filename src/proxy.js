@@ -56,6 +56,29 @@ const BRIEF_EXACT_REDIRECTS = {
   // Fix 3 — old category pages
   '/blog/business-intelligence': '/blog/business-analytics/',
   '/blog/report': 'https://www.analytixlabs.co.in/free-resources/', // cross-domain → main site
+
+  // Round 3 (Antigravity brief, 2026-08-03), Fix 1 — six Python posts still
+  // 404 since June; Google keeps re-crawling them.
+  '/blog/python-training-can-give-good-start-career': '/blog/why-python-for-data-science-is-industrys-top-choice/',
+  '/blog/using-python-is-a-satisfying-experience-for-coders': '/blog/why-python-for-data-science-is-industrys-top-choice/',
+  '/blog/python-skills-can-be-vital-for-a-successful-career-in-data-science': '/blog/why-python-for-data-science-is-industrys-top-choice/',
+  '/blog/why-python-training': '/blog/why-python-for-data-science-is-industrys-top-choice/',
+  '/blog/python-training-makes-industry-ready': '/blog/choose-python-data-science-course/',
+  '/blog/5-reasons-python-practical-choice-language': '/blog/choose-python-data-science-course/',
+  // Round 3, Fix 2 — Yoast strips the date from these old permalinks correctly,
+  // but the resulting slug (year still embedded) doesn't exist in Next.js.
+  '/blog/exploring-career-avenues-deep-learning-certification-2019': '/blog/exploring-career-avenues-deep-learning-certification-2024/',
+  '/blog/50-ultimate-python-data-science-libraries-to-learn-in-2020': '/blog/data-analytics-with-python/',
+  // Round 3, Fix 3 — truncated slugs newly appeared in GSC.
+  '/blog/data-science-and': '/blog/data-science-and-ai/',
+  '/blog/what-i': '/blog/', // too truncated to infer a specific post — route to blog home
+  // Round 3, Fix 4 — content bug: an internal link somewhere has a stray/line-break
+  // space before the last word, so Google crawls these with a literal space
+  // (encoded as %20). See scripts/find-space-slugs (or a Supabase content grep
+  // for "characteristics-of-big- data" / "components-of- artificial-intelligence")
+  // to fix the source link too, or these will keep getting rediscovered.
+  '/blog/characteristics-of-big-%20data': '/blog/characteristics-of-big-data/',
+  '/blog/components-of-%20artificial-intelligence': '/blog/components-of-artificial-intelligence/',
 };
 
 // Residual individual 404s from the GSC "Not found (404)" report (June 2026)
@@ -75,16 +98,19 @@ const GSC_RESIDUAL_REDIRECTS = {
   '/blog/random-forest-regression-a-comprehensive-guide': '/blog/random-forest-regression/',
   '/blog/artificial-intelligence/ai-models': '/blog/ai-models/',
   '/blog/ai-skills-playbook-2026': '/blog/ai-skills-in-demand/',
+  // Round 3, Fix 5 — repointed from a loosely-related category page to the
+  // exact-match post that exists for each (category-page redirects risk being
+  // treated as a soft 404 rather than honoured, wasting link equity).
+  '/blog/what-is-langchain': '/blog/langchain-components-and-uses/',
+  '/blog/what-is-marketing-analytics': '/blog/marketing-mix-modeling/',
+  '/blog/data-scientist-vs-machine-learning-engineer': '/blog/machine-learning-engineer-vs-data-scientist/',
   // Old dated permalinks whose target slug was itself renamed (override the
   // generic dated handler in legacyWpRedirect)
   '/blog/2020/05/07/50-ultimate-python-data-science-libraries-to-learn-in-2020': '/blog/50-ultimate-python-data-science-libraries-to-learn/',
   '/blog/2019/02/19/exploring-career-avenues-deep-learning-certification-2019': '/blog/exploring-career-avenues-deep-learning-certification-2024/',
   // Original post no longer exists → closest live page / category hub
   '/blog/advantages-disadvantages-of-artificial-intelligence': '/blog/artificial-intelligence/',
-  '/blog/data-scientist-vs-machine-learning-engineer': '/blog/data-science/',
-  '/blog/what-is-marketing-analytics': '/blog/what-is-business-analytics/',
   '/blog/2020/02/08/the-ai-and-machine-learning-trends-to-watch-out-for-in-2020': '/blog/artificial-intelligence/',
-  '/blog/what-is-langchain': '/blog/artificial-intelligence/',
   // No relevant target → blog index
   '/blog/best-geospatial-technology-trends-for-2022': '/blog/',
   '/blog/interview-q-a': '/blog/',
@@ -196,19 +222,13 @@ export async function proxy(request) {
     return supabaseResponse;
   }
 
-  // ── Dynamic Redirects (public paths only) ───────────────────────
-  // Reads from Vercel Edge Config (<1ms at the edge) with a Supabase
-  // fallback for local dev. See src/lib/infrastructure/redirects.js.
-  const dynamicRedirect = await lookupRedirect(pathname);
-  if (dynamicRedirect) {
-    const dest = dynamicRedirect.destination.startsWith('http')
-      ? dynamicRedirect.destination
-      : new URL(dynamicRedirect.destination, request.url).toString();
-    return NextResponse.redirect(dest, dynamicRedirect.type || 301);
-  }
-
   // ── SEO 404 / migration redirects (SEO-team brief, 2026-06-16) ───
   // Runs before trailing-slash normalization → one clean 301 with UTM kept.
+  // Checked BEFORE the dynamic/CMS redirects below: these ~50 entries are
+  // curated and SEO-verified per brief, so they must win even if a stale or
+  // malformed CMS row exists in Supabase for the same exact source path
+  // (this bit us in round 3 — 6 legacy CMS rows pre-dating the brief's
+  // consolidated destinations were silently overriding the correct fix).
   const brief = briefRedirect(pathname);
   if (brief) {
     const target = brief.startsWith('http')
@@ -216,6 +236,23 @@ export async function proxy(request) {
       : new URL(brief, request.url);
     target.search = request.nextUrl.search; // preserve UTM / query params
     return NextResponse.redirect(target.toString(), 301);
+  }
+
+  // ── Dynamic Redirects (public paths only) ───────────────────────
+  // Reads from Vercel Edge Config (<1ms at the edge) with a Supabase
+  // fallback for local dev. See src/lib/infrastructure/redirects.js.
+  const dynamicRedirect = await lookupRedirect(pathname);
+  if (dynamicRedirect) {
+    const rawDest = dynamicRedirect.destination;
+    // Defensive: a destination saved without a leading slash (e.g. a CMS
+    // data-entry typo — "blog/foo/" instead of "/blog/foo/") is a *relative*
+    // reference to the URL constructor, so it resolves against the current
+    // request path instead of the site root, producing a nested 404 like
+    // /blog/source-slug/blog/foo/ instead of replacing the path outright.
+    const dest = rawDest.startsWith('http')
+      ? rawDest
+      : new URL(rawDest.startsWith('/') ? rawDest : `/${rawDest}`, request.url).toString();
+    return NextResponse.redirect(dest, dynamicRedirect.type || 301);
   }
 
   // Catch-all for legacy WordPress tag/author/feed/dated URLs (runs after the
