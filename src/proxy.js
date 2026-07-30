@@ -2,6 +2,21 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import { lookupRedirect } from '@/lib/infrastructure/redirects';
 
+// Known-stale rows in the Supabase `redirects` table (dynamic/CMS layer) that
+// shadow a genuinely published post and would otherwise 301 it away before it
+// can render. The proper fix is deactivating the row and letting Studio's
+// admin UI push the change to Vercel Edge Config — but that cache only
+// refreshes on a Studio save, so until that happens (or the stale row is
+// deleted outright) this bypass keeps the live post reachable independent of
+// Edge Config's state. Safe to remove once the Edge Config cache is confirmed
+// to no longer carry the corresponding entry.
+const DYNAMIC_REDIRECT_BYPASS = new Set([
+  // id 226 in `blog.redirects`: source '/blog/choose-python-data-science-course'
+  // → '/blog/what-is-data-science/', deactivated 2026-07-30 but Edge Config
+  // hadn't picked that up as of the same date.
+  '/blog/choose-python-data-science-course',
+]);
+
 // Legacy WordPress URL shapes that were never migrated and 404 on the new
 // site (GSC "Not found (404)"). These are open-ended families, so we collapse
 // them with patterns rather than enumerating thousands of dead URLs. Takes a
@@ -241,7 +256,9 @@ export async function proxy(request) {
   // ── Dynamic Redirects (public paths only) ───────────────────────
   // Reads from Vercel Edge Config (<1ms at the edge) with a Supabase
   // fallback for local dev. See src/lib/infrastructure/redirects.js.
-  const dynamicRedirect = await lookupRedirect(pathname);
+  const dynamicRedirect = DYNAMIC_REDIRECT_BYPASS.has(pathname)
+    ? null
+    : await lookupRedirect(pathname);
   if (dynamicRedirect) {
     const rawDest = dynamicRedirect.destination;
     // Defensive: a destination saved without a leading slash (e.g. a CMS
