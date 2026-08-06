@@ -1,219 +1,186 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { getRoles, getLocations, getExperiences, getSalaryRange } from "@/lib/data";
+import Link from "next/link";
+import SalaryHubClient from "./SalaryHubClient";
 
-function formatRefreshed(iso) {
-  if (!iso) return "";
-  try {
-    return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  } catch { return ""; }
+const SITE_ORIGIN = "https://www.analytixlabs.co.in";
+
+const TITLE = "Tech Salary Estimator for Data & AI Roles in India | AnalytixLabs";
+const DESCRIPTION =
+  "Free salary estimator for data analyst, data scientist, ML engineer, and other data & AI roles across Bangalore, Delhi NCR, Mumbai, Hyderabad, Pune, and Chennai — by experience level.";
+
+export const metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: `${SITE_ORIGIN}/salary-hub/` },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    url: `${SITE_ORIGIN}/salary-hub/`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+};
+
+// Single source of truth for the visible FAQ block below AND the FAQPage
+// schema — schema must mirror on-page content exactly.
+const SALARY_FAQS = [
+  {
+    question: "How is this salary estimate calculated?",
+    answer:
+      "Each estimate combines a role's base compensation with a location multiplier (reflecting cost-of-living and demand differences across Indian tech hubs) and an experience-level multiplier, sourced from recent market compensation reports.",
+  },
+  {
+    question: "Which roles and locations are covered?",
+    answer:
+      "Roles span data analytics, data science, machine learning, and AI engineering — including titles like Data Analyst, Data Scientist, ML Engineer, MLOps Engineer, and AI Research Scientist — across Bangalore, Delhi NCR, Mumbai, Hyderabad, Pune, Chennai, and remote roles.",
+  },
+  {
+    question: "How often are the estimates refreshed?",
+    answer:
+      "Estimates are refreshed weekly. When live market data is unavailable, the tool falls back to its offline baseline estimate, which is shown clearly in the results.",
+  },
+  {
+    question: "Is this the same as a guaranteed salary offer?",
+    answer:
+      "No — this is a directional estimate of base compensation to help with negotiation and career planning. Actual offers vary by company, specific skills, and individual negotiation.",
+  },
+];
+
+function jsonLd(obj) {
+  return JSON.stringify(obj).replace(/</g, "\\u003c");
 }
 
-export default function SalaryHub() {
-  const roles = getRoles();
-  const locations = getLocations();
-  const experiences = getExperiences();
+const BREADCRUMB_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_ORIGIN}/` },
+    { "@type": "ListItem", position: 2, name: "Salary Hub", item: `${SITE_ORIGIN}/salary-hub/` },
+  ],
+};
 
-  const [role, setRole] = useState(roles[0]);
-  const [location, setLocation] = useState(locations[0]);
-  const [exp, setExp] = useState(experiences[0]);
+const WEBPAGE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${SITE_ORIGIN}/salary-hub/#webpage`,
+  name: TITLE,
+  description: DESCRIPTION,
+  url: `${SITE_ORIGIN}/salary-hub/`,
+  isPartOf: { "@type": "WebSite", url: SITE_ORIGIN },
+  about: { "@type": "Thing", name: "Data & AI role compensation in India" },
+  publisher: { "@type": "Organization", "@id": `${SITE_ORIGIN}/#organization` },
+};
 
-  const [estimate, setEstimate] = useState(null);
-  const [meta, setMeta] = useState(null); // { source, sources, refreshed_at, commentary, yoy_delta_pct }
-  const [loading, setLoading] = useState(true);
-  const [usingFallback, setUsingFallback] = useState(false);
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${SITE_ORIGIN}/salary-hub/#faq`,
+  mainEntity: SALARY_FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
+// Genuinely relevant related reading — real posts on this same topic, not
+// arbitrary internal-link padding.
+const RELATED_POSTS = [
+  { slug: "data-scientist-salary", label: "Data Scientist Salary in India: A Complete Breakdown" },
+  { slug: "data-analyst-salary-in-india", label: "Data Analyst Salary in India" },
+  { slug: "data-engineer-salary", label: "Data Engineer Salary Guide" },
+];
 
-    const params = new URLSearchParams({ role, location, experience: exp });
-    fetch(`/api/salary?${params.toString()}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (cancelled) return;
-        if (data.ok && data.estimate) {
-          setEstimate({ min: data.estimate.min, median: data.estimate.median, max: data.estimate.max });
-          setMeta({
-            source: data.source,
-            sources: data.estimate.sources || [],
-            refreshed_at: data.estimate.refreshed_at,
-            commentary: data.estimate.commentary,
-            yoy_delta_pct: data.estimate.yoy_delta_pct,
-          });
-          setUsingFallback(false);
-        } else {
-          const fb = data.fallback || getSalaryRange(role, location, exp);
-          setEstimate(fb);
-          setMeta(null);
-          setUsingFallback(true);
-        }
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setEstimate(getSalaryRange(role, location, exp));
-        setMeta(null);
-        setUsingFallback(true);
-      })
-      .finally(() => { if (!cancelled) setLoading(false); });
-
-    return () => { cancelled = true; };
-  }, [role, location, exp]);
-
-  const salary = estimate || { min: "–", median: "–", max: "–" };
-  const refreshedLabel = meta?.refreshed_at ? formatRefreshed(meta.refreshed_at) : "";
-
+export default function SalaryHubPage() {
   return (
     <div className="min-h-screen flex flex-col pt-16 font-[family-name:var(--font-body)] bg-background dark:bg-[#0b1326] text-on-background dark:text-[#dae2fd]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(WEBPAGE_JSON_LD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(BREADCRUMB_JSON_LD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(FAQ_JSON_LD) }}
+      />
+
       <Navbar activeCategory="Salary Hub" />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 md:py-20 flex flex-col md:flex-row gap-12">
-
-        {/* Left Side: Form */}
-        <div className="w-full md:w-1/2 space-y-8">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold font-[family-name:var(--font-headline)] mb-4 tracking-tight">
-              Tech Salary <span className="text-primary dark:text-[#adc6ff]">Estimator</span>
-            </h1>
-            <p className="text-on-surface-variant dark:text-[#c2c6d6] text-lg leading-relaxed max-w-lg">
-              AI-estimated base compensation for data &amp; AI roles across India&apos;s top tech hubs, sourced from recent market reports and refreshed weekly.
-            </p>
-          </div>
-
-          <div className="bg-surface-container-lowest dark:bg-[#131b2e] p-8 rounded-2xl border border-outline-variant/20 dark:border-[#424754]/30 shadow-sm space-y-6">
-            <h3 className="font-bold text-lg font-[family-name:var(--font-headline)]">Your Profile</h3>
-
-            <div className="space-y-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
-                  Job Role
-                </label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  {roles.map(r => <option key={r} value={r}>{r}</option>)}
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
-                  Years of Experience
-                </label>
-                <select
-                  value={exp}
-                  onChange={(e) => setExp(e.target.value)}
-                  className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  {experiences.map(e => <option key={e} value={e}>{e} Years</option>)}
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold font-[family-name:var(--font-label)] uppercase tracking-wider text-secondary dark:text-[#8c909f]">
-                  Location
-                </label>
-                <select
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full p-4 bg-surface-container dark:bg-[#060e20] border-none rounded-xl text-on-surface dark:text-[#dae2fd] outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  {locations.map(l => <option key={l} value={l}>{l}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
+      <main className="flex-1 w-full py-12 md:py-20">
+        <div className="max-w-7xl mx-auto w-full px-6 mb-10">
+          <h1 className="text-4xl md:text-5xl font-extrabold font-[family-name:var(--font-headline)] mb-4 tracking-tight">
+            Tech Salary Estimator for Data &amp; AI Roles in India
+          </h1>
+          <p className="text-on-surface-variant dark:text-[#c2c6d6] text-lg leading-relaxed max-w-2xl">
+            Built for job seekers, career switchers, and hiring managers who need a quick,
+            directional read on what data analytics, data science, and AI/ML roles pay across
+            India&apos;s major tech hubs — broken down by experience level.
+          </p>
         </div>
 
-        {/* Right Side: Results */}
-        <div className="w-full md:w-1/2 md:py-16">
-          <div className="bg-primary text-on-primary dark:bg-[#1f2937] dark:text-[#dae2fd] p-8 md:p-12 rounded-3xl shadow-xl relative overflow-hidden border border-outline/10">
-            {/* Ambient Background Blur */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 dark:bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3"></div>
+        <SalaryHubClient />
 
-            <div className="relative z-10 flex flex-col gap-8">
-              <div>
-                <span className="font-[family-name:var(--font-label)] text-xs uppercase tracking-[0.2em] font-bold opacity-80 mb-2 block">
-                  Estimated Base Compensation
-                </span>
-                <div className="flex items-baseline gap-2 min-h-[80px]">
-                  {loading ? (
-                    <div className="h-16 w-48 bg-white/10 dark:bg-white/5 rounded-lg animate-pulse" />
-                  ) : (
-                    <>
-                      <span className="text-2xl font-medium">₹</span>
-                      <span className="text-6xl md:text-7xl font-extrabold font-[family-name:var(--font-headline)] tracking-tighter">
-                        {salary.median}
-                      </span>
-                      <span className="text-xl font-medium opacity-80">LPA</span>
-                    </>
-                  )}
-                </div>
-              </div>
+        <div className="max-w-7xl mx-auto w-full px-6 mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+          <section>
+            <h2 className="text-2xl font-bold font-[family-name:var(--font-headline)] mb-4">
+              How We Calculate These Estimates
+            </h2>
+            <p className="text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed mb-3">
+              Each estimate starts from a role&apos;s base compensation, then applies two adjustments:
+              a location multiplier reflecting cost-of-living and hiring-demand differences across
+              Bangalore, Delhi NCR, Mumbai, Hyderabad, Pune, and Chennai, and an experience-level
+              multiplier for early-career (0-2 years) through senior (10+ years) professionals.
+            </p>
+            <p className="text-on-surface-variant dark:text-[#c2c6d6] leading-relaxed">
+              When live market data is available, the tool also surfaces year-over-year change and
+              its sources; otherwise it shows an offline baseline estimate, labeled clearly in the
+              results panel.
+            </p>
+          </section>
 
-              <div className="bg-black/10 dark:bg-black/30 w-full h-[1px]" />
+          <section>
+            <h2 className="text-2xl font-bold font-[family-name:var(--font-headline)] mb-4">
+              Related Reading
+            </h2>
+            <ul className="flex flex-col gap-3">
+              {RELATED_POSTS.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/blog/${p.slug}/`}
+                    className="text-primary dark:text-[#adc6ff] font-semibold hover:underline"
+                  >
+                    {p.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
 
-              <div className="flex justify-between items-center">
-                <div className="flex flex-col">
-                  <span className="text-sm font-[family-name:var(--font-label)] uppercase tracking-widest opacity-70 mb-1">
-                    Lower Band
-                  </span>
-                  <span className="text-2xl font-bold">₹ {salary.min} L</span>
+        <div className="max-w-7xl mx-auto w-full px-6 mt-16">
+          <section className="max-w-3xl">
+            <h2 className="text-2xl font-bold font-[family-name:var(--font-headline)] mb-6">
+              Frequently Asked Questions
+            </h2>
+            <div className="flex flex-col gap-6">
+              {SALARY_FAQS.map((f) => (
+                <div key={f.question}>
+                  <h3 className="font-semibold text-base mb-1.5">{f.question}</h3>
+                  <p className="text-on-surface-variant dark:text-[#c2c6d6] text-sm leading-relaxed">
+                    {f.answer}
+                  </p>
                 </div>
-                <div className="flex flex-col text-right">
-                  <span className="text-sm font-[family-name:var(--font-label)] uppercase tracking-widest opacity-70 mb-1">
-                    Upper Band
-                  </span>
-                  <span className="text-2xl font-bold">₹ {salary.max} L</span>
-                </div>
-              </div>
-
-              <div className="mt-4 p-4 bg-white/10 dark:bg-white/5 rounded-xl border border-white/20 dark:border-white/10 flex gap-4 items-start backdrop-blur-sm">
-                <span className="material-symbols-outlined text-green-300">trending_up</span>
-                <div className="text-sm leading-relaxed text-white/90 dark:text-[#c2c6d6] flex-1">
-                  {meta?.commentary ? (
-                    <>
-                      <p>{meta.commentary}</p>
-                      {meta.yoy_delta_pct != null && (
-                        <p className="mt-1 opacity-80">
-                          YoY change: <strong>{meta.yoy_delta_pct >= 0 ? "+" : ""}{meta.yoy_delta_pct}%</strong>
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    <p>
-                      The market demand for <strong>{role}</strong> roles in <strong>{location}</strong> is currently steady. {usingFallback ? "Showing offline estimate." : "Refreshing live estimate…"}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Sources + refreshed footer */}
-              {meta && (meta.sources?.length > 0 || refreshedLabel) && (
-                <div className="text-xs opacity-70 leading-relaxed">
-                  {refreshedLabel && <div>Refreshed: {refreshedLabel}</div>}
-                  {meta.sources?.length > 0 && (
-                    <div className="mt-1">
-                      Sources:{" "}
-                      {meta.sources.slice(0, 3).map((s, i) => (
-                        <span key={s.uri}>
-                          {i > 0 && ", "}
-                          <a href={s.uri} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100">
-                            {s.title || new URL(s.uri).hostname}
-                          </a>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              ))}
             </div>
-          </div>
+          </section>
         </div>
       </main>
 

@@ -17,7 +17,9 @@ import FilterBar from "@/components/FilterBar";
 const AskAI = dynamic(() => import("@/components/AskAI"), { ssr: false, loading: () => <div className="rounded-2xl min-h-[160px] bg-surface-container/30 animate-pulse" /> });
 const SidebarCourseCard = dynamic(() => import("@/components/SidebarCourseCard"), { ssr: false });
 const SidebarSalaryWidget = dynamic(() => import("@/components/SidebarSalaryWidget"), { ssr: false });
-const SidebarAuthorSpotlight = dynamic(() => import("@/components/SidebarAuthorSpotlight"), { ssr: false });
+// ssr enabled (unlike the other sidebar widgets below) — author name/bio is an
+// E-E-A-T signal search/AI crawlers need in the initial HTML, not just after hydration.
+const SidebarAuthorSpotlight = dynamic(() => import("@/components/SidebarAuthorSpotlight"));
 const RecommendedPosts = dynamic(() => import("@/components/RecommendedPosts"), { ssr: false });
 const SidebarCategories = dynamic(() => import("@/components/SidebarCategories"), { ssr: false });
 const NewsletterBanner = dynamic(() => import("@/components/NewsletterBanner"), { ssr: false });
@@ -34,6 +36,7 @@ function BlogListingContent({
   initialBlogConfig = { featured_slugs: [], carousels: [], categories_widget: null },
   initialAuthorPostCount = 0,
   initialSpotlight = null,
+  faqs = [],
 }) {
   const addToast = useToast();
   const [search, setSearch]           = useState("");
@@ -155,6 +158,16 @@ function BlogListingContent({
         onToggleBookmark={toggleBookmark}
       />
 
+      {/* ── Summary / audience statement — top-of-page key takeaway for AEO/GEO extraction ── */}
+      <div className="max-w-7xl mx-auto px-6 pt-8">
+        <p className="text-on-surface-variant dark:text-[#c2c6d6] text-base leading-relaxed max-w-3xl">
+          The AnalytixLabs blog publishes tutorials, career guides, and industry analysis on data
+          science, machine learning, and AI. It&apos;s written for students exploring the field, working
+          professionals upskilling in ML/AI, and career switchers evaluating analytics as a path —
+          filter by topic and skill level below to find what&apos;s relevant to you.
+        </p>
+      </div>
+
       {/* ── Curated Sections (Featured + Carousels) ── */}
       {showCurated && (
         <div className="max-w-7xl mx-auto px-6 pt-10">
@@ -251,6 +264,27 @@ function BlogListingContent({
             <SidebarSalaryWidget />
           </aside>
         </div>
+
+        {/* ── FAQ — mirrors the FAQPage JSON-LD emitted server-side in page.js ── */}
+        {faqs.length > 0 && (
+          <section className="mt-14 max-w-3xl">
+            <h2 className="font-[family-name:var(--font-headline)] font-bold text-xl md:text-2xl text-on-background dark:text-[#dae2fd] mb-6">
+              Frequently Asked Questions
+            </h2>
+            <div className="flex flex-col gap-6">
+              {faqs.map((f) => (
+                <div key={f.question}>
+                  <h3 className="font-semibold text-base text-on-background dark:text-[#dae2fd] mb-1.5">
+                    {f.question}
+                  </h3>
+                  <p className="text-on-surface-variant dark:text-[#c2c6d6] text-sm leading-relaxed">
+                    {f.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
       {/* ── Newsletter + Discussion ── */}

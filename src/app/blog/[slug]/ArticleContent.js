@@ -217,6 +217,11 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
     setShowShare(false);
   }
 
+  function openShareWindow(url) {
+    window.open(url, "_blank", "noopener,noreferrer,width=600,height=600");
+    setShowShare(false);
+  }
+
 
   // Sidebar search removed — use FilterBar on /article page instead
 
@@ -374,18 +379,34 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
                   Share
                 </button>
                 {showShare && (
-                  <div className="absolute left-0 top-full mt-2 w-44 bg-white dark:bg-[#171f33] border border-outline-variant/20 dark:border-[#424754] rounded-xl shadow-xl z-20 overflow-hidden">
+                  <div className="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-[#171f33] border border-outline-variant/20 dark:border-[#424754] rounded-xl shadow-xl z-20 overflow-hidden max-h-[calc(100vh-120px)] overflow-y-auto">
                     <button onClick={handleCopyLink}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
                       <span className="material-symbols-outlined text-base">link</span>Copy Link
                     </button>
-                    <button onClick={() => { window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, "_blank"); setShowShare(false); }}
+                    <button onClick={() => openShareWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`)}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
                       <span className="material-symbols-outlined text-base">share_reviews</span>LinkedIn
                     </button>
-                    <button onClick={() => { window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, "_blank"); setShowShare(false); }}
+                    <button onClick={() => openShareWindow(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`)}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
                       <span className="material-symbols-outlined text-base">post_add</span>Twitter / X
+                    </button>
+                    <button onClick={() => openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
+                      <span className="material-symbols-outlined text-base">thumb_up</span>Facebook
+                    </button>
+                    <button onClick={() => openShareWindow(`https://api.whatsapp.com/send?text=${encodeURIComponent(`${post.title} ${window.location.href}`)}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
+                      <span className="material-symbols-outlined text-base">chat</span>WhatsApp
+                    </button>
+                    <button onClick={() => openShareWindow(`https://reddit.com/submit?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(post.title)}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
+                      <span className="material-symbols-outlined text-base">forum</span>Reddit
+                    </button>
+                    <button onClick={() => { window.location.href = `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(window.location.href)}`; setShowShare(false); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm border-t border-outline-variant/10 dark:border-[#424754] hover:bg-surface-container-low dark:hover:bg-[#222a3d] dark:text-[#dae2fd]">
+                      <span className="material-symbols-outlined text-base">mail</span>Email
                     </button>
                   </div>
                 )}

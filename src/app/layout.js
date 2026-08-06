@@ -27,11 +27,16 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+const SITE_TITLE = "AnalytixLabs Editorial | Data Science & AI Insights";
+const SITE_DESCRIPTION =
+  "Deep, authoritative insights into Data Science, Machine Learning, AI, and Analytics from industry experts at AnalytixLabs.";
+
+// Sitewide fallback — individual routes (blog posts, /blog/, /salary-hub/) set
+// their own openGraph/twitter/alternates.canonical and override these per-page.
 export const metadata = {
   metadataBase: new URL("https://www.analytixlabs.co.in"),
-  title: "AnalytixLabs Editorial | Data Science & AI Insights",
-  description:
-    "Deep, authoritative insights into Data Science, Machine Learning, AI, and Analytics from industry experts at AnalytixLabs.",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   alternates: {
     canonical: "/blog",
   },
@@ -40,6 +45,43 @@ export const metadata = {
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
+  openGraph: {
+    siteName: "AnalytixLabs",
+    type: "website",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [{ url: "/authorlogo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: ["/authorlogo.png"],
+  },
+};
+
+// Organization schema — the single identity every page's Article/WebPage/Blog
+// schema links back to via `publisher`, so AI/search systems can attribute
+// content to a consistent entity instead of re-deriving it per page.
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://www.analytixlabs.co.in/#organization",
+  name: "AnalytixLabs",
+  url: "https://www.analytixlabs.co.in/",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://www.analytixlabs.co.in/blog/logo.svg",
+  },
+  // Matches FOOTER_DATA.socialLinks in lib/config.js — the site's actual,
+  // verified social profiles (kept in sync manually; update both if these change).
+  sameAs: [
+    "https://www.linkedin.com/company/analytixlabs/",
+    "https://twitter.com/AnalytixLabs",
+    "https://www.facebook.com/analytixlabs",
+    "https://www.youtube.com/@analytixlabs./videos",
+    "https://instagram.com/analytixlabs?igshid=5outdkxzn8xq",
+  ],
 };
 
 import Script from "next/script";
@@ -58,6 +100,10 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD).replace(/</g, "\\u003c") }}
+        />
         {/* Google Tag Manager — production only (gated so preview/dev deploys
             don't fire GTM→GA4 or trip GTM's "additional domains" warning) */}
         {isProd && (
