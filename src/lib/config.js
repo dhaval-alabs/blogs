@@ -68,17 +68,10 @@ export const FOOTER_DATA = {
 };
 
 // ── Filtering ─────────────────────────────────────────────────────
-export const FILTER_CHIPS = [
-  "Artificial Intelligence",
-  "Data Analytics",
-  "Data Science",
-  "Machine Learning",
-  "Deep Learning",
-  "Business Analytics",
-];
-
 export const SKILL_LEVELS = ["All", "Beginner", "Intermediate", "Advanced"];
 
+// Fallback only, shown until FilterBar's /api/topics fetch resolves (or if it
+// fails/returns empty) — the real, editable list lives in Studio → Topics.
 export const TOPIC_OPTIONS = [
   "Data Science",
   "Machine Learning",

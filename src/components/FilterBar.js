@@ -1,6 +1,7 @@
 "use client";
 
-import { FILTER_CHIPS, SKILL_LEVELS, TOPIC_OPTIONS } from "@/lib/config";
+import { useEffect, useState } from "react";
+import { SKILL_LEVELS, TOPIC_OPTIONS } from "@/lib/config";
 
 /**
  * Search bar + topic/skill dropdowns + filter chips.
@@ -33,6 +34,23 @@ export default function FilterBar({
   skillsOpen,
   onToggleSkills,
 }) {
+  // TOPIC_OPTIONS is the pre-fetch/failure fallback only — the real list is
+  // admin-managed (Studio → Topics) and served from /api/topics. Previously
+  // this component never fetched that endpoint at all, so topics added in
+  // Studio could never appear here regardless of caching: there was no
+  // reachable code path from the admin's saved list to this UI.
+  const [topics, setTopics] = useState(TOPIC_OPTIONS);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/topics")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) setTopics(data);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
   const hasActiveFilters = activeTopic || activeSkill !== "All" || searchQuery;
 
   return (
@@ -63,7 +81,7 @@ export default function FilterBar({
           </button>
           {topicsOpen && (
             <div className="absolute top-full left-0 mt-2 w-52 rounded-xl shadow-xl z-30 overflow-hidden border bg-surface-container-lowest dark:bg-[#171f33] border-outline-variant/20 dark:border-[#424754]">
-              {TOPIC_OPTIONS.map((t) => (
+              {topics.map((t) => (
                 <button
                   key={t}
                   onClick={() => onTopicSelect(t)}
@@ -115,9 +133,12 @@ export default function FilterBar({
         )}
       </div>
 
-      {/* Filter chips — desktop only (mobile/tablet use the Topics dropdown instead) */}
+      {/* Filter chips — desktop only (mobile/tablet use the Topics dropdown instead).
+          Same `topics` list as the dropdown above — previously this rendered a
+          second, different hardcoded array (FILTER_CHIPS) that didn't even match
+          TOPIC_OPTIONS, so desktop and mobile showed different topics. */}
       <div className="hidden lg:flex flex-wrap gap-2 mb-8">
-        {FILTER_CHIPS.map((chip) => (
+        {topics.map((chip) => (
           <button
             key={chip}
             onClick={() => onTopicSelect(chip)}

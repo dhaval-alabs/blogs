@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { requireSuperAdmin, getCallerSlug } from '@/lib/infrastructure/auth';
 import { getServiceClient } from '@/lib/supabase';
 import { revalidateRoute } from '@/lib/utils/core';
@@ -13,6 +14,14 @@ export async function upsertTopics(topics) {
     if (error) throw error;
     revalidateRoute('/');
     revalidateRoute('/blog');
+    // /api/topics is a Route Handler with its own `revalidate = 300` time-based
+    // cache — revalidateRoute() only busts page paths, so without this the
+    // studio editor's topic picker (useStudioDraft → GET /api/topics) and the
+    // public FilterBar kept serving the pre-save list for up to 5 minutes.
+    // Trailing slash matters here: with next.config's trailingSlash:true,
+    // /api/topics is itself a 308 redirect stub to /api/topics/ — the actual
+    // cached response (and cache key) lives at the slashed path.
+    revalidatePath('/api/topics/');
     return { success: true };
   } catch (error) {
     console.error('upsertTopics failed:', error);
