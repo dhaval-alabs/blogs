@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 import { stripInlineColors } from '@/utils/sanitizeContent';
-import { Node, Extension, mergeAttributes } from '@tiptap/core';
+import { Node, Extension, mergeAttributes, nodeInputRule, nodePasteRule } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import TiptapLink from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import TiptapImage from '@tiptap/extension-image';
 import { TextStyle, FontFamily } from '@tiptap/extension-text-style';
@@ -41,6 +42,72 @@ const VideoNode = Node.create({
       class: commentId ? 'commented-media' : '',
       style: 'max-width:100%;border-radius:12px;margin:28px 0;display:block;box-shadow: 0 4px 24px rgba(0,0,0,0.08);' + (commentId ? 'outline: 3px solid var(--blue-dim); outline-offset: 4px;' : ''),
     })];
+  },
+});
+
+// ── YouTube embed ─────────────────────────────────────────────
+// Matches watch/embed/shorts/youtu.be forms, capturing the 11-char video ID
+// as group 1. Trailing \S* absorbs any query string/path after the ID (e.g.
+// "...shorts/30PyUQhGm0Q?feature=share").
+const YOUTUBE_ID_REGEX = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})\S*/;
+
+const YoutubeNode = Node.create({
+  name: 'youtube',
+  group: 'block',
+  atom: true,
+  addAttributes() {
+    return {
+      // Rendered as data-video-id (not the default matching-name lookup), so
+      // parseHTML must read it back explicitly — otherwise reopening a saved
+      // post for editing would silently lose the video (videoId -> null).
+      videoId: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('data-video-id'),
+      },
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'div[data-youtube-video]' }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    const { videoId, ...rest } = HTMLAttributes;
+    return ['div',
+      mergeAttributes(rest, {
+        'data-youtube-video': '',
+        'data-video-id': videoId,
+        style: 'position:relative;padding-bottom:56.25%;height:0;margin:28px 0;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);',
+      }),
+      ['iframe', {
+        src: `https://www.youtube.com/embed/${videoId}`,
+        style: 'position:absolute;top:0;left:0;width:100%;height:100%;border:0;',
+        allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+        allowfullscreen: 'true',
+      }],
+    ];
+  },
+  addInputRules() {
+    return [
+      nodeInputRule({
+        // nodeInputRule's match[1] handling replaces exactly that captured
+        // span with the node — it must cover the whole URL, not just the ID,
+        // or the URL prefix is left behind as stray text. So group 1 here
+        // wraps the entire pattern; the ID itself ends up as group 2.
+        find: new RegExp(`(${YOUTUBE_ID_REGEX.source})\\s$`),
+        type: this.type,
+        getAttributes: (match) => ({ videoId: match[2] }),
+      }),
+    ];
+  },
+  addPasteRules() {
+    return [
+      nodePasteRule({
+        // nodePasteRule always deletes the full matched range regardless of
+        // capture-group shape, so the single-ID-group regex is fine as-is.
+        find: new RegExp(YOUTUBE_ID_REGEX, 'g'),
+        type: this.type,
+        getAttributes: (match) => ({ videoId: match[1] }),
+      }),
+    ];
   },
 });
 
@@ -665,6 +732,17 @@ const WidgetNode = Node.create({
 
 const lowlight = createLowlight(common);
 
+// Adds a native `title` attribute (== href) to every rendered link, so
+// hovering a link in the editor shows the destination URL as a browser
+// tooltip — StarterKit's bundled Link has no way to do this per-instance,
+// since its HTMLAttributes option applies the same fixed value to every link.
+const LinkWithTitle = TiptapLink.extend({
+  renderHTML(props) {
+    const [tag, attrs, ...rest] = this.parent(props);
+    return [tag, { ...attrs, title: props.HTMLAttributes.href }, ...rest];
+  },
+});
+
 
 // ── Bubble Menu (renders on text selection) ──────────────────
 function SelectionMenu({ editor, outerRef, comments, onUpdateComments, currentAuthor }) {
@@ -812,7 +890,14 @@ function SelectionMenu({ editor, outerRef, comments, onUpdateComments, currentAu
       <button onClick={() => editor.chain().focus().toggleCode().run()} className={editor.isActive('code') ? 'is-active' : ''} title="Inline code">{'<>'}</button>
       <div className="bmenu-sep" />
       {isLinkActive ? (
-        <button onClick={removeLink} className="is-active" title="Remove link">🔗✕</button>
+        <>
+          <button
+            onClick={() => { setShowLinkInput(l => !l); setLinkUrl(editor.getAttributes('link').href || ''); }}
+            className={showLinkInput ? 'is-active' : ''}
+            title="Edit link"
+          >🔗✎</button>
+          <button onClick={removeLink} title="Remove link">🔗✕</button>
+        </>
       ) : (
         <button
           onClick={() => { setShowLinkInput(l => !l); setLinkUrl(editor.getAttributes('link').href || ''); }}
@@ -901,7 +986,7 @@ function SelectionMenu({ editor, outerRef, comments, onUpdateComments, currentAu
         </>
       )}
 
-      {showLinkInput && !isLinkActive && (
+      {showLinkInput && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 6 }}>
           <input
             autoFocus
@@ -1112,6 +1197,20 @@ function PlusMenu({ editor, outerRef }) {
             <span>Video</span>
           </button>
           <button
+            onClick={() => {
+              const url = window.prompt('Paste a YouTube link (watch, youtu.be, or Shorts):');
+              if (!url) return;
+              const match = url.match(YOUTUBE_ID_REGEX);
+              if (!match) { alert("That doesn't look like a YouTube link."); return; }
+              editor.chain().focus().insertContent({ type: 'youtube', attrs: { videoId: match[1] } }).run();
+              setOpen(false);
+            }}
+            className="fod-btn"
+          >
+            <span style={{ fontSize: 14, lineHeight: 1 }}>▶️</span>
+            <span>YouTube</span>
+          </button>
+          <button
             onClick={() => { editor.chain().focus().toggleCodeBlock().run(); setOpen(false); }}
             className="fod-btn"
           >
@@ -1202,14 +1301,16 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
     extensions: [
       StarterKit.configure({
         codeBlock: false,
-        link: {
-          openOnClick: false,
-          HTMLAttributes: { rel: 'noopener noreferrer', target: '_blank' },
-        },
+        link: false,
+      }),
+      LinkWithTitle.configure({
+        openOnClick: false,
+        HTMLAttributes: { rel: 'noopener noreferrer', target: '_blank' },
       }),
       Placeholder.configure({ placeholder: 'Tell your story…' }),
       CustomImage.configure({ inline: false, allowBase64: true }),
       VideoNode,
+      YoutubeNode,
       WidgetNode,
       CodeBlockLowlight.configure({ lowlight }),
       CommentMark,
