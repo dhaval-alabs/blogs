@@ -17,6 +17,23 @@ const DYNAMIC_REDIRECT_BYPASS = new Set([
   '/blog/choose-python-data-science-course',
 ]);
 
+// next.config's trailingSlash:true means every real route needs a trailing
+// slash or Next 308s to add one — a wasted hop, and (confirmed 2026-08-18)
+// the other half of a genuine infinite redirect loop: a same-origin
+// destination saved without one bounced through the slash-add 308 straight
+// back into an external (Cloudflare-side) rule redirecting the other way.
+// Skips paths with a query string/hash already past the pathname, or that
+// end in something that looks like a file extension (e.g. sitemap.xml).
+function withTrailingSlash(path) {
+  const splitIndex = path.search(/[?#]/);
+  const pathname = splitIndex === -1 ? path : path.slice(0, splitIndex);
+  const suffix = splitIndex === -1 ? '' : path.slice(splitIndex);
+  if (pathname === '' || pathname.endsWith('/')) return path;
+  const lastSegment = pathname.slice(pathname.lastIndexOf('/') + 1);
+  if (lastSegment.includes('.')) return path;
+  return `${pathname}/${suffix}`;
+}
+
 // Legacy WordPress URL shapes that were never migrated and 404 on the new
 // site (GSC "Not found (404)"). These are open-ended families, so we collapse
 // them with patterns rather than enumerating thousands of dead URLs. Takes a
@@ -268,7 +285,7 @@ export async function proxy(request) {
     // /blog/source-slug/blog/foo/ instead of replacing the path outright.
     const dest = rawDest.startsWith('http')
       ? rawDest
-      : new URL(rawDest.startsWith('/') ? rawDest : `/${rawDest}`, request.url).toString();
+      : new URL(withTrailingSlash(rawDest.startsWith('/') ? rawDest : `/${rawDest}`), request.url).toString();
     return NextResponse.redirect(dest, dynamicRedirect.type || 301);
   }
 
