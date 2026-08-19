@@ -8,6 +8,12 @@ import { getMdxPostBySlug, mdxToHtml, mapMdxToPost } from "@/lib/mdx-posts";
 
 export const revalidate = 600; // 10 min ISR — articles rarely change; bots were thrashing at 60s
 
+// Below this many posts, a tag/category archive is thin enough that Google
+// tends to override its canonical in favor of one of the underlying posts
+// (seen on /blog/tableau/, /blog/r/, /blog/python/, etc). noindex it until
+// it accumulates enough posts to stand on its own.
+const THIN_CATEGORY_POST_THRESHOLD = 5;
+
 /** Generate dynamic SEO metadata for each article */
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -32,10 +38,13 @@ export async function generateMetadata({ params }) {
     }
     if (await isCategorySlug(slug)) {
       const label = slug.replace(/-/g, " ");
+      const categoryPosts = await getCategoryPosts(slug);
+      const isThin = categoryPosts.length < THIN_CATEGORY_POST_THRESHOLD;
       return {
         title: `${label.replace(/\b\w/g, (c) => c.toUpperCase())} | ${SITE_NAME}`,
         description: `Articles in ${label}`,
         alternates: { canonical: `https://www.analytixlabs.co.in/blog/${slug}/` },
+        robots: isThin ? { index: false, follow: true } : undefined,
       };
     }
     return { title: "Article Not Found" };

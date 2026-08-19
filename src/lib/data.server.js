@@ -244,7 +244,7 @@ export async function isCategorySlug(categorySlug) {
 
 /** Fetch posts for a specific category, merging Supabase and MDX sources.
  *  Handles slugs like "cyber-security" by converting them to labels. */
-export async function getCategoryPosts(slug) {
+export const getCategoryPosts = cache(async function getCategoryPosts(slug) {
   const { getAllMdxPosts, mapMdxToPost } = await import('./mdx-posts');
   const categoryLabel = slug.replace(/-/g, " ");
 
@@ -262,7 +262,7 @@ export async function getCategoryPosts(slug) {
     ...supabasePosts,
     ...mdxPosts.filter((p) => !supabaseSlugs.has(p.slug)),
   ].sort((a, b) => mappedRecency(b) - mappedRecency(a));
-}
+});
 
 /** Count published posts by a given author */
 export const getAuthorPostCount = cache(async function getAuthorPostCount(authorId) {
