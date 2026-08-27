@@ -1,24 +1,26 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiGuard, logAiUsage, rateLimitedResponse } from "@/lib/ai-guard.server";
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-const rateLimitMap = new Map();
-const WINDOW_MS = 60_000;
-const MAX = 20;
-
-function limited(ip) {
-  const now = Date.now();
-  const e = rateLimitMap.get(ip);
-  if (!e || now - e.t > WINDOW_MS) { rateLimitMap.set(ip, { t: now, n: 1 }); return false; }
-  e.n++;
-  return e.n > MAX;
-}
+const MODEL = "gemini-2.5-flash";
 
 export async function POST(req) {
-  const ip = req.headers.get("x-forwarded-for") || "unknown";
-  if (limited(ip)) return Response.json({ questions: [] }, { status: 429 });
-  if (!genAI) return Response.json({ questions: [] }, { status: 503 });
+  // Same shared guard as /api/ask-ai — one Gemini call per request, so this
+  // endpoint needs the same protection. It answers with an empty questions[]
+  // rather than an error object, because the widget renders this inline and a
+  // missing suggestion list must degrade quietly.
+  const guard = await aiGuard(req, "ask-ai/followups");
+  if (!guard.allowed) {
+    logAiUsage({ route: "ask-ai/followups", ipHash: guard.ipHash, model: MODEL, outcome: guard.reason,
+                 detail: guard.degraded ? "degraded: shared counters unavailable" : null });
+    return rateLimitedResponse(guard.reason, "questions");
+  }
+  if (!genAI) {
+    logAiUsage({ route: "ask-ai/followups", ipHash: guard.ipHash, outcome: "error", detail: "GEMINI_API_KEY not set" });
+    return Response.json({ questions: [] }, { status: 503 });
+  }
 
   let body;
   try { body = await req.json(); } catch { return Response.json({ questions: [] }, { status: 400 }); }
@@ -51,7 +53,7 @@ Example output:
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: MODEL,
       generationConfig: {
         maxOutputTokens: 200,
         temperature: 0.8,
@@ -65,9 +67,14 @@ Example output:
     const questions = Array.isArray(parsed)
       ? parsed.filter((q) => typeof q === "string" && q.length > 3).slice(0, 3)
       : [];
+    logAiUsage({ route: "ask-ai/followups", ipHash: guard.ipHash, model: MODEL, outcome: "served",
+                 questionChars: question.length,
+                 detail: guard.degraded ? "degraded: shared counters unavailable" : null });
     return Response.json({ questions });
   } catch (err) {
     console.error("[ask-ai/followups] error:", err.message);
+    logAiUsage({ route: "ask-ai/followups", ipHash: guard.ipHash, model: MODEL, outcome: "error",
+                 questionChars: question.length, detail: err.message });
     return Response.json({ questions: [] });
   }
 }

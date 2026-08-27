@@ -4,6 +4,7 @@ import {
   rankRelevantArticles,
   formatKnowledgeForPrompt,
 } from "@/lib/ai-knowledge.server";
+import { aiGuard, logAiUsage, rateLimitedResponse } from "@/lib/ai-guard.server";
 
 // Validate API key at startup
 const apiKey = process.env.GEMINI_API_KEY;
@@ -13,31 +14,23 @@ if (!apiKey) {
 
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-// Basic in-memory rate limiter (per IP, resets on cold-start)
-const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 15;
-
-function isRateLimited(ip) {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(ip, { windowStart: now, count: 1 });
-    return false;
-  }
-  entry.count++;
-  return entry.count > RATE_LIMIT_MAX;
-}
+const MODEL = "gemini-2.5-flash";
 
 export async function POST(req) {
-  // Rate-limit check
-  const ip = req.headers.get("x-forwarded-for") || "unknown";
-  if (isRateLimited(ip)) {
-    return Response.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  // Shared, cross-instance rate limit + global daily cap, and every request is
+  // logged. The old limiter was a module-scope Map keyed on the raw
+  // x-forwarded-for header: empty on each cold start, unshared between
+  // instances, and bypassable by varying a header. See lib/ai-guard.server.js.
+  const guard = await aiGuard(req, "ask-ai");
+  if (!guard.allowed) {
+    logAiUsage({ route: "ask-ai", ipHash: guard.ipHash, model: MODEL, outcome: guard.reason,
+                 detail: guard.degraded ? "degraded: shared counters unavailable" : null });
+    return rateLimitedResponse(guard.reason);
   }
 
   // API key guard
   if (!genAI) {
+    logAiUsage({ route: "ask-ai", ipHash: guard.ipHash, outcome: "error", detail: "GEMINI_API_KEY not set" });
     return Response.json({ error: "AI service is not configured." }, { status: 503 });
   }
 
@@ -129,7 +122,7 @@ ${knowledgeSection}${sharedRules}`;
     async start(controller) {
       try {
         const model = genAI.getGenerativeModel({
-          model: "gemini-2.5-flash",
+          model: MODEL,
           systemInstruction: systemPrompt,
           generationConfig: {
             maxOutputTokens: 1200,
@@ -150,10 +143,15 @@ ${knowledgeSection}${sharedRules}`;
           }
         }
         controller.close();
+        logAiUsage({ route: "ask-ai", ipHash: guard.ipHash, model: MODEL, outcome: "served",
+                     questionChars: sanitizedQuestion.length,
+                     detail: guard.degraded ? "degraded: shared counters unavailable" : null });
       } catch (err) {
         console.error("[ask-ai] Generation error:", err.message);
         controller.enqueue(encoder.encode("\n\nSorry, something went wrong. Please try again."));
         controller.close();
+        logAiUsage({ route: "ask-ai", ipHash: guard.ipHash, model: MODEL, outcome: "error",
+                     questionChars: sanitizedQuestion.length, detail: err.message });
       }
     },
   });
