@@ -19,7 +19,7 @@ import { getServiceClient } from '@/lib/supabase';
 import { revalidateRoute } from '@/lib/utils/core';
 
 export const BRAND_AUTHOR = 'AnalytixLabs';
-const MODEL = 'gemini-2.5-flash';
+const MODEL = 'gemini-3.6-flash';
 const MAX_REPLY_CHARS = 600;
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -70,10 +70,12 @@ async function classifyAndReply({ commentText, userName, articleTitle, thread })
     systemInstruction: SYSTEM_INSTRUCTION,
     generationConfig: {
       temperature: 0.6,
-      maxOutputTokens: 500,
+      // gemini-3.6-flash can't disable thinking (thinkingBudget: 0 is
+      // rejected) — "low" is the minimum, so a small headroom bump keeps
+      // the JSON output from getting crowded out.
+      maxOutputTokens: 700,
       responseMimeType: 'application/json',
-      // No hidden "thinking" budget — keep the whole budget for the JSON output.
-      thinkingConfig: { thinkingBudget: 0 },
+      thinkingConfig: { thinkingLevel: 'low' },
     },
   });
 

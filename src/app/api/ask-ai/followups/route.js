@@ -4,7 +4,7 @@ import { aiGuard, logAiUsage, rateLimitedResponse } from "@/lib/ai-guard.server"
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3.6-flash";
 
 export async function POST(req) {
   // Same shared guard as /api/ask-ai — one Gemini call per request, so this
@@ -55,10 +55,14 @@ Example output:
     const model = genAI.getGenerativeModel({
       model: MODEL,
       generationConfig: {
-        maxOutputTokens: 200,
+        // gemini-3.6-flash can't disable thinking (thinkingBudget: 0 is
+        // rejected) — "low" is the minimum, and it alone can eat ~150-200
+        // tokens before any visible output, so the old 200-token budget
+        // truncated the JSON array mid-string. Bumped for headroom.
+        maxOutputTokens: 500,
         temperature: 0.8,
         responseMimeType: "application/json",
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: { thinkingLevel: "low" },
       },
     });
     const result = await model.generateContent(prompt);

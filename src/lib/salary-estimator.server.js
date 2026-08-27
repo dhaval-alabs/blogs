@@ -4,7 +4,7 @@
 // Flow:
 //   1. Look up (role, location, experience) in `salary_estimates`.
 //   2. If a row exists and refreshed_at is within CACHE_TTL_MS, return it.
-//   3. Otherwise call Gemini 2.5 Flash with Google Search grounding,
+//   3. Otherwise call Gemini 3.6 Flash with Google Search grounding,
 //      parse the structured JSON response, upsert the row, return it.
 //   4. On Gemini failure, return the stale row if we have one, else null
 //      (callers fall back to the hardcoded table in src/lib/data.js).
@@ -138,12 +138,16 @@ Constraints:
 - If the role doesn't exist in this market, return min_lpa=0 median_lpa=0 max_lpa=0 and explain in commentary.`;
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.6-flash',
     tools: [{ googleSearch: {} }],
     generationConfig: {
       temperature: 0.2,
-      maxOutputTokens: 600,
-      thinkingConfig: { thinkingBudget: 0 },
+      // gemini-3.6-flash can't disable thinking (thinkingBudget: 0 is
+      // rejected) — "low" is the minimum, and the Google Search grounding
+      // here pushes thinking overhead higher than the plain-text call sites,
+      // so this needed the biggest headroom bump of the four.
+      maxOutputTokens: 900,
+      thinkingConfig: { thinkingLevel: 'low' },
     },
   });
 

@@ -14,7 +14,7 @@ if (!apiKey) {
 
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3.6-flash";
 
 export async function POST(req) {
   // Shared, cross-instance rate limit + global daily cap, and every request is
@@ -125,12 +125,13 @@ ${knowledgeSection}${sharedRules}`;
           model: MODEL,
           systemInstruction: systemPrompt,
           generationConfig: {
-            maxOutputTokens: 1200,
+            maxOutputTokens: 1600,
             temperature: 0.7,
-            // Disable "thinking" so the entire token budget goes to visible output.
-            // Without this, gemini-2.5-flash can burn the full budget on hidden
-            // reasoning and return an empty / CTA-truncated answer.
-            thinkingConfig: { thinkingBudget: 0 },
+            // gemini-3.6-flash requires some thinking budget (thinkingBudget: 0
+            // is rejected outright) — "low" is the minimum, plus extra
+            // maxOutputTokens headroom so hidden reasoning can't crowd out the
+            // visible answer the way it did on gemini-2.5-flash.
+            thinkingConfig: { thinkingLevel: "low" },
           },
         });
 
