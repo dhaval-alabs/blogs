@@ -207,8 +207,8 @@ export default function RedirectsPage() {
         )}
 
         {/* Redirects Table */}
-        <div style={{ background: 'var(--bg2)', borderRadius: 20, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+        <div style={{ background: 'var(--bg2)', borderRadius: 20, border: '1px solid var(--border)', overflowX: 'auto', overflowY: 'hidden' }}>
+          <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr style={{ background: 'var(--bg3)', borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '16px 24px', color: 'var(--text3)', fontWeight: 700, fontSize: 11, textTransform: 'uppercase' }}>Source Path</th>
