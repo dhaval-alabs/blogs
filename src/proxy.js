@@ -111,6 +111,46 @@ const BRIEF_EXACT_REDIRECTS = {
   // to fix the source link too, or these will keep getting rediscovered.
   '/blog/characteristics-of-big-%20data': '/blog/characteristics-of-big-data/',
   '/blog/components-of-%20artificial-intelligence': '/blog/components-of-artificial-intelligence/',
+
+  // Round 4 (Antigravity brief, 2026-08-31) — active truncation bug producing
+  // new truncated-slug 404s (crawl dates July 27–Aug 21, 2026). Root cause
+  // NOT found in this codebase: PostCard.js, RecommendedPosts.js, the ask-ai
+  // knowledge-grounding formatter, and the social share buttons were all
+  // audited and every one builds its href/URL from the untouched slug field,
+  // never a truncated display string. Likely origin is external (a
+  // third-party aggregator/scraper linkifying a truncated page title). All
+  // destinations verified live (200) 2026-08-31.
+  '/blog/random-forest-reg': '/blog/random-forest-regression/',
+  '/blog/logistic': '/blog/logistic-regression-in-python/',
+  '/blog/classification-in-mac': '/blog/classification-in-machine-learning/',
+  '/blog/data-reduction-in': '/blog/data-reduction-in-data-mining/',
+  '/blog/component': '/blog/components-of-artificial-intelligence/',
+  '/blog/applications-of-artificial...': '/blog/applications-of-artificial-intelligence/',
+  '/blog/applications-of-artificial-intelligence/%21': '/blog/applications-of-artificial-intelligence/',
+  '/blog/applications-of-arti': '/blog/applications-of-artificial-intelligence/',
+  '/blog/data-analysis-and-interpretatio': '/blog/data-analysis-and-interpretation/',
+  '/blog/data-analysis': '/blog/data-analysis-and-interpretation/',
+  '/blog/python-interview-questions-for': '/blog/python-interview-questions-for-data-science/',
+  '/blog/father-of-artificial': '/blog/father-of-artificial-intelligence/',
+  '/blog/father': '/blog/father-of-artificial-intelligence/',
+  '/blog/types-of-business': '/blog/types-of-business-analytics/',
+  // Brief suggested best-programming-language-for-machine-learning as the
+  // fallback target, but that slug itself 301s (truncated to -machine) —
+  // pointing directly at the real final destination to avoid the extra hop.
+  '/blog/types-of-algorithms-with-different-machine-learning-algorithm-examples': '/blog/best-programming-language-for-machine/',
+  // Brief flagged these three as "needs CMS search, do not guess" — searched
+  // Supabase directly, each resolved to exactly one live published post.
+  '/blog/descriptive': '/blog/descriptive-and-inferential-statistics/',
+  '/blog/parametric': '/blog/parametric-and-non-parametric-test/',
+  '/blog/data-science-life': '/blog/data-science-life-cycle/',
+  // Too short/generic to safely infer a specific post — brief's own
+  // recommended fallback, same treatment as the existing '/blog/what-i' above.
+  '/blog/what': '/blog/',
+  '/blog/wh': '/blog/',
+  '/blog/full': '/blog/',
+  '/blog/type': '/blog/',
+  '/blog/types': '/blog/',
+  '/blog/types-of': '/blog/',
 };
 
 // Residual individual 404s from the GSC "Not found (404)" report (June 2026)
