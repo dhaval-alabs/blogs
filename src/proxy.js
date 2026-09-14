@@ -125,9 +125,21 @@ const BRIEF_EXACT_REDIRECTS = {
   '/blog/classification-in-mac': '/blog/classification-in-machine-learning/',
   '/blog/data-reduction-in': '/blog/data-reduction-in-data-mining/',
   '/blog/component': '/blog/components-of-artificial-intelligence/',
-  '/blog/applications-of-artificial...': '/blog/applications-of-artificial-intelligence/',
-  '/blog/applications-of-artificial-intelligence/%21': '/blog/applications-of-artificial-intelligence/',
-  '/blog/applications-of-arti': '/blog/applications-of-artificial-intelligence/',
+  // The post at this slug was renamed to /blog/ai-applications/ in Supabase
+  // (2026-09-14) — no post row remains at the old slug, only a leftover
+  // WordPress-migration MDX file (content/blog/applications-of-artificial-
+  // intelligence.mdx) still serving stale content, invisible to Studio's
+  // post list since /api/posts?all=true only queries the posts table. A
+  // prior redirect attempt (Supabase redirects id 232) never worked: its
+  // source was a full URL instead of a normalized path, and its destination
+  // pointed at blog.analytixlabs.co.in (the Studio-only host) instead of
+  // www. Fixed here at the code level instead. All three sibling truncated-
+  // slug entries below repointed directly at the real final destination to
+  // avoid chaining through this now-redirected slug.
+  '/blog/applications-of-artificial-intelligence': '/blog/ai-applications/',
+  '/blog/applications-of-artificial...': '/blog/ai-applications/',
+  '/blog/applications-of-artificial-intelligence/%21': '/blog/ai-applications/',
+  '/blog/applications-of-arti': '/blog/ai-applications/',
   '/blog/data-analysis-and-interpretatio': '/blog/data-analysis-and-interpretation/',
   '/blog/data-analysis': '/blog/data-analysis-and-interpretation/',
   '/blog/python-interview-questions-for': '/blog/python-interview-questions-for-data-science/',
