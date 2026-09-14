@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
+import { useEditor, EditorContent, NodeViewWrapper, NodeViewContent, ReactNodeViewRenderer } from '@tiptap/react';
 import { stripInlineColors } from '@/utils/sanitizeContent';
 import { Node, Extension, mergeAttributes, nodeInputRule, nodePasteRule } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
@@ -730,6 +730,66 @@ const WidgetNode = Node.create({
   },
 });
 
+// ── Callout Box ───────────────────────────────────────────────
+// Generic customizable highlight box: one editable one-line title + full
+// rich-text body (paragraphs, lists, links, etc. — unlike WidgetNode above,
+// this is NOT an atom node). Replaces the old hardcoded "💡 Key Insight"
+// blockquote toggle for new insertions, so authors can label a highlight box
+// whatever fits ("Pro Tip", "Common Mistake", ...) instead of every box
+// saying "Key Insight". Existing posts' raw <blockquote> content is
+// untouched — that's a different node (StarterKit's Blockquote) with its
+// own hardcoded CSS label (see TiptapEditor.css) — so old "Key Insight"
+// boxes keep rendering exactly as before with no migration needed.
+const CalloutNode = Node.create({
+  name: 'callout',
+  group: 'block',
+  content: 'block+',
+  defining: true,
+  addAttributes() {
+    return {
+      title: {
+        default: 'Key Insight',
+        parseHTML: (element) => element.getAttribute('data-title') || 'Key Insight',
+        renderHTML: (attributes) => ({ 'data-title': attributes.title }),
+      },
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'div.callout-box' }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['div', mergeAttributes(HTMLAttributes, { class: 'callout-box' }), 0];
+  },
+  addCommands() {
+    return {
+      setCallout: (attributes) => ({ commands }) => commands.wrapIn(this.name, attributes),
+      toggleCallout: (attributes) => ({ commands }) => commands.toggleWrap(this.name, attributes),
+      unsetCallout: () => ({ commands }) => commands.lift(this.name),
+    };
+  },
+  addNodeView() {
+    return ReactNodeViewRenderer(CalloutView);
+  },
+});
+
+function CalloutView({ node, updateAttributes }) {
+  return (
+    <NodeViewWrapper className="callout-box">
+      <div
+        className="callout-title"
+        contentEditable
+        suppressContentEditableWarning
+        onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); stopKey(e); }}
+        onKeyUp={stopKey}
+        onBlur={(e) => updateAttributes({ title: e.currentTarget.textContent.trim() || 'Key Insight' })}
+      >
+        {node.attrs.title}
+      </div>
+      <NodeViewContent className="callout-content" />
+    </NodeViewWrapper>
+  );
+}
+
 const lowlight = createLowlight(common);
 
 // Adds a native `title` attribute (== href) to every rendered link, so
@@ -886,7 +946,7 @@ function SelectionMenu({ editor, outerRef, comments, onUpdateComments, currentAu
       <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive('bulletList') ? 'is-active' : ''} title="Bullet list">•</button>
       <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={editor.isActive('orderedList') ? 'is-active' : ''} title="Numbered list">1.</button>
       <div className="bmenu-sep" />
-      <button onClick={() => editor.chain().focus().toggleBlockquote().run()} className={editor.isActive('blockquote') ? 'is-active' : ''} title="Key Insight callout" style={{ fontSize: 11, letterSpacing: '0.02em' }}>💡 Key Insight</button>
+      <button onClick={() => editor.chain().focus().toggleCallout().run()} className={editor.isActive('callout') ? 'is-active' : ''} title="Callout box (customizable label)" style={{ fontSize: 11, letterSpacing: '0.02em' }}>💡 Callout</button>
       <button onClick={() => editor.chain().focus().toggleCode().run()} className={editor.isActive('code') ? 'is-active' : ''} title="Inline code">{'<>'}</button>
       <div className="bmenu-sep" />
       {isLinkActive ? (
@@ -1218,11 +1278,11 @@ function PlusMenu({ editor, outerRef }) {
             <span>Code block</span>
           </button>
           <button
-            onClick={() => { editor.chain().focus().toggleBlockquote().run(); setOpen(false); }}
+            onClick={() => { editor.chain().focus().toggleCallout().run(); setOpen(false); }}
             className="fod-btn"
           >
             <span style={{ fontSize: 14, lineHeight: 1 }}>💡</span>
-            <span>Key Insight</span>
+            <span>Callout box</span>
           </button>
           <div className="fod-sep" />
           <button
@@ -1312,6 +1372,7 @@ const TiptapEditor = forwardRef(function TiptapEditor({ content, onChange, onSta
       VideoNode,
       YoutubeNode,
       WidgetNode,
+      CalloutNode,
       CodeBlockLowlight.configure({ lowlight }),
       CommentMark,
       TextStyle,

@@ -172,6 +172,59 @@
   color: #4ade80;
 }
 
+/* ── Callout box (customizable label) ── */
+.tiptap-prose .callout-box,
+.callout-box {
+  border-left: 4px solid #16a34a;
+  margin: 32px 0;
+  padding: 14px 18px;
+  background: rgba(22, 163, 74, 0.06);
+  border-radius: 0 10px 10px 0;
+  position: relative;
+}
+
+.callout-title {
+  font-family: var(--font-body), "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #16a34a;
+  margin-bottom: 8px;
+  outline: none;
+}
+
+/* Public page only: the saved HTML has no editable .callout-title element,
+   just the data-title attribute on the wrapper (see CalloutNode's
+   attribute renderHTML in TiptapEditor.js) — this pseudo-element is what
+   actually displays it there. In the live editor .callout-box never carries
+   data-title (see CalloutView), so this always resolves to empty there and
+   never duplicates the real .callout-title div. */
+.callout-box::before {
+  content: attr(data-title);
+  display: block;
+  font-family: var(--font-body), "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #16a34a;
+  margin-bottom: 8px;
+}
+
+.dark .callout-box::before {
+  color: #adc6ff;
+}
+
+.callout-content > *:first-child { margin-top: 0; }
+.callout-content > *:last-child { margin-bottom: 0; }
+
+.dark .tiptap-prose .callout-box,
+.dark .callout-box {
+  border-left-color: #adc6ff;
+  background: rgba(173, 198, 255, 0.06);
+}
+
+.dark .callout-title {
+  color: #adc6ff;
+}
+
 /* ── Inline code ───────────────────── */
 .tiptap-prose code {
   background: #f1f5f9;
