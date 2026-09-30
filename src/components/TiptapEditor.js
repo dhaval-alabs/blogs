@@ -775,15 +775,16 @@ const CalloutNode = Node.create({
 function CalloutView({ node, updateAttributes }) {
   return (
     <NodeViewWrapper className="callout-box">
-      <div
-        className="callout-title"
-        contentEditable
-        suppressContentEditableWarning
-        onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); stopKey(e); }}
-        onKeyUp={stopKey}
-        onBlur={(e) => updateAttributes({ title: e.currentTarget.textContent.trim() || 'Key Insight' })}
-      >
-        {node.attrs.title}
+      <div contentEditable={false}>
+        <input
+          type="text"
+          className="callout-title-input"
+          value={node.attrs.title}
+          onChange={(e) => updateAttributes({ title: e.target.value })}
+          onKeyDown={stopKey}
+          onKeyUp={stopKey}
+          placeholder="Label this box…"
+        />
       </div>
       <NodeViewContent className="callout-content" />
     </NodeViewWrapper>

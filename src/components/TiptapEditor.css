@@ -183,21 +183,31 @@
   position: relative;
 }
 
-.callout-title {
+.callout-title-input {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 8px;
   font-family: var(--font-body), "Inter", sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #16a34a;
-  margin-bottom: 8px;
   outline: none;
 }
 
-/* Public page only: the saved HTML has no editable .callout-title element,
+.callout-title-input::placeholder {
+  color: #16a34a;
+  opacity: 0.5;
+}
+
+/* Public page only: the saved HTML has no .callout-title-input element,
    just the data-title attribute on the wrapper (see CalloutNode's
    attribute renderHTML in TiptapEditor.js) — this pseudo-element is what
    actually displays it there. In the live editor .callout-box never carries
    data-title (see CalloutView), so this always resolves to empty there and
-   never duplicates the real .callout-title div. */
+   never duplicates the real input. */
 .callout-box::before {
   content: attr(data-title);
   display: block;
@@ -221,8 +231,13 @@
   background: rgba(173, 198, 255, 0.06);
 }
 
-.dark .callout-title {
+.dark .callout-title-input {
   color: #adc6ff;
+}
+
+.dark .callout-title-input::placeholder {
+  color: #adc6ff;
+  opacity: 0.5;
 }
 
 /* ── Inline code ───────────────────── */
