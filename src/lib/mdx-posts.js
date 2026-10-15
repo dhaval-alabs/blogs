@@ -14,7 +14,12 @@ export function getAllMdxPosts() {
 
   return fs
     .readdirSync(POSTS_DIR)
-    .filter((f) => f.endsWith('.mdx'))
+    // Exclude macOS/ExFAT AppleDouble shadow files (e.g. "._foo.mdx") — they
+    // end in .mdx too, are untracked/never deployed, but can appear on a
+    // local ExFAT dev drive and would otherwise be parsed as phantom posts
+    // with a "._<slug>" slug (confirmed locally: 495 real files, 495 bogus
+    // "._"-prefixed sitemap entries before this filter was added).
+    .filter((f) => f.endsWith('.mdx') && !f.startsWith('._'))
     .map((f) => {
       const raw = fs.readFileSync(path.join(POSTS_DIR, f), 'utf8');
       const { data, content } = matter(raw);
