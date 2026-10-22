@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Sun, Moon } from "lucide-react";
 import { NAV_CATEGORIES } from "@/lib/config";
 
 
@@ -19,13 +20,22 @@ export default function Navbar({ activeCategory = "Data Science" }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "dark") {
-      document.documentElement.classList.add("dark");
-      setIsDark(true);
-    }
+  // The inline "theme-init" script in layout.js already applies the .dark
+  // class to <html> before this component ever mounts, deciding between
+  // localStorage and the OS's prefers-color-scheme. Re-deriving `isDark` from
+  // localStorage alone (as this used to) ignores the system-preference case:
+  // a visitor with no stored choice but a dark OS theme would get a page
+  // that's actually dark while this button's own state stayed stuck on
+  // "light" — showing the wrong icon and requiring an extra click to catch
+  // up (the first click just reconfirmed the dark class with no visible
+  // change). Reading the DOM directly makes this the single source of truth.
+  // useLayoutEffect (not useEffect) so it resolves before the first paint,
+  // instead of after — avoiding a visible flash to the wrong icon.
+  useLayoutEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
+  useEffect(() => {
     const storedFont = localStorage.getItem("font-scale");
     if (storedFont) {
       const parsed = Number(storedFont);
@@ -150,8 +160,15 @@ export default function Navbar({ activeCategory = "Data Science" }) {
               aria-label="Toggle dark mode"
               id="dark-mode-toggle"
             >
-              <span className="material-symbols-outlined text-[#434653] dark:text-[#c2c6d6]">
-                {isDark ? "light_mode" : "dark_mode"}
+              {/* Plain SVG icon, not the material-symbols-outlined ligature
+                  font used elsewhere — that font loads lazily (see the
+                  "lazy-css-promoter" swap in layout.js) and its ligature
+                  names ("dark_mode"/"light_mode") render as literal,
+                  readable text until the font arrives. For this toggle
+                  specifically that read as a visible "Loading…"-style glitch,
+                  so it gets a font-independent icon instead. */}
+              <span className="flex items-center justify-center text-[#434653] dark:text-[#c2c6d6]">
+                {isDark ? <Sun size={20} strokeWidth={1.75} /> : <Moon size={20} strokeWidth={1.75} />}
               </span>
             </button>
 
