@@ -18,6 +18,8 @@ const DYNAMIC_REDIRECT_BYPASS = new Set([
   '/blog/choose-python-data-science-course',
 ]);
 
+const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
+
 // next.config's trailingSlash:true means every real route needs a trailing
 // slash or Next 308s to add one — a wasted hop, and (confirmed 2026-08-18)
 // the other half of a genuine infinite redirect loop: a same-origin
@@ -191,6 +193,13 @@ export async function proxy(request) {
     ? null
     : await lookupRedirect(pathname);
   if (dynamicRedirect) {
+    // A 410/404 row retires the URL rather than redirecting it.
+    // NextResponse.redirect() throws on any non-redirect status, which
+    // surfaced as a 500 (row 91, /blog/category/blog-analytixlabs, type 410).
+    const status = Number(dynamicRedirect.type) || 301;
+    if (status === 410 || status === 404) {
+      return new NextResponse(status === 410 ? 'Gone' : 'Not Found', { status });
+    }
     const rawDest = dynamicRedirect.destination;
     // Defensive: a destination saved without a leading slash (e.g. a CMS
     // data-entry typo — "blog/foo/" instead of "/blog/foo/") is a *relative*
@@ -200,7 +209,7 @@ export async function proxy(request) {
     const dest = rawDest.startsWith('http')
       ? rawDest
       : new URL(withTrailingSlash(rawDest.startsWith('/') ? rawDest : `/${rawDest}`), request.url).toString();
-    return NextResponse.redirect(dest, dynamicRedirect.type || 301);
+    return NextResponse.redirect(dest, REDIRECT_STATUSES.has(status) ? status : 301);
   }
 
   // Catch-all for legacy WordPress tag/author/feed/dated URLs (runs after the
