@@ -18,7 +18,7 @@ import { courses, salaryData, authors as staticAuthors } from './data';
 // list is explicit so we never pull PII (e.g. email) into public responses.
 const POST_WITH_AUTHOR_SELECT = `
   id, title, slug, excerpt, content, category, domain_tags, skill_level,
-  read_time, author_id, image, status, published_at,
+  read_time, author_id, image, status, published_at, updated_at,
   seo, course_mappings, course_cta, newsletter, quiz, ai_hints,
   trust, discussion, advanced, likes,
   author:authors!posts_author_id_fkey (
@@ -49,7 +49,7 @@ function formatDate(dateStr) {
 }
 
 // Recency = the post's published_at (its creation/publish date) ONLY.
-// updated_at is deliberately ignored for ordering: editing an old post bumps
+// updated_at is deliberately ignored for ordering: a significant update bumps
 // updated_at, but we do NOT want a refreshed old post to jump back to the top
 // of "Latest". A post's position is fixed by when it was published; to
 // intentionally re-date a post, change its published_at (see the studio
@@ -99,11 +99,14 @@ function mapPostRow(row) {
     image:          row.image,
     status:         row.status,
     publishedAt:    formatDate(row.published_at),
-    // Raw ISO timestamp preserved for schema.org JSON-LD (datePublished must
-    // be ISO 8601 — the formatted string above loses the time and would shift
-    // the date across the IST→UTC boundary). updated_at is intentionally not
-    // surfaced: the frontend only ever shows/sorts by the publish date.
+    // Raw ISO timestamps preserved for schema.org JSON-LD (dates must be
+    // ISO 8601 — the formatted string above loses the time and would shift
+    // the date across the IST→UTC boundary). updated_at only moves on a
+    // "Significant update" save in the Studio, so it's the honest
+    // dateModified; listings still sort by publish date only.
     publishedAtISO: row.published_at ?? null,
+    updatedAt:      formatDate(row.updated_at),
+    updatedAtISO:   row.updated_at ?? null,
     seo:            row.seo ?? {},
     courseMappings: row.course_mappings ?? [],
     courseCTA:      row.course_cta ?? '',

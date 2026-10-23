@@ -5,6 +5,25 @@ import { validatePayload, validateAltText } from '@/lib/domain/shared/validation
 import { getCallerSlug } from '@/lib/infrastructure/auth';
 import { toRow } from '@/lib/domain/posts/mappers';
 
+// updated_at means "last significant update" (it's the page's dateModified),
+// so a save only moves it when the editor ticked "Significant update".
+// Leaving the key out keeps the stored value — update_post_atomic COALESCEs
+// a missing updated_at to the current one.
+function significantUpdateStamp(payload) {
+  return payload.significantUpdate === true ? { updated_at: formatDate() } : {};
+}
+
+// published_at is fixed at first publish. Only a post that was never
+// published, or is still Scheduled, takes the Publish Date field.
+function resolvePublishedAt(original, payload) {
+  const canRedate = !original.published_at || original.status === 'Scheduled';
+  if (canRedate && payload.publishDate) {
+    const d = new Date(payload.publishDate);
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+  return original.published_at;
+}
+
 export async function snapshotVersion(db, postId) {
   // Delegates to the snapshot_post_version Postgres function, which runs
   // under a row lock and a single transaction — eliminating the
@@ -49,7 +68,7 @@ export async function saveDraft(payload, id = null) {
       const row = {
         ...toRow({ ...payload, slug }),
         status: original.status || 'Draft',
-        updated_at: formatDate(),
+        ...significantUpdateStamp(payload),
       };
       const { error } = await db.from('posts').update(row).eq('id', id);
       if (error) throw error;
@@ -153,19 +172,11 @@ export async function updatePost(id, payload) {
 
     let slug = payload.slug || toSlug(payload.title);
 
-    let publishedAt = original.published_at;
-    if (payload.publishDate) {
-      try {
-        const d = new Date(payload.publishDate);
-        if (!isNaN(d.getTime())) publishedAt = d.toISOString();
-      } catch { }
-    }
-
     const row = {
       ...toRow({ ...payload, slug }),
       status: original.status || 'Published',
-      published_at: publishedAt,
-      updated_at: formatDate(),
+      published_at: resolvePublishedAt(original, payload),
+      ...significantUpdateStamp(payload),
     };
 
     const { data: rpcResult, error: rpcErr } = await db.rpc('update_post_atomic', {
@@ -212,19 +223,17 @@ export async function publishExistingDraft(id, payload) {
 
     let slug = payload.slug || toSlug(payload.title);
 
-    let publishedAt = original.published_at || formatDate();
-    if (payload.publishDate) {
-      try {
-        const d = new Date(payload.publishDate);
-        if (!isNaN(d.getTime())) publishedAt = d.toISOString();
-      } catch { }
-    }
+    // First publish (never published, or going live from Scheduled): the
+    // last-updated date starts equal to the publish date. Republishing an
+    // unpublished post keeps both dates unless "Significant update" is ticked.
+    const firstPublish = !original.published_at || original.status === 'Scheduled';
+    const publishedAt = resolvePublishedAt(original, payload) || formatDate();
 
     const row = {
       ...toRow({ ...payload, slug }),
       status: 'Published',
       published_at: publishedAt,
-      updated_at: formatDate(),
+      ...(firstPublish ? { updated_at: publishedAt } : significantUpdateStamp(payload)),
     };
 
     const { data: rpcResult, error: rpcErr } = await db.rpc('update_post_atomic', {
@@ -283,7 +292,7 @@ export async function togglePostStatus(id) {
 
     const { data: post, error: fetchErr } = await db
       .from('posts')
-      .select('status, slug, author_id')
+      .select('status, slug, author_id, published_at')
       .eq('id', id)
       .single();
     if (fetchErr) throw fetchErr;
@@ -292,13 +301,13 @@ export async function togglePostStatus(id) {
       return { success: false, error: 'Forbidden: you do not own this post.' };
     }
 
+    // Unpublish/republish keeps both dates. Only a post that was never
+    // published gets a publish date now (and its last-updated date with it).
     const newStatus = post.status === 'Published' ? 'Draft' : 'Published';
-    const updates = {
-      status: newStatus,
-      updated_at: formatDate(),
-    };
-    if (newStatus === 'Published') {
+    const updates = { status: newStatus };
+    if (newStatus === 'Published' && !post.published_at) {
       updates.published_at = formatDate();
+      updates.updated_at = updates.published_at;
     }
 
     const { error } = await db.from('posts').update(updates).eq('id', id);
@@ -423,7 +432,8 @@ export async function restoreVersion(postId, versionId) {
       trust: ver.trust,
       discussion: ver.discussion,
       advanced: ver.advanced,
-      updated_at: formatDate(),
+      // updated_at deliberately untouched: a restore isn't a significant
+      // update unless the editor ticks it on the next save.
     }).eq('id', postId);
     if (updateErr) throw updateErr;
 

@@ -284,19 +284,42 @@ export default function DetailsPanel({ state, dispatch, set, showToast, isSuperA
         </div>
       </Section>
 
-      {/* Publish Date (editable for published/scheduled posts) */}
+      {/* Publish Date: settable until the post first goes live, then fixed */}
       {state.editingPostId && (
         <div className="pp-field">
           <div className="f-lbl" style={{ marginBottom: 6 }}>
             PUBLISH DATE
-            <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400, marginLeft: 6 }}>past dates allowed</span>
+            <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 400, marginLeft: 6 }}>
+              {state.publishDateLocked ? "fixed after first publish" : "past dates allowed"}
+            </span>
           </div>
           <input
             type="date"
             value={state.publishDate || ""}
             onChange={(e) => set("publishDate", e.target.value)}
+            disabled={state.publishDateLocked}
             style={{ width: "100%" }}
           />
+        </div>
+      )}
+
+      {/* Significant update: the only thing that moves "Last updated" (dateModified) */}
+      {state.editingPostId && state.publishDateLocked && (
+        <div className="pp-field">
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 8, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={!!state.significantUpdate}
+              onChange={(e) => set("significantUpdate", e.target.checked)}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              <span className="f-lbl">Significant update (sets &apos;Last updated&apos; to today)</span>
+              <span style={{ display: "block", fontSize: 11, color: "var(--text3)", marginTop: 4, lineHeight: 1.45 }}>
+                Tick only when the article&apos;s content changed meaningfully: new or rewritten sections, refreshed facts, examples or questions. Don&apos;t tick for typos, SEO-field edits, images or relabelling.
+              </span>
+            </span>
+          </label>
         </div>
       )}
 

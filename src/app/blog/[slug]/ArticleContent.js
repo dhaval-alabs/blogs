@@ -34,6 +34,14 @@ function formatBlogDate(dateStr) {
   } catch { return dateStr; }
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function wasUpdatedAfterPublish(post) {
+  const pub = Date.parse(post.publishedAtISO || "");
+  const upd = Date.parse(post.updatedAtISO || "");
+  return Number.isFinite(pub) && Number.isFinite(upd) && upd - pub > DAY_MS;
+}
+
 function buildSuggestedQuestions(post) {
   // Extract question-headings from post HTML
   const re = /<h[2-4][^>]*>([^<]*\?[^<]*)<\/h[2-4]>/gi;
@@ -342,7 +350,9 @@ function ArticleContent({ post, recommendedArticles, courseMatch, authorPostCoun
             {/* Meta row */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-on-surface-variant dark:text-[#8c909f] mb-6">
               {post.publishedAt && <span>Published {formatBlogDate(post.publishedAt)}</span>}
-              {/* "Updated" date intentionally hidden — only the publish date is shown in the frontend. */}
+              {/* Matches JSON-LD dateModified; only shown when the last significant
+                  update came more than a day after publishing. */}
+              {wasUpdatedAfterPublish(post) && <><span className="opacity-30">·</span><span>Updated {formatBlogDate(post.updatedAt)}</span></>}
               {(() => {
                 const mins = resolveReadTime(post.readTime, post.content);
                 return mins > 0 ? <><span className="opacity-30">·</span><span>{mins} min read</span></> : null;

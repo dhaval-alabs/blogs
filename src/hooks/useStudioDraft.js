@@ -86,6 +86,8 @@ const INITIAL_STATE = {
   editingPostId: null,
   status: "",
   publishDate: "",
+  publishDateLocked: false, // published_at is fixed once a post has gone live
+  significantUpdate: false, // ticked → this save sets "Last updated" to today
   allPosts: [],
   activeTab: "details",    // "details" | "seo" | "advanced"
   showScheduleModal: false,
@@ -267,6 +269,8 @@ function studioReducer(state, action) {
         editingPostId: p.id,
         status: p.status || "Draft",
         publishDate,
+        publishDateLocked: !!publishDate && p.status !== "Scheduled",
+        significantUpdate: false,
         postBody: p.content || "",
         postTitle: p.title || "",
         slug: p.slug || "",
@@ -369,6 +373,7 @@ export function buildPublishPayload(s, userId) {
     discussion: { qa: s.qaEnabled, faqSchema: s.faqSchemaEnabled, moderation: s.moderationMode, editorComments: s.editorComments || [] },
     advanced: { semanticIndex: s.semanticIndexEnabled, salaryHub: s.salaryHubEnabled, darkModeCompat: s.darkModeCompat, progressBarColor: s.progressBarColor, cardImage: s.cardImage, squareImage: s.squareImage, widgets: s.widgets, showLeadGen: s.showLeadGen, showNextSteps: s.showNextSteps, showCourseCta: s.showCourseCta, showRightSidebar: s.showRightSidebar },
     publishDate: s.publishDate || "",
+    significantUpdate: !!s.significantUpdate,
   };
 }
 

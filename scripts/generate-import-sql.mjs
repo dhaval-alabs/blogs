@@ -89,8 +89,10 @@ async function mdxToValues({ data, content }) {
 }
 
 const COLS = ['title','slug','excerpt','content','category','domain_tags','skill_level','read_time','author_id','image','alt_text','status','published_at','updated_at','seo','course_mappings','course_cta','newsletter','quiz','ai_hints','trust','discussion','advanced'];
-// On conflict, refresh content/metadata/dates but keep id/created_at.
-const UPDATE_COLS = ['title','excerpt','content','category','domain_tags','read_time','image','alt_text','status','published_at','updated_at','seo','ai_hints','discussion','advanced'];
+// On conflict, refresh content/metadata but keep id/created_at and both dates:
+// published_at is fixed at first publish and updated_at only moves on a
+// significant Studio update, so a re-import must never re-date a post.
+const UPDATE_COLS = ['title','excerpt','content','category','domain_tags','read_time','image','alt_text','status','seo','ai_hints','discussion','advanced'];
 
 const AUTHOR_SQL = `-- Ensure the author referenced by these posts exists (satisfies the FK).
 INSERT INTO blog.authors (slug, name, initials, color, bio)

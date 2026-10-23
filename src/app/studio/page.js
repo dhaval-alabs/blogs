@@ -99,7 +99,8 @@ export default function AuthorStudio() {
       clearDraftOnSuccess();
       showToast("Post updated!");
       fetchAllPosts();
-      set("isPublishing", false);
+      // The tick applies to one save only.
+      setMany({ isPublishing: false, significantUpdate: false });
     } else { showToast(res.error || "Update failed", "err"); set("isPublishing", false); }
   };
 
@@ -113,7 +114,7 @@ export default function AuthorStudio() {
       clearDraftOnSuccess();
       showToast("Post published!");
       fetchAllPosts();
-      setMany({ postsViewMode: "posts", isPublishing: false, status: "Published" });
+      setMany({ postsViewMode: "posts", isPublishing: false, status: "Published", significantUpdate: false });
     } else { showToast(res.error || "Failed to publish", "err"); set("isPublishing", false); }
   };
 
@@ -128,7 +129,7 @@ export default function AuthorStudio() {
       showToast("Draft saved!");
       fetchAllPosts();
       if (!state.editingPostId) setMany({ editingPostId: res.id, slug: res.slug, isSaving: false });
-      else set("isSaving", false);
+      else setMany({ isSaving: false, significantUpdate: false });
     } else { showToast(res.error || "Failed to save draft", "err"); set("isSaving", false); }
   };
 

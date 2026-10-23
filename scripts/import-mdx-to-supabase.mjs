@@ -242,13 +242,27 @@ async function main() {
     return;
   }
 
+  // A --refresh must never re-date existing posts: published_at is fixed at
+  // first publish and updated_at only moves on a significant Studio update.
+  // Existing rows go in batches of their own without the date keys (a mixed
+  // batch would write NULL into the missing columns).
+  const fresh = rows.filter((r) => !existingSlugs.has(r.slug));
+  const refreshed = rows
+    .filter((r) => existingSlugs.has(r.slug))
+    .map(({ published_at, updated_at, ...rest }) => rest);
+  const batches = [];
+  for (const group of [fresh, refreshed]) {
+    for (let i = 0; i < group.length; i += BATCH_SIZE) batches.push(group.slice(i, i + BATCH_SIZE));
+  }
+
   // Batch upsert
   let inserted = 0;
   let errors = 0;
   const errorDetails = [];
 
-  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-    const batch = rows.slice(i, i + BATCH_SIZE);
+  for (let b = 0; b < batches.length; b++) {
+    const batch = batches[b];
+    const i = b * BATCH_SIZE;
     const { data, error } = await supabase
       .from("posts")
       .upsert(batch, { onConflict: "slug", ignoreDuplicates: false })

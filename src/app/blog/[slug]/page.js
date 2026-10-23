@@ -68,10 +68,8 @@ export async function generateMetadata({ params }) {
       title: seo.metaTitle || post.title,
       description: seo.metaDesc || post.excerpt || post.title,
       type: "article",
-      publishedTime: post.publishedAt,
-      // Updated date is intentionally not surfaced anywhere in the frontend
-      // (incl. social/structured metadata) — mirror it to the publish date.
-      modifiedTime: post.publishedAt,
+      publishedTime: toISO(post.publishedAtISO) || post.publishedAt,
+      modifiedTime: lastModifiedISO(post) || post.publishedAt,
       images: image ? [{ url: image }] : [],
     },
     twitter: {
@@ -144,14 +142,19 @@ function toISO(value) {
   return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
+/** Last significant edit (updated_at), falling back to the publish date. */
+function lastModifiedISO(post) {
+  return toISO(post.updatedAtISO) || toISO(post.publishedAtISO);
+}
+
 /** BlogPosting schema — rich-result eligibility + author/publisher/date signals. */
 function buildArticleJsonLd(post) {
   const url = post.seo?.canonicalUrl || `${SITE_ORIGIN}/blog/${post.slug}/`;
   const image = post.seo?.ogImage || post.image || null;
   const datePublished = toISO(post.publishedAtISO);
-  // Don't advertise an "updated" date anywhere in the frontend: keep
-  // dateModified equal to datePublished so Google never shows "Updated …".
-  const dateModified = datePublished;
+  // updated_at only moves on a "Significant update" save, so it's safe to
+  // advertise as dateModified (Google wants it to track real content edits).
+  const dateModified = lastModifiedISO(post);
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
