@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { fetchRedirectsAction, saveRedirectAction, deleteRedirectAction } from "@/app/actions";
@@ -9,6 +9,13 @@ import {
   ShieldAlert, Loader2, Save, X, ExternalLink, 
   RefreshCw, Power
 } from "lucide-react";
+
+// The live site reads redirects from Edge Config, not the table, so a save
+// only takes effect once the sync succeeds. Say so either way.
+function syncMessage(saved, sync) {
+  if (sync?.synced) return { type: 'success', text: `${saved} Live redirects refreshed (${sync.count} active).` };
+  return { type: 'err', text: `${saved} The live site was NOT updated (${sync?.reason || 'unknown'}). Save again, or check the Edge Config settings in Vercel.` };
+}
 
 export default function RedirectsPage() {
   const router = useRouter();
@@ -28,6 +35,13 @@ export default function RedirectsPage() {
     active: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef(null);
+
+  // The form renders above the table; bring it into view so editing a row
+  // far down the list doesn't open it off-screen.
+  useEffect(() => {
+    if (isEditing) formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [isEditing, editingId]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -57,7 +71,7 @@ export default function RedirectsPage() {
 
     const res = await saveRedirectAction(formData, editingId);
     if (res.success) {
-      setMessage({ type: 'success', text: editingId ? "Redirect updated!" : "Redirect created!" });
+      setMessage(syncMessage(editingId ? "Redirect updated." : "Redirect created.", res.sync));
       setFormData({ source: "", destination: "", type: "301", active: true });
       setIsEditing(false);
       setEditingId(null);
@@ -73,6 +87,7 @@ export default function RedirectsPage() {
     
     const res = await deleteRedirectAction(id);
     if (res.success) {
+      setMessage(syncMessage("Redirect deleted.", res.sync));
       loadRedirects();
     } else {
       setMessage({ type: 'err', text: res.error });
@@ -145,7 +160,7 @@ export default function RedirectsPage() {
 
         {/* Editor Form */}
         {isEditing && (
-          <div style={{ 
+          <div ref={formRef} style={{
             background: 'var(--bg2)', padding: 32, borderRadius: 20, border: '1px solid var(--border)', 
             marginBottom: 48, boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
           }}>
@@ -257,7 +272,7 @@ export default function RedirectsPage() {
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                         <button 
                           onClick={() => handleEdit(r)}
-                          style={{ pading: 8, background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', borderRadius: 8 }}
+                          style={{ padding: 8, background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', borderRadius: 8 }}
                           className="action-btn"
                           title="Edit"
                         >
@@ -265,7 +280,7 @@ export default function RedirectsPage() {
                         </button>
                         <button 
                           onClick={() => handleDelete(r.id)}
-                          style={{ pading: 8, background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', borderRadius: 8 }}
+                          style={{ padding: 8, background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', borderRadius: 8 }}
                           className="action-btn"
                           title="Delete"
                         >

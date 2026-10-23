@@ -151,12 +151,14 @@ export async function saveRedirect(payload, id = null) {
       if (error) throw error;
     }
 
-    // Push the new state to Edge Config. Fire-and-forget on failures so an
-    // Edge Config outage doesn't block the admin save.
+    // Push the new state to Edge Config. Awaited: on Vercel an un-awaited
+    // fetch can be cut off when the action returns, leaving live redirects
+    // stale. The sync never throws, so an Edge Config outage still doesn't
+    // fail the save; the result is returned so the Studio can show it.
     const { syncRedirectsToEdgeConfig } = await import('@/lib/infrastructure/redirects');
-    syncRedirectsToEdgeConfig().catch(() => {});
+    const sync = await syncRedirectsToEdgeConfig().catch(() => ({ synced: false, reason: 'error' }));
 
-    return { success: true };
+    return { success: true, sync };
   } catch (error) {
     console.error('saveRedirect failed:', error);
     if (error.code === '23505') return { success: false, error: 'A redirect for this source already exists.' };
@@ -174,9 +176,9 @@ export async function deleteRedirect(id) {
     if (error) throw error;
 
     const { syncRedirectsToEdgeConfig } = await import('@/lib/infrastructure/redirects');
-    syncRedirectsToEdgeConfig().catch(() => {});
+    const sync = await syncRedirectsToEdgeConfig().catch(() => ({ synced: false, reason: 'error' }));
 
-    return { success: true };
+    return { success: true, sync };
   } catch (error) {
     console.error('deleteRedirect failed:', error);
     return { success: false, error: error.message || 'Failed to delete redirect.' };
