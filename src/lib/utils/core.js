@@ -14,3 +14,13 @@ export function revalidateRoute(path) {
   const normalized = path === '/' ? '/' : path.endsWith('/') ? path : `${path}/`;
   revalidatePath(normalized);
 }
+
+// The sitemap is a metadata route handler at /blog/sitemap.xml (a file
+// path, so no trailing slash — revalidateRoute would add one). Called on
+// every change that can alter its URL list or a <lastmod>: publish,
+// unpublish, delete, (re)schedule, slug or updated_at changes, and
+// redirect saves. Its hourly `revalidate` hasn't been refreshing it in
+// production, so this keeps it current regardless.
+export function revalidateSitemap() {
+  revalidatePath('/blog/sitemap.xml');
+}

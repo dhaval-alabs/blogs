@@ -1,6 +1,6 @@
 import { getServiceClient } from '@/lib/supabase';
 import { toSlug, formatDate } from '@/lib/utils/core';
-import { revalidateRoute } from '@/lib/infrastructure/cache';
+import { revalidateRoute, revalidateSitemap } from '@/lib/infrastructure/cache';
 import { validatePayload, validateAltText } from '@/lib/domain/shared/validation';
 import { getCallerSlug } from '@/lib/infrastructure/auth';
 import { toRow } from '@/lib/domain/posts/mappers';
@@ -74,6 +74,7 @@ export async function saveDraft(payload, id = null) {
       if (error) throw error;
 
       revalidateRoute('/');
+      revalidateSitemap(); // a live post's slug or updated_at may have changed
       return { success: true, id, slug };
     } else {
       let slug = payload.slug || toSlug(payload.title);
@@ -141,6 +142,7 @@ export async function publishPost(payload) {
     revalidateRoute('/');
     revalidateRoute('/blog');
     revalidateRoute(`/blog/${data.slug}`);
+    revalidateSitemap();
     return { success: true, slug: data.slug };
   } catch (error) {
     const msg = error?.message || error?.toString() || 'Unknown error';
@@ -192,6 +194,7 @@ export async function updatePost(id, payload) {
     revalidateRoute('/blog');
     revalidateRoute(`/blog/${slug}`);
     if (original.slug !== slug) revalidateRoute(`/blog/${original.slug}`);
+    revalidateSitemap();
     return { success: true, slug };
   } catch (error) {
     const msg = error?.message || error?.toString() || 'Unknown error';
@@ -249,6 +252,7 @@ export async function publishExistingDraft(id, payload) {
     revalidateRoute('/blog');
     revalidateRoute(`/blog/${slug}`);
     if (original.slug !== slug) revalidateRoute(`/blog/${original.slug}`);
+    revalidateSitemap();
     return { success: true, slug };
   } catch (error) {
     console.error('publishExistingDraft failed:', error);
@@ -278,6 +282,7 @@ export async function deletePost(id) {
     revalidateRoute('/');
     revalidateRoute('/blog');
     revalidateRoute(`/blog/${post.slug}`);
+    revalidateSitemap();
     return { success: true };
   } catch (error) {
     console.error('deletePost failed:', error);
@@ -316,6 +321,7 @@ export async function togglePostStatus(id) {
     revalidateRoute('/');
     revalidateRoute('/blog');
     revalidateRoute(`/blog/${post.slug}`);
+    revalidateSitemap();
     return { success: true, newStatus };
   } catch (error) {
     console.error('togglePostStatus failed:', error);
@@ -349,7 +355,9 @@ export async function schedulePost(payload, scheduledDate) {
       ...toRow({ ...payload, slug }),
       status: 'Scheduled',
       published_at: publishedAt,
-      updated_at: formatDate(),
+      // Starts equal to the scheduled publish date; now() would put
+      // dateModified before datePublished.
+      updated_at: publishedAt,
     };
 
     const { error } = await db.from('posts').insert(row);
@@ -357,6 +365,7 @@ export async function schedulePost(payload, scheduledDate) {
 
     revalidateRoute('/');
     revalidateRoute('/blog');
+    revalidateSitemap();
     return { success: true, slug };
   } catch (error) {
     const msg = error?.message || error?.toString() || 'Unknown error';

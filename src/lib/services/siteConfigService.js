@@ -1,7 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { requireSuperAdmin, getCallerSlug } from '@/lib/infrastructure/auth';
 import { getServiceClient } from '@/lib/supabase';
-import { revalidateRoute } from '@/lib/utils/core';
+import { revalidateRoute, revalidateSitemap } from '@/lib/utils/core';
 
 export async function upsertTopics(topics) {
   try {
@@ -157,6 +157,7 @@ export async function saveRedirect(payload, id = null) {
     // fail the save; the result is returned so the Studio can show it.
     const { syncRedirectsToEdgeConfig } = await import('@/lib/infrastructure/redirects');
     const sync = await syncRedirectsToEdgeConfig().catch(() => ({ synced: false, reason: 'error' }));
+    revalidateSitemap(); // the sitemap leaves out redirected URLs
 
     return { success: true, sync };
   } catch (error) {
@@ -177,6 +178,7 @@ export async function deleteRedirect(id) {
 
     const { syncRedirectsToEdgeConfig } = await import('@/lib/infrastructure/redirects');
     const sync = await syncRedirectsToEdgeConfig().catch(() => ({ synced: false, reason: 'error' }));
+    revalidateSitemap();
 
     return { success: true, sync };
   } catch (error) {

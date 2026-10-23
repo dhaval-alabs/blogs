@@ -1,1 +1,1 @@
-export { revalidateRoute } from '@/lib/utils/core';
+export { revalidateRoute, revalidateSitemap } from '@/lib/utils/core';
