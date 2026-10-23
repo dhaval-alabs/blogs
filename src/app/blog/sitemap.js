@@ -65,7 +65,7 @@ function hasForeignCanonical(slug, canonicalUrl) {
 export default async function sitemap() {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('slug, updated_at, seo')
+    .select('slug, updated_at, published_at, seo')
     .eq('status', 'Published')
     .order('updated_at', { ascending: false });
 
@@ -90,6 +90,19 @@ export default async function sitemap() {
   if (redirectsError) {
     console.error('[sitemap] redirects lookup error:', redirectsError.message);
   }
+
+  // Every slug that has a Supabase row, whatever its status. A Draft or
+  // unpublished row is a deliberate decision, so the legacy MDX file with the
+  // same slug must not put it back in the sitemap. Service role because RLS
+  // hides non-Published rows from the anon client.
+  const { data: allRows, error: allRowsError } = await getServiceClient()
+    .from('posts')
+    .select('slug');
+
+  if (allRowsError) {
+    console.error('[sitemap] all-slugs lookup error:', allRowsError.message);
+  }
+  const supabaseSlugs = new Set((allRows || []).map((r) => r.slug));
 
   const redirectedPaths = new Set([
     ...Object.keys(BRIEF_EXACT_REDIRECTS),
@@ -116,11 +129,12 @@ export default async function sitemap() {
     if (redirectedPaths.has(`/blog/${post.slug}`)) continue;
     if (hasForeignCanonical(post.slug, post.seo?.canonicalUrl)) continue;
     seen.add(post.slug);
-    entries.push(toEntry(post.slug, post.updated_at));
+    // <lastmod> must match the page's dateModified (updated_at, else published_at).
+    entries.push(toEntry(post.slug, post.updated_at || post.published_at));
   }
 
   for (const mdx of getAllMdxPosts()) {
-    if (!mdx.slug || seen.has(mdx.slug)) continue;
+    if (!mdx.slug || seen.has(mdx.slug) || supabaseSlugs.has(mdx.slug)) continue;
     if (DUP_SUFFIX_RE.test(mdx.slug)) continue;
     if (redirectedPaths.has(`/blog/${mdx.slug}`)) continue;
     if (hasForeignCanonical(mdx.slug, mdx.canonical)) continue;
