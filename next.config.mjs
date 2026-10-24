@@ -70,6 +70,12 @@ const nextConfig = {
         source: "/fonts/:path*",
         headers: [{ key: "Cache-Control", value: oneYearImmutable }],
       },
+      {
+        // The sitemap is rendered per request (src/app/blog/sitemap.js); let
+        // the CDN keep it for at most an hour so it is never staler than that.
+        source: "/blog/sitemap.xml",
+        headers: [{ key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=600" }],
+      },
     ];
   },
   async redirects() {

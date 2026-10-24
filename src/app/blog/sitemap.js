@@ -2,7 +2,10 @@ import { supabase, getServiceClient } from '@/lib/supabase';
 import { getAllMdxPosts } from '@/lib/mdx-posts';
 import { BRIEF_EXACT_REDIRECTS, GSC_RESIDUAL_REDIRECTS } from '@/lib/infrastructure/hardcoded-redirects';
 
-export const revalidate = 3600;
+// Built per request: neither the hourly `revalidate` nor on-demand
+// revalidatePath ever replaced the prerendered copy on Vercel. The CDN still
+// caches it for up to an hour via the Cache-Control rule in next.config.mjs.
+export const dynamic = 'force-dynamic';
 
 const SITE_ORIGIN = 'https://www.analytixlabs.co.in';
 
