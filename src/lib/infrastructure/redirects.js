@@ -37,13 +37,16 @@ export async function lookupRedirect(pathname) {
   return null;
 }
 
-async function getRedirectMap() {
+// `fetchOptions` lets a cached page (e.g. the article page, which uses the map
+// to normalise internal links) read it without forcing dynamic rendering; the
+// proxy keeps the default no-store read.
+export async function getRedirectMap(fetchOptions = { cache: 'no-store' }) {
   const conn = process.env.EDGE_CONFIG;
   if (conn) {
     try {
       const [base, query] = conn.split('?');
       const url = `${base}/item/${REDIRECTS_KEY}${query ? `?${query}` : ''}`;
-      const res = await fetch(url, { cache: 'no-store' });
+      const res = await fetch(url, fetchOptions);
       if (res.ok) return await res.json();
       if (res.status !== 404) {
         console.warn('[redirects] Edge Config read failed:', res.status);

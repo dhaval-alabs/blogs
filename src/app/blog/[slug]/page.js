@@ -5,6 +5,8 @@ import ArticleContent from "./ArticleContent";
 import CategoryView from "@/components/CategoryView";
 import { SITE_NAME } from "@/lib/config";
 import { getMdxPostBySlug, mdxToHtml, mapMdxToPost } from "@/lib/mdx-posts";
+import { getRedirectMap } from "@/lib/infrastructure/redirects";
+import { buildRedirectLookup, normalizeArticleHtml } from "@/lib/domain/posts/link-normalizer";
 
 export const revalidate = 600; // 10 min ISR — articles rarely change; bots were thrashing at 60s
 
@@ -188,6 +190,30 @@ function buildBreadcrumbJsonLd(post) {
   };
 }
 
+const REDIRECT_STATUSES = new Set([301, 302, 307, 308]);
+
+/**
+ * Redirects used to normalise internal links in post bodies: the static map
+ * (main-site pages + Cloudflare /blog/ redirects) plus active /blog/ rows from
+ * the redirects table. The table's other rows are left out on purpose: only
+ * /blog/ paths reach this app, and the live main site doesn't follow those
+ * rows (many 404 or go elsewhere), so rewriting links to them would be wrong.
+ */
+async function getContentRedirectLookup() {
+  const map = (await getRedirectMap({ next: { revalidate } })) || {};
+  const blogRows = {};
+  for (const [source, row] of Object.entries(map)) {
+    let path = source;
+    if (/^https?:\/\//i.test(path)) {
+      try { path = new URL(path).pathname; } catch { continue; }
+    }
+    if (!path.startsWith("/blog/")) continue;
+    if (!REDIRECT_STATUSES.has(Number(row?.type) || 301)) continue;
+    blogRows[path] = row.destination;
+  }
+  return buildRedirectLookup(blogRows);
+}
+
 /** Serialize JSON-LD for safe inlining in a <script> tag (escape `<`). */
 function jsonLd(obj) {
   return JSON.stringify(obj).replace(/</g, "\\u003c");
@@ -214,12 +240,17 @@ export default async function ArticlePage({ params }) {
     notFound();
   }
 
-  const [recommendedArticles, courseMatch, authorPostCount, siteConfig] = await Promise.all([
+  const [recommendedArticles, courseMatch, authorPostCount, siteConfig, redirectLookup] = await Promise.all([
     getRecommendations(slug, 3, post.domain_tags ?? null, post.skill_level ?? null),
     Promise.resolve(getCourseMatch(post.domain_tags)),
     getAuthorPostCount(post.authorId),
     getSiteConfig(),
+    getContentRedirectLookup(),
   ]);
+
+  // Render-time only: stored content is untouched. Internal links stop
+  // hitting redirects, and in-body <h1>s become <h2> (the title is the h1).
+  post = { ...post, content: normalizeArticleHtml(post.content, redirectLookup) };
 
   const faqJsonLd = post.discussion?.faqSchema && post.content
     ? extractFaqJsonLd(post.content, post.slug)
